@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="action_settings">Ustawienia</string>
+    <string name="app_name">Budżet domowy</string>
+    <string name="text">TOKENPL</string>
+    <string name="create_token">Create Token PL</string>
+
+</resources>

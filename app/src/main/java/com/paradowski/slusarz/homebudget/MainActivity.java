@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import  com.paradowski.slusarz.homebudget.Token;
 
@@ -12,19 +14,26 @@ import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        setContentView(R.layout.activity_main);
+    }
+
+
+    public void buttonClick(View view){
+        TextView tv = (TextView)findViewById(R.id.tokenTextView);
         Token token = new Token(getApplicationContext());
         try {
             token.createToken();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        setContentView(R.layout.activity_main);
+        tv.setText(token.getToken());
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

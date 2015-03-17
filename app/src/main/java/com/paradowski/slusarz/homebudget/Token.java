@@ -17,27 +17,24 @@ public class Token {
     private final String FILENAME = "hb_config";
     private Context context;
 
+    public String getToken(){
+        return this.token;
+    }
+
     public Token(Context context){
         this.context = context;
     }
 
     public void createToken() throws IOException {
         if(!loadToken()){
-            Random r = new Random(); // perhaps make it a class variable so you don't make a new one every time
-            StringBuilder sb = new StringBuilder();
-            for(int i = 0; i < 20; i++) {
-                char c = (char)(r.nextInt((int)(Character.MAX_VALUE)));
-                sb.append(c);
-            }
-            token = sb.toString();
-            sb = null;
+            this.token = Long.toHexString(Double.doubleToLongBits(Math.random()));
             saveToken();
         }
     }
 
     private void saveToken() throws IOException {
         FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-        fos.write(token.getBytes());
+        fos.write(this.token.getBytes());
         fos.close();
     }
 
@@ -49,7 +46,7 @@ public class Token {
             while( (c = fin.read()) != -1){
                 temp = temp + Character.toString((char)c);
             }
-            //string temp contains all the data of the file.
+            this.token = temp;
             fin.close();
             return true;
         }catch(FileNotFoundException e){
