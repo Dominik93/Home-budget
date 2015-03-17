@@ -1,16 +1,27 @@
 package com.paradowski.slusarz.homebudget;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import  com.paradowski.slusarz.homebudget.Token;
+
+import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Token token = new Token(getApplicationContext());
+        try {
+            token.createToken();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         setContentView(R.layout.activity_main);
     }
 
