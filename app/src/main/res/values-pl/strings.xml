@@ -2,7 +2,10 @@
 
     <string name="action_settings">Ustawienia</string>
     <string name="app_name">Budżet domowy</string>
-    <string name="text">TOKENPL</string>
-    <string name="create_token">Create Token PL</string>
-
+    <string name="text">TOKEN</string>
+    <string name="create_token">Stwórz Token</string>
+    <string name="buttonSave">Zapisano token</string>
+    <string name="insertToken">Zapisz token</string>
+    <string name="but">insert token</string>
+    <string name="afterinsert">after insert</string>
 </resources>

@@ -12,18 +12,32 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/text"
         android:id="@+id/tokenTextView"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/button2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/button"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_token"
         android:id="@+id/button"
-        android:layout_below="@+id/tokenTextView"
+        android:onClick="buttonClick"
+        android:layout_alignBaseline="@+id/button2"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonSave"
+        android:id="@+id/button2"
+        android:onClick="buttonClickSave"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="43dp"
-        android:onClick="buttonClick" />
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
