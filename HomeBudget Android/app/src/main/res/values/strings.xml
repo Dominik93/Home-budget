@@ -1,0 +1,70 @@
+<resources>
+    <!-- main activity -->
+    <string name="app_name">HomeBudget</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_version">Version</string>
+    <string name="action_sync">Synchronization</string>
+
+    <!-- tapped menu -->
+    <string name="title_section1">Outcome</string>
+    <string name="title_section2">Summary</string>
+    <string name="title_section3">Income</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Version activity -->
+    <string name="title_activity_version">VersionActivity</string>
+    <string name="token_settings">Token:</string>
+    <string name="token_value_settings">Token value</string>
+    <string name="version_settings">Version</string>
+    <string name="version_value_settings">1.6</string>
+
+    <!-- Settings activity -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="settings_auto_savings">Auto-savings in first day every month</string>
+    <string name="settings_auto_delete">Auto-delete element in first day every month</string>
+
+    <!-- Summary activity -->
+    <string name="summary_income">Income</string>
+    <string name="summary_outcome">Outcome </string>
+    <string name="summary_summary">Summary</string>
+    <string name="summary_savings">Savings</string>
+
+    <!-- welcome activity -->
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="welcome">Welcome to Home Budget</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="connection_error">No active internet connection</string>
+
+    <!-- element activity -->
+    <string name="title_activity_element">ElementActivity</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="element">Element</string>
+    <string name="name">Name</string>
+    <string name="type_name">Type name</string>
+    <string name="value">Value</string>
+    <string name="type_value">Type value</string>
+    <string name="date">Date</string>
+    <string name="constant_element">Constant element</string>
+    <string name="ask_date">Add date</string>
+
+    <!-- sync activity -->
+    <string name="title_activity_sync">SyncActivity</string>
+    <string name="to_file">Database to file</string>
+    <string name="to_database">File to database</string>
+    <string name="clear_database">Clear database</string>
+    <string name="clear_file">Clear file</string>
+
+    <string name="element_ask">What to do?</string>
+
+    <string name="category_name">Type name of category:</string>
+    <string name="token_name">Token:</string>
+    <string name="generate_graph">Generate graph</string>
+
+
+    <!-- List adapter activity -->
+    <string name="add_category">Add category</string>
+    <string name="add_element">Add element</string>
+</resources>
