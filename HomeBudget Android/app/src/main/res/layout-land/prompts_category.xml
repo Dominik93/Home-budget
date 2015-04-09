@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/category_name"
-        android:id="@+id/textViewPromptCategory"
-        android:gravity="center_horizontal" />
+        android:id="@+id/textViewPromptCategory" />
 
     <EditText
         android:layout_width="match_parent"

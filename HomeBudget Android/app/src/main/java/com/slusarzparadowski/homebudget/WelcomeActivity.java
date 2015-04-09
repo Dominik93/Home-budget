@@ -220,13 +220,13 @@ public class WelcomeActivity extends ActionBarActivity {
             Log.i(getClass().getSimpleName(), "doInBackground created new model");
             model = new Model(false);
             Log.i(getClass().getSimpleName(), "doInBackground try load model");
-            if(model.load(getApplicationContext())){
+            if(model.loadFromFile(getApplicationContext())){
                 return true;
             }
             else{
                 try {
                     Log.i(getClass().getSimpleName(), "doInBackground model save");
-                    model.save(getApplicationContext());
+                    model.saveToFile(getApplicationContext());
                     return true;
                 } catch (IOException e) {
                     Log.e(getClass().getSimpleName(), "doInBackground " + e.toString());

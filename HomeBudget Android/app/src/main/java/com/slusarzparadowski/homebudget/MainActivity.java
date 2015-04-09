@@ -111,7 +111,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onDestroy() {
         super.onDestroy();
         try {
-            model.save(getApplicationContext());
+            this.model.saveToFile(getApplicationContext());
         } catch (IOException e) {
             Log.i(getClass().getSimpleName(), "onDestroy "+ e.toString());
         }
@@ -164,7 +164,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Log.i(getClass().getSimpleName(), "onOptionsItemSelected settingsActivity");
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.putExtras(model.saveToBundle());
-            startActivity(intent);
+            startActivityForResult(intent, 1);
             return true;
         }
         else if (id == R.id.action_synchronization) {
@@ -176,6 +176,33 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
+                this.model = new Model(data.getExtras());
+
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_CANCELED);
+
+            }
+        }
+        else if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
+                this.model = new Model(data.getExtras());
+                this.model.notification();
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_CANCELED);
+
+            }
+        }
     }
 
     @Override
@@ -198,6 +225,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     public void setModel(Model model){
         this.model = model;
+        this.model.notification();
     }
 
     public Model getModel(){

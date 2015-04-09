@@ -20,8 +20,9 @@ import java.util.ArrayList;
 /**
  * Created by Dominik on 2015-03-22.
  */
-public class Model implements IObserver{
+public class Model implements IObserver, IBundle, IFile{
 
+    private final String SETTINGS = "settings";
     private final String USER = "user";
     private final String MODE = "mode";
     private final String INCOME = "income";
@@ -67,6 +68,7 @@ public class Model implements IObserver{
         this.views = new ArrayList<>();
     }
 
+    @Override
     public Bundle saveToBundle(){
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
@@ -77,6 +79,7 @@ public class Model implements IObserver{
         return bundle;
     }
 
+    @Override
     public Bundle addToBundle(Bundle bundle){
         Gson gson = new Gson();
         bundle.putString(MODE, gson.toJson(this.mode));
@@ -86,7 +89,8 @@ public class Model implements IObserver{
         return bundle;
     }
 
-    public boolean load(Context context){
+    @Override
+    public boolean loadFromFile(Context context){
         try {
             Gson gson = new Gson();
             FileInputStream fin;
@@ -137,7 +141,8 @@ public class Model implements IObserver{
         }
     }
 
-    public void save(Context context) throws IOException {
+    @Override
+    public void saveToFile(Context context) throws IOException {
         FileOutputStream fos;
         fos = context.openFileOutput(USER, Context.MODE_PRIVATE);
         fos.write((new Gson().toJson(this.user)).getBytes());
@@ -206,6 +211,10 @@ public class Model implements IObserver{
         return this.user;
     }
 
+    public boolean getMode() {
+        return mode;
+    }
+
     public ArrayList<Category> getIncome() {
         return income;
     }
@@ -242,7 +251,4 @@ public class Model implements IObserver{
         }
     }
 
-    public boolean getMode() {
-        return mode;
-    }
 }

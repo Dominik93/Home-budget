@@ -1,9 +1,18 @@
 package com.slusarzparadowski.model;
 
+import android.content.Context;
+import android.os.Bundle;
+
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
 /**
  * Created by Dominik on 2015-04-02.
  */
 public class User {
+
+    private final String USER = "user";
 
     private String token;
     private float savings;
@@ -50,4 +59,5 @@ public class User {
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
+
 }

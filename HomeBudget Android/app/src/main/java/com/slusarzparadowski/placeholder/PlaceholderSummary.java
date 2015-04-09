@@ -66,6 +66,18 @@ public class PlaceholderSummary extends Placeholder {
     @Override
     public void update(Model model) {
         Log.i(getClass().getSimpleName(), "update");
+        tv1.setText(getString(R.string.summary_income)+ " " + String.valueOf(model.getIncomeSum()));
+
+        tv2.setText(getString(R.string.summary_outcome)+ " " + String.valueOf(model.getOutcomeSum()));
+
+        double r = model.getSummary();
+        if(r < 0)
+            tv3.setTextColor(Color.RED);
+        else
+            tv3.setTextColor(Color.GREEN);
+        tv3.setText(getString(R.string.summary_summary)+ " " + String.valueOf(r));
+
+        tv4.setText(getString(R.string.summary_savings)+ " " + String.valueOf(model.getUser().getSavings()));
     }
 
 }

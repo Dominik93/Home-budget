@@ -6,8 +6,8 @@
     android:id="@+id/scrollView" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -34,7 +34,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/editTextElementName"
             android:text="@string/type_name"
             android:inputType="text" />
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText2"
+            android:id="@+id/editTextElementValue"
             android:text="@string/type_value" />
 
         <TextView
@@ -64,18 +64,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/constant_element"
-            android:id="@+id/checkBox3" />
+            android:id="@+id/checkBoxElementConstant" />
 
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ask_date"
-            android:id="@+id/checkBox4" />
+            android:id="@+id/checkBoxElementDate" />
 
         <DatePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/datePicker"
+            android:id="@+id/datePickerElementDate"
             android:visibility="invisible" />
 
 
@@ -86,16 +86,18 @@
             android:gravity="center_horizontal">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
-                android:id="@+id/button" />
+                android:id="@+id/buttonElementSave" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
-                android:id="@+id/button2" />
+                android:id="@+id/buttonElementCancel" />
 
         </LinearLayout>
 

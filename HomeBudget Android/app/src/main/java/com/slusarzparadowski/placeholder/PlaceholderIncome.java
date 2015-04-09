@@ -46,5 +46,6 @@ public class PlaceholderIncome extends Placeholder {
     @Override
     public void update(Model model) {
         Log.i(getClass().getSimpleName(), "update");
+        expandableListView.setAdapter((new ExpandableItemListAdapter(getActivity().getApplicationContext(), getActivity(), model.getOutcome(), "INCOME")));
     }
 }

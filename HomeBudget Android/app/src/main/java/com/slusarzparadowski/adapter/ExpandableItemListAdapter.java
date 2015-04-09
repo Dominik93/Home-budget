@@ -3,6 +3,7 @@ package com.slusarzparadowski.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +14,14 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.slusarzparadowski.dialog.AskCategoryDialog;
 import com.slusarzparadowski.dialog.CategoryDialog;
-import com.slusarzparadowski.dialog.ElementDialog;
-import com.slusarzparadowski.dialog.InternetAccessDialog;
+import com.slusarzparadowski.dialog.AskElementDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
+import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Category;
-import com.slusarzparadowski.model.Model;
 
 import java.util.ArrayList;
 
@@ -72,26 +73,38 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         return list.get(groupPosition).getElementList().size();
     }
 
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         View v = convertView;
         final Element child = getChild(groupPosition, childPosition);
         if (child != null) {
             v = vi.inflate(CHILD_ITEM_RESOURCE, null);
             ViewHolder holder = new ViewHolder(v);
             holder.getTextName().setText(Html.fromHtml(child.toString()));
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(child.getId() != -1){
+                        Log.i(getClass().getSimpleName(), "getChildView onLongClick ask element");
+                        new AskElementDialog(activity, LayoutInflater.from(context).inflate(R.layout.prompts_ask_element, null), list, groupPosition ,childPosition  ).buildDialog().show();
+                    }
+                    return false;
+                }
+            });
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // TODO: ExpandableListAdapter onClick
                     // check if group item is last
                     // if is show propt_category dialog and create new category
-                    if(child.getId() == -1){
+                    if(child.getId() == -1) {
                         Log.i(getClass().getSimpleName(), "getChildView onClick add element");
                         Intent intent = new Intent(activity, ElementActivity.class);
-                        activity.startActivityForResult(intent, 1);
-                    }
-                    else{
-                        new ElementDialog(activity, LayoutInflater.from(context).inflate(R.layout.prompts_element, null)).buildDialog().show();
+                        Bundle bundle = new Bundle();
+                        bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
+                        bundle.putInt("group", groupPosition);
+                        bundle.putString("type", type);
+                        intent.putExtras(bundle);
+                        activity.startActivityForResult(intent, 2);
                     }
                     Log.i(getClass().getSimpleName(), "getChildView onClick");
                 }
@@ -100,8 +113,8 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         return v;
     }
 
-    public String getGroup(int groupPosition) {
-        return "group-" + groupPosition;
+    public Category getGroup(int groupPosition) {
+        return list.get(groupPosition);
     }
 
     public int getGroupCount() {
@@ -140,8 +153,9 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 @Override
                 public boolean onLongClick(View v) {
                     // TODO: ExpandableListAdapter onLongClick
-                    Log.i(getClass().getSimpleName(), "getGroupView onLongClicky");
-                    // ask update or delete
+                    Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
+                    new AskCategoryDialog(activity, LayoutInflater.from(context).inflate(R.layout.prompts_ask_category, null), list, groupPosition).buildDialog().show();
+
                     return false;
                 }
             });

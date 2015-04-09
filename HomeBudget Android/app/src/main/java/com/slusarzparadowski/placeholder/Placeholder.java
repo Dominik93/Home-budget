@@ -102,4 +102,5 @@ public abstract class Placeholder extends Fragment implements IObservable {
         super.onDetach();
         Log.i(getClass().getSimpleName(), "onDetach");
     }
+
 }

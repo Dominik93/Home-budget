@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
@@ -45,14 +46,16 @@ public class CategoryDialog extends MyDialog{
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(getClass().getSimpleName(), "OK");
                                 if (!et.getText().toString().trim().equals("")) {
-                                    if (!list.contains(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
-                                        list.add(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
+                                    if (list.contains(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
+                                        list.remove(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
 
                                     for(Category c : list){
-                                        if (!c.getElementList().contains(new Element(-1, activity.getApplicationContext().getString(R.string.add_element))))
-                                            c.getElementList().add(new Element(-1, activity.getApplicationContext().getString(R.string.add_element)));
+                                        if (c.getElementList().contains(new Element(-1, activity.getApplicationContext().getString(R.string.add_element))))
+                                            c.getElementList().remove(new Element(-1, activity.getApplicationContext().getString(R.string.add_element)));
                                     }
                                     list.add(new Category(0, et.getText().toString().trim(), type));
+                                    ((MainActivity)activity).getModel().notification();
+
                                     Log.i(getClass().getSimpleName(), "new Category(0, " + et.getText().toString() + ", " + type + ")");
                                 }
                             }

@@ -67,4 +67,5 @@
     <!-- List adapter activity -->
     <string name="add_category">Add category</string>
     <string name="add_element">Add element</string>
+    <string name="ask_category">What to do?</string>
 </resources>
