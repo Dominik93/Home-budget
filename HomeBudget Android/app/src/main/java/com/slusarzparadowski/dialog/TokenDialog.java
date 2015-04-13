@@ -20,8 +20,8 @@ public class TokenDialog extends MyDialog {
     EditText et;
     User user;
 
-    public TokenDialog(Activity activity, View view, User user) {
-        super(activity, view);
+    public TokenDialog(Activity activity, int recourse, User user) {
+        super(activity, recourse);
         this.et = (EditText)this.view.findViewById(R.id.editTextTokenDialog);
         this.user = user;
     }

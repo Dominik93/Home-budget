@@ -1,4 +1,4 @@
-package com.slusarzparadowski.dialog;
+package com.slusarzparadowski.dialog.element;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 
+import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
@@ -20,24 +21,30 @@ public class AskElementDialog extends MyDialog {
     ArrayList<Category> list;
     int indexCategory, indexElement;
 
-    public AskElementDialog(Activity activity, View view, ArrayList<Category> list, int indexCategory, int indexElement) {
-        super(activity, view);
+    public AskElementDialog(Activity activity, int recourse, ArrayList<Category> list, int indexCategory, int indexElement) {
+        super(activity, recourse);
         this.indexCategory = indexCategory;
         this.indexElement = indexElement;
         this.list = list;
     }
 
     public MyDialog buildDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
+        this.alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
 
-        alertDialogBuilder.setView(getView());
+        this.alertDialogBuilder.setView(getView());
 
-        alertDialogBuilder
+        this.alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Update",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Update");
+                                dialog.cancel();
+                            }
+                        })
+                .setNeutralButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
                                 dialog.cancel();
                             }
                         })
@@ -50,8 +57,8 @@ public class AskElementDialog extends MyDialog {
                                 dialog.cancel();
                             }
                         });
-        
-        this.setAlertDialog(alertDialogBuilder.create());
+
+        this.createDialog();
         return this;
     }
 

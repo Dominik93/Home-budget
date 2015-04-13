@@ -138,7 +138,7 @@ public class WelcomeActivity extends ActionBarActivity {
             else{
                 Log.i(getClass().getSimpleName(), "onPostExecute No internet access turn on wifi or 3G");
                 pDialog.dismiss();
-                new InternetAccessDialog(activity, LayoutInflater.from(getApplicationContext()).inflate(R.layout.prompts_internet, null)).buildDialog().show();
+                new InternetAccessDialog(activity, R.layout.prompts_internet).buildDialog().show();
             }
 
         }

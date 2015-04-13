@@ -18,8 +18,8 @@ import java.lang.reflect.Method;
  */
 public class InternetAccessDialog extends MyDialog {
 
-    public InternetAccessDialog(Activity activity, View view) {
-        super(activity, view);
+    public InternetAccessDialog(Activity activity, int recourse) {
+        super(activity, recourse);
     }
 
     public MyDialog buildDialog(){
@@ -35,15 +35,8 @@ public class InternetAccessDialog extends MyDialog {
                                 dialog.cancel();
                             }
                         });
-        // create alert dialog
-        this.setAlertDialog(alertDialogBuilder.create());
+
+        this.createDialog();
         return this;
     }
-
-    @Override
-    public void show() {
-        getAlertDialog().show();
-    }
-
-
 }

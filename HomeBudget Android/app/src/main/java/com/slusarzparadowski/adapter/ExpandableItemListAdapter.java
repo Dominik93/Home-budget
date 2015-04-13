@@ -14,9 +14,10 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.slusarzparadowski.dialog.AskCategoryDialog;
-import com.slusarzparadowski.dialog.CategoryDialog;
-import com.slusarzparadowski.dialog.AskElementDialog;
+import com.slusarzparadowski.dialog.category.AskCategoryDialog;
+import com.slusarzparadowski.dialog.category.CategoryDialog;
+import com.slusarzparadowski.dialog.category.NewCategoryDialog;
+import com.slusarzparadowski.dialog.element.AskElementDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
@@ -85,7 +86,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     if(child.getId() != -1){
                         Log.i(getClass().getSimpleName(), "getChildView onLongClick ask element");
-                        new AskElementDialog(activity, LayoutInflater.from(context).inflate(R.layout.prompts_ask_element, null), list, groupPosition ,childPosition  ).buildDialog().show();
+                        new AskElementDialog(activity, R.layout.prompts_ask_element, list, groupPosition, childPosition).buildDialog().show();
                     }
                     return false;
                 }
@@ -140,11 +141,13 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                     if(group.getId() == -1){
                         // TODO: ExpandableListAdapter onClick
                         Log.i(getClass().getSimpleName(), "getGroupView onClick add category");
-                        new CategoryDialog(activity, LayoutInflater.from(context).inflate(R.layout.prompts_category, null), list, type).buildDialog().show();
+                        new NewCategoryDialog(activity, R.layout.prompts_category, list, type).buildDialog().show();
                     }
                     else{
-                        if(isExpanded) ((ExpandableListView) parent).collapseGroup(groupPosition);
-                        else ((ExpandableListView) parent).expandGroup(groupPosition);
+                        if(isExpanded)
+                            ((ExpandableListView) parent).collapseGroup(groupPosition);
+                        else
+                            ((ExpandableListView) parent).expandGroup(groupPosition);
                     }
                     Log.i(getClass().getSimpleName(), "getGroupView onClick");
                 }
@@ -154,7 +157,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     // TODO: ExpandableListAdapter onLongClick
                     Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
-                    new AskCategoryDialog(activity, LayoutInflater.from(context).inflate(R.layout.prompts_ask_category, null), list, groupPosition).buildDialog().show();
+                    new AskCategoryDialog(activity, R.layout.prompts_ask_category, list, groupPosition).buildDialog().show();
 
                     return false;
                 }

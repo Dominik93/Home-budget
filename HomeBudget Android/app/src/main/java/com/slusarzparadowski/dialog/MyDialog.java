@@ -15,16 +15,24 @@ public abstract class MyDialog {
     protected Activity activity;
     protected View view;
     protected AlertDialog alertDialog;
+    protected AlertDialog.Builder alertDialogBuilder;
 
-    public MyDialog(Activity activity, View view){
+    public MyDialog(Activity activity, int recourse){
         this.activity = activity;
-        this.view = view;
-
+        this.view = LayoutInflater.from(activity.getApplicationContext()).inflate(recourse, null);
+        this.alertDialogBuilder = new AlertDialog.Builder(this.activity);
+        this.alertDialogBuilder.setView(this.view);
     }
 
     public abstract MyDialog buildDialog();
-    public abstract void show();
 
+    public void createDialog(){
+        this.alertDialog = this.alertDialogBuilder.create();
+    }
+
+    public void show( ) {
+        this.alertDialog.show();
+    }
 
     public Activity getActivity() {
         return activity;
