@@ -27,12 +27,11 @@ public class UpdateCategoryDialog extends CategoryDialog {
         super(activity, recourse, list);
         this.index = index;
         this.et = (EditText)this.view.findViewById(R.id.editTextPromptCategoryName);
+        this.et.setText(list.get(index).getName());
     }
 
     @Override
     public MyDialog buildDialog(){
-        alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
-        alertDialogBuilder.setView(getView());
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Save",

@@ -104,6 +104,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                         bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
                         bundle.putInt("group", groupPosition);
                         bundle.putString("type", type);
+                        bundle.putBoolean("modify", false);
                         intent.putExtras(bundle);
                         activity.startActivityForResult(intent, 2);
                     }

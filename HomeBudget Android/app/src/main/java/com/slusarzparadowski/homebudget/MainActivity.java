@@ -45,7 +45,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(getClass().getSimpleName(), "onCreate MainActivity created");
-        model = new Model(getIntent().getExtras());
+        if (savedInstanceState != null){
+            this.model = new Model(savedInstanceState);
+        }
+        else{
+            this.model = new Model(getIntent().getExtras());
+        }
+
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -135,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.i(getClass().getSimpleName(), "onRestoreInstanceState load model");
-        this.model = new Model(savedInstanceState);
+
     }
 
     @Override

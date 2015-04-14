@@ -3,10 +3,13 @@ package com.slusarzparadowski.dialog.element;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.slusarzparadowski.dialog.MyDialog;
+import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
@@ -40,6 +43,14 @@ public class AskElementDialog extends MyDialog {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Update");
                                 dialog.cancel();
+                                Intent intent = new Intent(activity, ElementActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
+                                bundle.putInt("category", indexCategory);
+                                bundle.putInt("element", indexElement);
+                                bundle.putBoolean("modify", true);
+                                intent.putExtras(bundle);
+                                activity.startActivityForResult(intent, 2);
                             }
                         })
                 .setNeutralButton("Cancel",
@@ -57,7 +68,6 @@ public class AskElementDialog extends MyDialog {
                                 dialog.cancel();
                             }
                         });
-
         this.createDialog();
         return this;
     }

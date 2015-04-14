@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.slusarzparadowski.adapter.ExpandableItemListAdapter;
+import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Model;
 
@@ -38,7 +39,7 @@ public class PlaceholderOutcome extends Placeholder {
         View rootView = inflater.inflate(R.layout.fragment_outcome, container, false);
         Log.i(getClass().getSimpleName(), "onCreateView");
         expandableListView = (ExpandableListView)rootView.findViewById(R.id.expandableListViewOutcome);
-        expandableListView.setAdapter(new ExpandableItemListAdapter(rootView.getContext(), getActivity(), model.getOutcome(), "OUTCOME"));
+        expandableListView.setAdapter(new ExpandableItemListAdapter(rootView.getContext(), getActivity(), ((MainActivity)getActivity()).getModel().getOutcome(), "OUTCOME"));
         return rootView;
     }
 

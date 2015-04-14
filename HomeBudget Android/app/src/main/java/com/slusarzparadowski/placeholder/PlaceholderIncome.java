@@ -39,7 +39,7 @@ public class PlaceholderIncome extends Placeholder {
         View rootView = inflater.inflate(R.layout.fragment_income, container, false);
         Log.i(getClass().getSimpleName(), "onCreateView");
         this.expandableListView = (ExpandableListView)rootView.findViewById(R.id.expandableListViewIncome);
-        this.expandableListView.setAdapter(new ExpandableItemListAdapter(rootView.getContext(), getActivity(), this.model.getIncome(), "INCOME"));
+        this.expandableListView.setAdapter(new ExpandableItemListAdapter(rootView.getContext(), getActivity(), ((MainActivity)getActivity()).getModel().getIncome(), "INCOME"));
         return rootView;
     }
 

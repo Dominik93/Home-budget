@@ -22,6 +22,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.0.0'
-    compile files('libs/joda-time-2.7.jar')
-    compile files('libs/gson-2.3.1.jar')
+    compile 'com.loopj.android:android-async-http:1.4.5'
+    compile 'com.google.http-client:google-http-client:1.20.0'
+    compile 'joda-time:joda-time:2.7'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.googlecode.charts4j:charts4j:1.3'
 }

@@ -8,5 +8,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/ask_category"
-        android:id="@+id/textViewAskCategory" />
+        android:id="@+id/textViewAskCategory"
+        android:gravity="center_vertical|center_horizontal" />
 </LinearLayout>

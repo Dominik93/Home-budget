@@ -26,9 +26,6 @@ public class AskCategoryDialog extends CategoryDialog{
     }
 
     public MyDialog buildDialog(){
-        this.alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
-        this.alertDialogBuilder.setView(getView());
-
         this.alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Update",

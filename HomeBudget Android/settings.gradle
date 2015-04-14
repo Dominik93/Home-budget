@@ -1,3 +1,1 @@
-include ':app', ':gson-2.3.1', ':joda-time-2.7'
-project(':gson-2.3.1').projectDir = new File('libs/gson-2.3.1')
-project(':joda-time-2.7').projectDir = new File('libs/joda-time-2.7')
+include ':app'

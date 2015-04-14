@@ -31,8 +31,6 @@ public class NewCategoryDialog extends CategoryDialog {
 
     @Override
     public MyDialog buildDialog(){
-        alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
-        alertDialogBuilder.setView(getView());
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Save",

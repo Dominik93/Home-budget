@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Model;
 
@@ -42,7 +43,7 @@ public class PlaceholderSummary extends Placeholder {
 
         View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
         Log.i(getClass().getSimpleName(), "onCreateView");
-
+        Model model = ((MainActivity)getActivity()).getModel();
         tv1 = (TextView) rootView.findViewById(R.id.textViewSummaryIncome);
         tv1.setText(getString(R.string.summary_income)+ " " + String.valueOf(model.getIncomeSum()));
 
@@ -59,7 +60,7 @@ public class PlaceholderSummary extends Placeholder {
 
         tv4 = (TextView) rootView.findViewById(R.id.textViewSummarySavings);
         tv4.setText(getString(R.string.summary_savings)+ " " + String.valueOf(model.getUser().getSavings()));
-
+        model = null;
         return rootView;
     }
 

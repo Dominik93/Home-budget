@@ -23,10 +23,7 @@ public class InternetAccessDialog extends MyDialog {
     }
 
     public MyDialog buildDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
-
-        alertDialogBuilder.setView(getView());
-        alertDialogBuilder
+        this.alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {

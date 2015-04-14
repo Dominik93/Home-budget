@@ -20,7 +20,6 @@ import com.slusarzparadowski.model.Model;
  */
 public abstract class Placeholder extends Fragment implements IObservable {
 
-    protected Model model;
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -36,28 +35,14 @@ public abstract class Placeholder extends Fragment implements IObservable {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        model = ((MainActivity)getActivity()).getModel();
         Log.i(getClass().getSimpleName(), "onCreate");
     }
-/*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_outcome, container, false);
-        Log.i(getClass().getSimpleName(), "onCreateView");
-        Bundle bundleFromArgs = this.getArguments();
-        model = new Gson().fromJson(bundleFromArgs.getString("model"), Model.class);
-        this.model = new Gson().fromJson(bundle.getString("model"), Model.class);
-        return rootView;
-    }
-    */
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i(getClass().getSimpleName(), "onActivityCreated");
-        if (savedInstanceState != null) {
-            Log.i(getClass().getSimpleName(), "onActivityCreated load model");
-            this.model = new Gson().fromJson(savedInstanceState.getString("model"), Model.class);
-        }
+
     }
 
     @Override
@@ -75,7 +60,6 @@ public abstract class Placeholder extends Fragment implements IObservable {
     @Override
     public void onPause() {
         super.onPause();
-        //((MainActivity)getActivity()).setModel(this.model);
         Log.i(getClass().getSimpleName(), "onPause");
     }
 

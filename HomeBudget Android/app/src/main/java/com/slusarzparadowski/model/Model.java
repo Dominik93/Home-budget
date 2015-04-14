@@ -22,7 +22,6 @@ import java.util.ArrayList;
  */
 public class Model implements IObserver, IBundle, IFile{
 
-    private final String SETTINGS = "settings";
     private final String USER = "user";
     private final String MODE = "mode";
     private final String INCOME = "income";

@@ -29,17 +29,17 @@ public class ElementActivity extends ActionBarActivity {
     Button b1,b2;
     EditText et1, et2;
 
-    int group;
+    int category;
+    int element;
     String type;
+    boolean modify;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_element);
 
-        this.model = new Model(getIntent().getExtras());
-        group = getIntent().getExtras().getInt("group");
-        type = getIntent().getExtras().getString("type");
-
+        //TODO: 2 stany co zrobić jak chce modyfikować a co jak dodać co przekazywać do tego? element liste model czy co?
         et1 = (EditText)findViewById(R.id.editTextElementName);
         et2 = (EditText)findViewById(R.id.editTextElementValue);
 
@@ -50,6 +50,20 @@ public class ElementActivity extends ActionBarActivity {
         cb1 = (CheckBox)findViewById(R.id.checkBoxElementDate);
 
         dp = (DatePicker) findViewById(R.id.datePickerElementDate);
+
+        this.model = new Model(getIntent().getExtras());
+        modify = getIntent().getExtras().getBoolean("modify");
+
+        if(modify){
+            category = getIntent().getExtras().getInt("category");
+            element = getIntent().getExtras().getInt("element");
+        }
+        else{
+            category = getIntent().getExtras().getInt("category");
+            type = getIntent().getExtras().getString("type");
+        }
+
+
 
         cb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -77,9 +91,9 @@ public class ElementActivity extends ActionBarActivity {
                 Intent returnIntent = new Intent();
                 Element element = new Element(0, et1.getText().toString(), Float.valueOf(et2.getText().toString()), cb2.isChecked(), dp.toString());
                 if(type.equals("INCOME"))
-                    model.getIncome().get(group).getElementList().add(element);
+                    model.getIncome().get(category).getElementList().add(element);
                 else if(type.equals("OUTCOME"))
-                    model.getOutcome().get(group).getElementList().add(element);
+                    model.getOutcome().get(category).getElementList().add(element);
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);
                 finish();

@@ -27,11 +27,7 @@ public class TokenDialog extends MyDialog {
     }
 
     public MyDialog buildDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
-
-        alertDialogBuilder.setView(getView());
-
-        alertDialogBuilder
+        this.alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Save",
                         new DialogInterface.OnClickListener() {
