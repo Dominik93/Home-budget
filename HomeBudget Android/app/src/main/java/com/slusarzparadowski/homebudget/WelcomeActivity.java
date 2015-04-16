@@ -27,7 +27,7 @@ import java.net.URL;
 
 //  cd C:\Users\Dominik\AppData\Local\Android\sdk\platform-tools
 
-public class WelcomeActivity extends ActionBarActivity {
+public class WelcomeActivity extends MyActivity {
 
     ProgressDialog pDialog;
     Model model;
@@ -38,61 +38,9 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        this.activity = this;
-        Log.i(getClass().getSimpleName(), "onCreate");
-        b1 = (Button)findViewById(R.id.buttonOnline);
-        b2 = (Button)findViewById(R.id.buttonOffline);
-        getApplication();
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(getClass().getSimpleName(), "onClick b1 online");
-                new CheckInternetAccess().execute();
-            }
-        });
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(getClass().getSimpleName(), "onClick b2 offline");
-                new LoadModelFromFile().execute();
-            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(getClass().getSimpleName(), "onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(getClass().getSimpleName(), "onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(getClass().getSimpleName(), "onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(getClass().getSimpleName(), "onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(getClass().getSimpleName(), "onDestroy");
-    }
-
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.i(getClass().getSimpleName(), "onRestart");
+        //Log.i(getClass().getSimpleName(), "onCreate");
+        this.initElements();
+        this.initListeners();
     }
 
     @Override
@@ -110,6 +58,31 @@ public class WelcomeActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    void initElements() {
+        this.activity = this;
+        b1 = (Button)findViewById(R.id.buttonOnline);
+        b2 = (Button)findViewById(R.id.buttonOffline);
+    }
+
+    @Override
+    void initListeners() {
+        this.b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(getClass().getSimpleName(), "onClick b1 online");
+                new CheckInternetAccess().execute();
+            }
+        });
+        this.b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(getClass().getSimpleName(), "onClick b2 offline");
+                new LoadModelFromFile().execute();
+            }
+        });
     }
 
     class CheckInternetAccess extends AsyncTask<Void, String, Boolean> {

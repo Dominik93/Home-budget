@@ -61,6 +61,10 @@ public class Category {
         this.type = type;
     }
 
+    @Override
+    public String toString(){
+        return this.id +" "+ this.name + " "+ this.type;
+    }
 
     @Override
     public boolean equals(Object object)

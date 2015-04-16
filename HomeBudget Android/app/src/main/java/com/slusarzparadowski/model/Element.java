@@ -64,13 +64,10 @@ public class Element {
         this.value = value;
     }
 
+    @Override
     public String toString(){
-        if(this.date == null)
-            return this.name + " "+ this.value;
-        else
-            return this.name + " "+ this.value + " "+ this.date;
+        return this.id +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : " ");
     }
-
 
     @Override
     public boolean equals(Object object)

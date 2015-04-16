@@ -86,7 +86,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     if(child.getId() != -1){
                         Log.i(getClass().getSimpleName(), "getChildView onLongClick ask element");
-                        new AskElementDialog(activity, R.layout.prompts_ask_element, list, groupPosition, childPosition).buildDialog().show();
+                        new AskElementDialog(activity, R.layout.prompts_ask, list, groupPosition, childPosition).buildDialog().show();
                     }
                     return false;
                 }
@@ -135,7 +135,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         if (group != null) {
             v = vi.inflate(GROUP_ITEM_RESOURCE, null);
             ViewHolder holder = new ViewHolder(v);
-            holder.getTextName().setText(Html.fromHtml(group.getName()));
+            holder.getTextName().setText(Html.fromHtml(group.toString()));
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -158,7 +158,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     // TODO: ExpandableListAdapter onLongClick
                     Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
-                    new AskCategoryDialog(activity, R.layout.prompts_ask_category, list, groupPosition).buildDialog().show();
+                    new AskCategoryDialog(activity, R.layout.prompts_ask, list, groupPosition).buildDialog().show();
 
                     return false;
                 }

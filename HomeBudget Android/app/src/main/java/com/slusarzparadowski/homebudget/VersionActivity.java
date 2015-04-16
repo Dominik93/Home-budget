@@ -13,57 +13,33 @@ import com.slusarzparadowski.model.Model;
 import org.w3c.dom.Text;
 
 
-public class VersionActivity extends ActionBarActivity {
+public class VersionActivity extends MyActivity {
 
     Model model;
     TextView tv;
+
+    @Override
+    void initElements() {
+        model = new Model(getIntent().getExtras());
+
+        tv = (TextView)findViewById(R.id.textViewTokenValueSettings);
+        tv.setText(model.getUser().getToken());
+    }
+
+    @Override
+    void initListeners() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_version);
         Log.i(getClass().getSimpleName(), "onCreate");
-        tv = (TextView)findViewById(R.id.textViewTokenValueSettings);
-        model = new Model(getIntent().getExtras());
-        tv.setText(model.getUser().getToken());
-    }
+        this.initElements();
+        this.initListeners();
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(getClass().getSimpleName(), "onStart");
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(getClass().getSimpleName(), "onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(getClass().getSimpleName(), "onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(getClass().getSimpleName(), "onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(getClass().getSimpleName(), "onDestroy");
-    }
-
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.i(getClass().getSimpleName(), "onRestart");
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

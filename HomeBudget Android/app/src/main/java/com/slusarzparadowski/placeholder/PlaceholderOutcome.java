@@ -36,9 +36,9 @@ public class PlaceholderOutcome extends Placeholder {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_outcome, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         Log.i(getClass().getSimpleName(), "onCreateView");
-        expandableListView = (ExpandableListView)rootView.findViewById(R.id.expandableListViewOutcome);
+        expandableListView = (ExpandableListView)rootView.findViewById(R.id.expandableListView);
         expandableListView.setAdapter(new ExpandableItemListAdapter(rootView.getContext(), getActivity(), ((MainActivity)getActivity()).getModel().getOutcome(), "OUTCOME"));
         return rootView;
     }

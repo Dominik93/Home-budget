@@ -22,7 +22,7 @@ import com.slusarzparadowski.placeholder.PlaceholderOutcome;
 import com.slusarzparadowski.placeholder.PlaceholderSummary;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class MainActivity extends MyActivity implements ActionBar.TabListener {
 
     private Model model;
     /**
@@ -39,6 +39,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    @Override
+    void initElements() {
+
+    }
+
+    @Override
+    void initListeners() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,30 +100,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(getClass().getSimpleName(), "onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(getClass().getSimpleName(), "onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(getClass().getSimpleName(), "onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(getClass().getSimpleName(), "onStop");
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         try {
@@ -141,7 +127,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.i(getClass().getSimpleName(), "onRestoreInstanceState load model");
-
     }
 
     @Override

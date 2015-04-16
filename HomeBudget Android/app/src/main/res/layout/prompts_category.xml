@@ -21,6 +21,5 @@
         android:id="@+id/editTextPromptCategoryName"
         android:inputType="text"
         android:editable="false"
-        android:text="Type name"
         android:background="#ffffffff" />
 </LinearLayout>

@@ -57,7 +57,6 @@
     <string name="clear_database">Clear database</string>
     <string name="clear_file">Clear file</string>
 
-    <string name="element_ask">What to do?</string>
 
     <string name="category_name">Type name of category:</string>
     <string name="token_name">Token:</string>
@@ -67,5 +66,6 @@
     <!-- List adapter activity -->
     <string name="add_category">Add category</string>
     <string name="add_element">Add element</string>
-    <string name="ask_category">What to do?</string>
+
+    <string name="ask">What to do?</string>
 </resources>

@@ -6,7 +6,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class SyncActivity extends ActionBarActivity {
+public class SyncActivity extends MyActivity {
+
+    @Override
+    void initElements() {
+
+    }
+
+    @Override
+    void initListeners() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

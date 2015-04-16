@@ -19,8 +19,7 @@ import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Model;
 
 
-public class ElementActivity extends ActionBarActivity {
-
+public class ElementActivity extends MyActivity {
 
     Model model;
     CheckBox cb1, cb2;
@@ -35,11 +34,9 @@ public class ElementActivity extends ActionBarActivity {
     boolean modify;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_element);
+    void initElements() {
+        this.model = new Model(getIntent().getExtras());
 
-        //TODO: 2 stany co zrobić jak chce modyfikować a co jak dodać co przekazywać do tego? element liste model czy co?
         et1 = (EditText)findViewById(R.id.editTextElementName);
         et2 = (EditText)findViewById(R.id.editTextElementValue);
 
@@ -50,21 +47,10 @@ public class ElementActivity extends ActionBarActivity {
         cb1 = (CheckBox)findViewById(R.id.checkBoxElementDate);
 
         dp = (DatePicker) findViewById(R.id.datePickerElementDate);
+    }
 
-        this.model = new Model(getIntent().getExtras());
-        modify = getIntent().getExtras().getBoolean("modify");
-
-        if(modify){
-            category = getIntent().getExtras().getInt("category");
-            element = getIntent().getExtras().getInt("element");
-        }
-        else{
-            category = getIntent().getExtras().getInt("category");
-            type = getIntent().getExtras().getString("type");
-        }
-
-
-
+    @Override
+    void initListeners() {
         cb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -73,7 +59,7 @@ public class ElementActivity extends ActionBarActivity {
                 if(isChecked)
                     dp.setVisibility(View.VISIBLE);
                 else
-                    dp.setVisibility(View.INVISIBLE);
+                    dp.setVisibility(View.GONE);
             }
         });
         cb2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -108,6 +94,26 @@ public class ElementActivity extends ActionBarActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_element);
+        this.initElements();
+        this.initListeners();
+        //TODO: 2 stany co zrobić jak chce modyfikować a co jak dodać co przekazywać do tego? element liste model czy co?
+
+        modify = getIntent().getExtras().getBoolean("modify");
+
+        if(modify){
+            category = getIntent().getExtras().getInt("category");
+            element = getIntent().getExtras().getInt("element");
+        }
+        else{
+            category = getIntent().getExtras().getInt("category");
+            type = getIntent().getExtras().getString("type");
+        }
     }
 
 

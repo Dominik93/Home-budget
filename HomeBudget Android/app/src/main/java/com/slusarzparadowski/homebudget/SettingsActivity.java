@@ -14,24 +14,27 @@ import android.widget.CompoundButton;
 import com.slusarzparadowski.model.Model;
 
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends MyActivity {
 
     Model model;
     Button b1,b2;
     CheckBox cb1,cb2;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        Log.i(getClass().getSimpleName(), "onCreate");
-        this.model = new Model(getIntent().getExtras());
-        b1 = (Button)findViewById(R.id.buttonSettingsSave);
-        b2 = (Button)findViewById(R.id.buttonSettingsCancel);
 
-        cb1 = (CheckBox)findViewById(R.id.checkBoxSettingsSavings);
-        cb2 = (CheckBox)findViewById(R.id.checkBoxSettingsDelete);
-        cb1.setChecked(this.model.getUser().getSettings().isAutoSaving());
-        cb2.setChecked(this.model.getUser().getSettings().isAutoDeleting());
+    @Override
+    void initElements() {
+        this.model = new Model(getIntent().getExtras());
+
+        this.b1 = (Button)findViewById(R.id.buttonSettingsSave);
+        this.b2 = (Button)findViewById(R.id.buttonSettingsCancel);
+
+        this.cb1 = (CheckBox)findViewById(R.id.checkBoxSettingsSavings);
+        this.cb2 = (CheckBox)findViewById(R.id.checkBoxSettingsDelete);
+        this.cb1.setChecked(this.model.getUser().getSettings().isAutoSaving());
+        this.cb2.setChecked(this.model.getUser().getSettings().isAutoDeleting());
+    }
+
+    @Override
+    void initListeners() {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,41 +72,13 @@ public class SettingsActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(getClass().getSimpleName(), "onStart");
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        Log.i(getClass().getSimpleName(), "onCreate");
+        this.initElements();
+        this.initListeners();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(getClass().getSimpleName(), "onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(getClass().getSimpleName(), "onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(getClass().getSimpleName(), "onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(getClass().getSimpleName(), "onDestroy");
-    }
-
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.i(getClass().getSimpleName(), "onRestart");
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
