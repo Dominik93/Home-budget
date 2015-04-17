@@ -278,10 +278,24 @@ public class WelcomeActivity extends MyActivity {
                 model = new Model(false);
                 model.getUser().setName(editText.getText().toString());
                 modelDataSource.insertModel(model);
+                spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+                if((spinner.getSelectedItem()).toString().equals("Add user")){
+                    editText.setVisibility(View.VISIBLE);
+                }
+                else{
+                    editText.setVisibility(View.GONE);
+                }
                 return true;
             }
             else{
                 model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+                if((spinner.getSelectedItem()).toString().equals("Add user")){
+                    editText.setVisibility(View.VISIBLE);
+                }
+                else{
+                    editText.setVisibility(View.GONE);
+                }
                 return  true;
             }
         }

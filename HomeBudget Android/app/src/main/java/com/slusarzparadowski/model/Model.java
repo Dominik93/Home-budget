@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by Dominik on 2015-03-22.
  */
-public class Model implements IObserver, IBundle, IFile{
+public class Model implements IObserver, IBundle{
 
     private final String USER = "user";
     private final String MODE = "mode";
@@ -87,84 +87,6 @@ public class Model implements IObserver, IBundle, IFile{
         bundle.putString(INCOME, gson.toJson(this.income));
         bundle.putString(OUTCOME, gson.toJson(this.outcome));
         return bundle;
-    }
-
-    @Override
-    public boolean loadFromFile(Context context){
-        try {
-            Gson gson = new Gson();
-            FileInputStream fin;
-            String temp;
-            int c;
-
-            temp="";
-            fin = context.openFileInput(MODE);
-            while( (c = fin.read()) != -1){
-                temp = temp + Character.toString((char)c);
-            }
-            Log.i(getClass().getSimpleName(), "load " +temp);
-            fin.close();
-            this.mode = gson.fromJson(temp, boolean.class);
-
-            temp="";
-            fin = context.openFileInput(USER);
-            while( (c = fin.read()) != -1){
-                temp = temp + Character.toString((char)c);
-            }
-            Log.i(getClass().getSimpleName(), "load " +temp);
-            fin.close();
-            this.user = gson.fromJson(temp, User.class);
-
-            temp="";
-            fin = context.openFileInput(INCOME);
-            while( (c = fin.read()) != -1){
-                temp = temp + Character.toString((char)c);
-            }
-            Log.i(getClass().getSimpleName(), "load " +temp);
-            fin.close();
-            this.income = gson.fromJson(temp, ArrayList.class);
-
-            temp="";
-            fin = context.openFileInput(OUTCOME);
-            while( (c = fin.read()) != -1){
-                temp = temp + Character.toString((char)c);
-            }
-            Log.i(getClass().getSimpleName(), "load " +temp);
-            fin.close();
-            this.outcome = gson.fromJson(temp, ArrayList.class);
-
-            Log.i(getClass().getSimpleName(), "load loaded from file");
-            return true;
-        } catch (IOException e) {
-            Log.e(getClass().getSimpleName(), "load " + e.toString());
-            return false;
-        }
-    }
-
-    @Override
-    public void saveToFile(Context context) throws IOException {
-        FileOutputStream fos;
-        fos = context.openFileOutput(USER, Context.MODE_PRIVATE);
-        fos.write((new Gson().toJson(this.user)).getBytes());
-        Log.i(getClass().getSimpleName(), "save "+new Gson().toJson(this.user));
-        fos.close();
-
-        fos = context.openFileOutput(MODE, Context.MODE_PRIVATE);
-        fos.write((new Gson().toJson(this.mode)).getBytes());
-        Log.i(getClass().getSimpleName(), "save "+new Gson().toJson(this.mode));
-        fos.close();
-
-        fos = context.openFileOutput(INCOME, Context.MODE_PRIVATE);
-        fos.write((new Gson().toJson(this.income)).getBytes());
-        Log.i(getClass().getSimpleName(), "save "+new Gson().toJson(this.income));
-        fos.close();
-
-        fos = context.openFileOutput(OUTCOME, Context.MODE_PRIVATE);
-        fos.write((new Gson().toJson(this.outcome)).getBytes());
-        Log.i(getClass().getSimpleName(), "save "+new Gson().toJson(this.outcome));
-        fos.close();
-
-        Log.i(getClass().getSimpleName(), "save model saved");
     }
 
     public void syncDatabase(Model model){

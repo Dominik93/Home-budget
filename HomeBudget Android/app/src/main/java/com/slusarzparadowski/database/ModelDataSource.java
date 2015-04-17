@@ -48,6 +48,7 @@ public class ModelDataSource {
 
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
+        database.execSQL("PRAGMA foreign_keys = ON;");
     }
 
     public void close() {
@@ -91,13 +92,18 @@ public class ModelDataSource {
     }
 
     public void updateElement(Element element){
-
+        ContentValues values = new ContentValues();
+        values.put(SQLite.COLUMN_NAME, element.getName());
+        values.put(SQLite.COLUMN_VALUE, element.getValue());
+        values.put(SQLite.COLUMN_CONST, element.isConstant() ? 1 : 0);
+        values.put(SQLite.COLUMN_DATE, element.getDate());
+        database.update(SQLite.TABLE_ELEMENT, values, SQLite.COLUMN_ID+"="+element.getId() ,null);
     }
 
     public ArrayList<Category> getCategory(long id_user, String type){
         ArrayList<Category> categories = new ArrayList<>();
 
-        Cursor cursor = database.query(SQLite.TABLE_CATEGORY, allColumnsCategory, SQLite.COLUMN_ID_USER+"="+ id_user+" and "+SQLite.COLUMN_TYPE+" like "+type, null, null, null, null);
+        Cursor cursor = database.query(SQLite.TABLE_CATEGORY, allColumnsCategory, SQLite.COLUMN_ID_USER+"="+ id_user+" and "+SQLite.COLUMN_TYPE+" like '"+type+"'", null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Category category = new Category(cursor);
@@ -133,9 +139,9 @@ public class ModelDataSource {
     }
 
     public void deleteCategory(Category category){
-        for(int i = 0; i < category.getElementList().size(); i++){
+        /*for(int i = 0; i < category.getElementList().size(); i++){
             this.deleteElement(category.getElementList().get(i));
-        }
+        }*/
         database.delete(SQLite.TABLE_CATEGORY, SQLite.COLUMN_ID + " = " + category.getId(), null);
     }
 
@@ -175,7 +181,11 @@ public class ModelDataSource {
     }
 
     public void updateSettings(Settings settings){
-
+        ContentValues values = new ContentValues();
+        values.put(SQLite.COLUMN_ID_USER, settings.getIdUser());
+        values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting() ? 1 : 0 );
+        values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving() ? 1 : 0);
+        database.update(SQLite.TABLE_SETTINGS, values, SQLite.COLUMN_ID+"="+settings.getId() ,null);
     }
 
     public User getUser(String name, String token){
@@ -226,11 +236,15 @@ public class ModelDataSource {
 
     public void deleteUser(User user){
         database.delete(SQLite.TABLE_USER, SQLite.COLUMN_NAME + " like '" + user.getName() + "' and "+ SQLite.COLUMN_TOKEN +" like '"+ user.getToken() +"'", null);
-        this.deleteSettings(user.getSettings());
+        //this.deleteSettings(user.getSettings());
     }
 
     public void updateUser(User user){
-
+        ContentValues values = new ContentValues();
+        values.put(SQLite.COLUMN_NAME, user.getName());
+        values.put(SQLite.COLUMN_TOKEN, user.getToken());
+        values.put(SQLite.COLUMN_SAVINGS, user.getSavings());
+        database.update(SQLite.TABLE_USER, values, SQLite.COLUMN_ID+"="+user.getId() ,null);
     }
 
     public Model getModel(String name, String token){
@@ -255,16 +269,29 @@ public class ModelDataSource {
 
     public void deleteModel(Model model){
         this.deleteUser(model.getUser());
-        for(int i = 0; i < model.getOutcome().size(); i++){
+        /*for(int i = 0; i < model.getOutcome().size(); i++){
             this.deleteCategory(model.getOutcome().get(i));
         }
         for(int i = 0; i < model.getIncome().size(); i++){
             this.deleteCategory(model.getIncome().get(i));
-        }
+        }*/
     }
 
     public void updateModel(Model model){
-
+        this.updateUser(model.getUser());
+        this.updateSettings(model.getUser().getSettings());
+        for(int i = 0; i < model.getOutcome().size(); i++){
+            for(int j = 0; j < model.getOutcome().get(i).getElementList().size(); j++){
+                this.updateElement(model.getOutcome().get(i).getElementList().get(j));
+            }
+            this.updateCategory(model.getOutcome().get(i));
+        }
+        for(int i = 0; i < model.getIncome().size(); i++){
+            for(int j = 0; j < model.getIncome().get(i).getElementList().size(); j++){
+                this.updateElement(model.getIncome().get(i).getElementList().get(j));
+            }
+            this.updateCategory(model.getIncome().get(i));
+        }
     }
 
 }

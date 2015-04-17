@@ -99,22 +99,6 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
         mViewPager.setCurrentItem(1);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            this.model.saveToFile(getApplicationContext());
-        } catch (IOException e) {
-            Log.i(getClass().getSimpleName(), "onDestroy "+ e.toString());
-        }
-        Log.i(getClass().getSimpleName(), "onDestroy");
-    }
-
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.i(getClass().getSimpleName(), "onRestart");
-    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

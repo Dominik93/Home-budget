@@ -18,14 +18,14 @@ public class SQLite extends SQLiteOpenHelper {
             "  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," +
             "  name TEXT NOT NULL ," +
             "  token TEXT NOT NULL," +
-            "  savings REAL DEFAULT NULL)";
+            "  savings REAL DEFAULT 0)";
     private static final String CREATE_TABLE_CATEGORY =
             "  CREATE TABLE IF NOT EXISTS category (" +
             "  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," +
             "  id_user INTEGER DEFAULT NULL," +
             "  name TEXT DEFAULT NULL," +
             "  type TEXT DEFAULT NULL," +
-            "  FOREIGN KEY(id_user) REFERENCES user(id))";
+            "  FOREIGN KEY(id_user) REFERENCES user(id) ON DELETE CASCADE)";
     private static final String CREATE_TABLE_ELEMENT = "" +
             "  CREATE TABLE IF NOT EXISTS element (" +
             "  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," +
@@ -34,14 +34,14 @@ public class SQLite extends SQLiteOpenHelper {
             "  value REAL NULL DEFAULT NULL," +
             "  const INTEGER NULL DEFAULT NULL," +
             "  date TEXT NULL DEFAULT NULL," +
-            "  FOREIGN KEY(id_category) REFERENCES category(id))";
+            "  FOREIGN KEY(id_category) REFERENCES category(id) ON DELETE CASCADE)";
     private static final String CREATE_TABLE_SETTINGS = "" +
             "  CREATE TABLE IF NOT EXISTS settings (" +
             "  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
             "  id_user INTEGER NULL DEFAULT NULL," +
             "  auto_delete INTEGER NULL DEFAULT NULL," +
             "  auto_savings INTEGER NULL DEFAULT NULL," +
-            "  FOREIGN KEY(id_user) REFERENCES user(id))";
+            "  FOREIGN KEY(id_user) REFERENCES user(id) ON DELETE CASCADE)";
 
     public static final String TABLE_USER = "user";
     public static final String TABLE_SETTINGS = "settings";
@@ -61,10 +61,6 @@ public class SQLite extends SQLiteOpenHelper {
     public static final String COLUMN_AUTO_DELETE = "auto_delete";
     public static final String COLUMN_AUTO_SAVINGS = "auto_savings";
 
-    public SQLite(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
-
     public SQLite(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -77,6 +73,7 @@ public class SQLite extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_ELEMENT);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
