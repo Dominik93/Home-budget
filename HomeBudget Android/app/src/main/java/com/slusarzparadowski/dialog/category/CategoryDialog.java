@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
@@ -23,10 +24,12 @@ import java.util.ArrayList;
 public abstract class CategoryDialog extends MyDialog {
 
     protected ArrayList<Category> list;
+    protected ModelDataSource modelDataSource;
 
-    public CategoryDialog(Activity activity, int recourse, ArrayList<Category> list) {
+    public CategoryDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource) {
         super(activity, recourse);
         this.list = list;
+        this.modelDataSource = modelDataSource;
     }
 
 }

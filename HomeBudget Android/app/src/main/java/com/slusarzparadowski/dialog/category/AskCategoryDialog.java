@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 
+import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
@@ -20,8 +21,8 @@ public class AskCategoryDialog extends CategoryDialog{
 
     int index;
 
-    public AskCategoryDialog(Activity activity, int recourse, ArrayList<Category> list, int index) {
-        super(activity, recourse, list);
+    public AskCategoryDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource, int index) {
+        super(activity, recourse, list, modelDataSource);
         this.index = index;
     }
 
@@ -33,7 +34,7 @@ public class AskCategoryDialog extends CategoryDialog{
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Update");
                                 dialog.cancel();
-                                new UpdateCategoryDialog(activity, R.layout.prompts_category, list, index).buildDialog().show();
+                                new UpdateCategoryDialog(activity, R.layout.prompts_category, list, modelDataSource, index).buildDialog().show();
                                 //TODO: new dialog with update current category
                             }
                         })
@@ -47,6 +48,7 @@ public class AskCategoryDialog extends CategoryDialog{
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+index+")");
+                                modelDataSource.deleteCategory(list.get(index));
                                 list.remove(index);
                                 ((MainActivity)getActivity()).getModel().notification();
                                 dialog.cancel();

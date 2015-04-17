@@ -14,6 +14,7 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.category.AskCategoryDialog;
 import com.slusarzparadowski.dialog.category.CategoryDialog;
 import com.slusarzparadowski.dialog.category.NewCategoryDialog;
@@ -46,15 +47,14 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         this.type = type;
         this.list = list;
 
-        //TODO: dodanie do listy add category i add element
-        /*
-        if (!this.list.contains(new Category(-1, context.getString(R.string.add_category), "ADD")))
-            this.list.add(new Category(-1, context.getString(R.string.add_category), "ADD"));
+        if (!this.list.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
+            this.list.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
 
         for(Category c : this.list){
-            if (!c.getElementList().contains(new Element(-1, context.getString(R.string.add_element))))
-                c.getElementList().add(new Element(-1, context.getString(R.string.add_element)));
-        }*/
+            if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
+                c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
+        }
+
         vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -95,9 +95,6 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: ExpandableListAdapter onClick
-                    // check if group item is last
-                    // if is show propt_category dialog and create new category
                     if(child.getId() == -1) {
                         Log.i(getClass().getSimpleName(), "getChildView onClick add element");
                         Intent intent = new Intent(activity, ElementActivity.class);
@@ -141,9 +138,8 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 @Override
                 public void onClick(View v) {
                     if(group.getId() == -1){
-                        // TODO: ExpandableListAdapter onClick
                         Log.i(getClass().getSimpleName(), "getGroupView onClick add category");
-                        new NewCategoryDialog(activity, R.layout.prompts_category, list, type).buildDialog().show();
+                        new NewCategoryDialog(activity, R.layout.prompts_category, list, new ModelDataSource(context), type).buildDialog().show();
                     }
                     else{
                         if(isExpanded)
@@ -157,9 +153,8 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
             v.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    // TODO: ExpandableListAdapter onLongClick
                     Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
-                    new AskCategoryDialog(activity, R.layout.prompts_ask, list, groupPosition).buildDialog().show();
+                    new AskCategoryDialog(activity, R.layout.prompts_ask, list, new ModelDataSource(context), groupPosition).buildDialog().show();
 
                     return false;
                 }
@@ -178,14 +173,14 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public ArrayList<Category> getArrayListCategory(){
-        /*
-        if (this.list.contains(new Category(-1, context.getString(R.string.add_category), "ADD")))
-            this.list.remove(new Category(-1, context.getString(R.string.add_category), "ADD"));
+
+        if (this.list.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
+            this.list.remove(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
 
         for(Category c : this.list){
-            if (!c.getElementList().contains(new Element(-1, context.getString(R.string.add_element))))
-                c.getElementList().remove(new Element(-1, context.getString(R.string.add_element)));
-        }*/
+            if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
+                c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
+        }
         return this.list;
     }
 

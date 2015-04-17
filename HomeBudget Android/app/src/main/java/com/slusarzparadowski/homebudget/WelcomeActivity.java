@@ -26,6 +26,7 @@ import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.database.SQLite;
 import com.slusarzparadowski.dialog.InternetAccessDialog;
 import com.slusarzparadowski.model.Model;
+import com.slusarzparadowski.model.Settings;
 import com.slusarzparadowski.model.User;
 
 import java.io.FileInputStream;
@@ -41,7 +42,7 @@ public class WelcomeActivity extends MyActivity {
     ProgressDialog pDialog;
     Model model;
     EditText editText;
-    Button b1, b2;
+    Button b1, b2, b3;
     Activity activity;
     Spinner spinner;
     ModelDataSource modelDataSource;
@@ -76,31 +77,48 @@ public class WelcomeActivity extends MyActivity {
     @Override
     void initElements() {
         this.activity = this;
-        b1 = (Button)findViewById(R.id.buttonOnline);
-        b2 = (Button)findViewById(R.id.buttonOffline);
-        editText = (EditText)findViewById(R.id.editTextUserName);
-        spinner = (Spinner) findViewById(R.id.spinnerUsers);
         modelDataSource = new ModelDataSource(getApplicationContext());
         try {
             modelDataSource.open();
         } catch (SQLException e) {
             Log.e(getClass().getSimpleName(), e.toString());
         }
-        spinner.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+        b1 = (Button)findViewById(R.id.buttonOnline);
+        b2 = (Button)findViewById(R.id.buttonOffline);
+        b3 = (Button)findViewById(R.id.buttonDelete);
+        editText = (EditText)findViewById(R.id.editTextUserName);
+        spinner = (Spinner) findViewById(R.id.spinnerUsers);
+        spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+        if((spinner.getSelectedItem()).toString().equals("Add user")){
+            editText.setVisibility(View.VISIBLE);
+            b3.setVisibility(View.GONE);
+        }
+        else{
+            editText.setVisibility(View.GONE);
+            b3.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     @Override
     void initListeners() {
-        this.spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if((spinner.getSelectedItem()).toString().equals("Add user")){
                     editText.setVisibility(View.VISIBLE);
+                    b3.setVisibility(View.GONE);
                 }
                 else{
                     editText.setVisibility(View.GONE);
+                    b3.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         this.b1.setOnClickListener(new View.OnClickListener() {
@@ -114,12 +132,24 @@ public class WelcomeActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b2 offline");
-                if((spinner.getSelectedItem()).toString().equals("Add user")){
-                    model = new Model(false);
-                    model.getUser().setName(editText.getText().toString());
-                    modelDataSource.insertModel(model);
-                }
                 new LoadModelFromFile().execute();
+            }
+        });
+        this.b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(getClass().getSimpleName(), "onClick b3 offline");
+                if(!spinner.getSelectedItem().toString().equals("Add user")){
+                    User user = modelDataSource.getUser(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                    modelDataSource.deleteUser(user);
+                    spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+                    if((spinner.getSelectedItem()).toString().equals("Add user")){
+                        editText.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        editText.setVisibility(View.GONE);
+                    }
+                }
             }
         });
     }
@@ -231,7 +261,6 @@ public class WelcomeActivity extends MyActivity {
 
     class LoadModelFromFile extends AsyncTask<String, String, Boolean> {
 
-        private Gson gson = new Gson();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -246,20 +275,15 @@ public class WelcomeActivity extends MyActivity {
         protected Boolean doInBackground(String... args) {
             Log.i(getClass().getSimpleName(), "doInBackground");
             Log.i(getClass().getSimpleName(), "doInBackground created new model");
-            model = new Model(false);
-            Log.i(getClass().getSimpleName(), "doInBackground try load model");
-            if(model.loadFromFile(getApplicationContext())){
+            if((spinner.getSelectedItem()).toString().equals("Add user")){
+                model = new Model(false);
+                model.getUser().setName(editText.getText().toString());
+                modelDataSource.insertModel(model);
                 return true;
             }
             else{
-                try {
-                    Log.i(getClass().getSimpleName(), "doInBackground model save");
-                    model.saveToFile(getApplicationContext());
-                    return true;
-                } catch (IOException e) {
-                    Log.e(getClass().getSimpleName(), "doInBackground " + e.toString());
-                    return false;
-                }
+                model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                return  true;
             }
         }
 

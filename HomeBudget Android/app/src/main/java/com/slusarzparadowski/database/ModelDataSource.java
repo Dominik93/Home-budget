@@ -73,7 +73,7 @@ public class ModelDataSource {
         ContentValues values = new ContentValues();
         values.put(SQLite.COLUMN_NAME, element.getName());
         values.put(SQLite.COLUMN_VALUE, element.getValue());
-        values.put(SQLite.COLUMN_CONST, element.isConstant());
+        values.put(SQLite.COLUMN_CONST, element.isConstant() ? 1 : 0);
         values.put(SQLite.COLUMN_DATE, element.getDate());
         long insertId = database.insert(SQLite.TABLE_ELEMENT, null,
                 values);
@@ -87,9 +87,7 @@ public class ModelDataSource {
     }
 
     public void deleteElement(Element element){
-        long id = element.getId();
-        System.out.println("Comment deleted with id: " + id);
-        database.delete(SQLite.TABLE_ELEMENT, SQLite.COLUMN_ID + " = " + id, null);
+        database.delete(SQLite.TABLE_ELEMENT, SQLite.COLUMN_ID + " = " + element.getId(), null);
     }
 
     public void updateElement(Element element){
@@ -120,16 +118,22 @@ public class ModelDataSource {
         long insertId = database.insert(SQLite.TABLE_CATEGORY, null,
                 values);
         Cursor cursor = database.query(SQLite.TABLE_CATEGORY,
-                allColumnsElement, SQLite.COLUMN_ID + " = " + insertId, null,
+                allColumnsCategory, SQLite.COLUMN_ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
-        category = new Category(cursor);
+        Category categoryNew = new Category(cursor);
+        categoryNew.setElementList(category.getElementList());
+        for(int i =0; i < categoryNew.getElementList().size(); i++){
+            categoryNew.getElementList().get(i).setIdCategory(categoryNew.getId());
+            categoryNew.getElementList().set(i, insertElement(categoryNew.getElementList().get(i)));
+        }
+
         cursor.close();
         return category;
     }
 
     public void deleteCategory(Category category){
-
+        database.delete(SQLite.TABLE_CATEGORY, SQLite.COLUMN_ID + " = " + category.getId(), null);
     }
 
     public void updateCategory(Category category){
@@ -147,12 +151,12 @@ public class ModelDataSource {
     public Settings insertSettings(Settings settings){
         ContentValues values = new ContentValues();
         values.put(SQLite.COLUMN_ID_USER, settings.getIdUser());
-        values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting());
-        values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving());
+        values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting() ? 1 : 0 );
+        values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving() ? 1 : 0);
         long insertId = database.insert(SQLite.TABLE_SETTINGS, null,
                 values);
         Cursor cursor = database.query(SQLite.TABLE_SETTINGS,
-                allColumnsElement, SQLite.COLUMN_ID + " = " + insertId, null,
+                allColumnsSettings, SQLite.COLUMN_ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
         settings = new Settings(cursor);
@@ -161,15 +165,15 @@ public class ModelDataSource {
     }
 
     public void deleteSettings(Settings settings){
-
+        database.delete(SQLite.TABLE_SETTINGS, SQLite.COLUMN_ID_USER + " like '" + settings.getIdUser()+"'", null);
     }
 
     public void updateSettings(Settings settings){
 
     }
 
-    public User getUser(String token){
-        Cursor cursor = database.query(SQLite.TABLE_USER, allColumnsUser, SQLite.COLUMN_TOKEN+" like "+ token, null, null, null, null);
+    public User getUser(String name, String token){
+        Cursor cursor = database.query(SQLite.TABLE_USER, allColumnsUser, SQLite.COLUMN_TOKEN+" like '"+ token +"' and " + SQLite.COLUMN_NAME +" like '"+ name+"'", null, null, null, null);
         cursor.moveToFirst();
         User user = new User(cursor);
         user.setSettings(getSettings(user.getId()));
@@ -190,7 +194,7 @@ public class ModelDataSource {
         temp = new String[users.size() + 1];
         int i;
         for(i = 0; i < users.size(); i++)
-            temp[i] = users.get(i).getName();
+            temp[i] = users.get(i).getName() + "-" +users.get(i).getToken();
         temp[i] = "Add user";
         cursor.close();
         return temp;
@@ -205,37 +209,42 @@ public class ModelDataSource {
         long insertId = database.insert(SQLite.TABLE_USER, null,
                 values);
         Cursor cursor = database.query(SQLite.TABLE_USER,
-                allColumnsElement, SQLite.COLUMN_ID + " = " + insertId, null,
+                allColumnsUser, SQLite.COLUMN_ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
         user = new User(cursor);
+        user.getSettings().setIdUser(user.getId());
         cursor.close();
         return user;
     }
 
     public void deleteUser(User user){
-
+        database.delete(SQLite.TABLE_USER, SQLite.COLUMN_NAME + " like '" + user.getName() + "' and "+ SQLite.COLUMN_TOKEN +" like '"+ user.getToken() +"'", null);
+        this.deleteSettings(user.getSettings());
     }
 
     public void updateUser(User user){
 
     }
 
-    public Model getModel(String token){
+    public Model getModel(String name, String token){
         Model model = new Model(false);
-        model.setUser(getUser(token));
+        model.setUser(getUser(name, token));
         model.setIncome(getCategory(model.getUser().getId(), "INCOME"));
         model.setOutcome(getCategory(model.getUser().getId(), "OUTCOME"));
         return model;
     }
 
-    public void insertModel(Model model){
+    public Model insertModel(Model model){
         model.setUser(this.insertUser(model.getUser()));
         model.getUser().setSettings(this.insertSettings(model.getUser().getSettings()));
-        for (Category c : model.getOutcome())
-            c = insertCategory(c);
-        for (Category c : model.getOutcome())
-            c = insertCategory(c);
+        for(int i = 0; i < model.getOutcome().size(); i++){
+            model.getOutcome().set(i, this.insertCategory(model.getOutcome().get(i)));
+        }
+        for(int i = 0; i < model.getIncome().size(); i++){
+            model.getIncome().set(i, this.insertCategory(model.getIncome().get(i)));
+        }
+        return model;
     }
 
     public void deleteModel(Model model){

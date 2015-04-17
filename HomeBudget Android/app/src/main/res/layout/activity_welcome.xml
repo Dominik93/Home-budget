@@ -51,5 +51,14 @@
         android:id="@+id/editTextUserName"
         android:layout_below="@+id/spinnerUsers"
         android:layout_centerHorizontal="true"
-        android:visibility="gone" />
+        android:visibility="visible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        android:id="@+id/buttonDelete"
+        android:layout_below="@+id/spinnerUsers"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible" />
 </RelativeLayout>

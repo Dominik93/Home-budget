@@ -15,22 +15,30 @@ import java.util.ArrayList;
  */
 public class Settings {
 
+    private int id;
     private int idUser;
     private boolean autoSaving;
     private boolean autoDeleting;
 
-    public Settings(){}
+    public Settings(){
+        this.id = 0;
+        this.idUser = 0;
+        this.autoSaving = false;
+        this.autoDeleting = false;
+    }
 
     public Settings(boolean autoSaving,  boolean autoDeleting){
+        this.id = 0;
         this.idUser = 0;
         this.autoSaving = autoSaving;
         this.autoDeleting = autoDeleting;
     }
 
     public Settings(Cursor cursor) {
-        this.idUser = cursor.getInt(0);
-        this.autoSaving = cursor.getInt(1) == 0 ? false : true;
-        this.autoDeleting = cursor.getInt(2) == 0 ? false : true;
+        this.id = cursor.getInt(0);
+        this.idUser = cursor.getInt(1);
+        this.autoSaving = cursor.getInt(2) == 0 ? false : true;
+        this.autoDeleting = cursor.getInt(3) == 0 ? false : true;
     }
 
     public boolean isAutoSaving() {
@@ -55,5 +63,13 @@ public class Settings {
 
     public void setIdUser(int idUser) {
         this.idUser = idUser;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

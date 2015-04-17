@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
@@ -23,8 +24,8 @@ public class UpdateCategoryDialog extends CategoryDialog {
     int index;
     EditText et;
 
-    public UpdateCategoryDialog(Activity activity, int recourse, ArrayList<Category> list, int index) {
-        super(activity, recourse, list);
+    public UpdateCategoryDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource, int index) {
+        super(activity, recourse, list, modelDataSource);
         this.index = index;
         this.et = (EditText)this.view.findViewById(R.id.editTextPromptCategoryName);
         this.et.setText(list.get(index).getName());
@@ -38,20 +39,21 @@ public class UpdateCategoryDialog extends CategoryDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(getClass().getSimpleName(), "OK");
-                                /*
+
                                 if (!et.getText().toString().trim().equals("")) {
-                                    if (list.contains(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
-                                        list.remove(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
+                                    /*
+                                    if (list.contains(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
+                                        list.remove(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
 
                                     for(Category c : list){
-                                        if (c.getElementList().contains(new Element(-1, activity.getApplicationContext().getString(R.string.add_element))))
-                                            c.getElementList().remove(new Element(-1, activity.getApplicationContext().getString(R.string.add_element)));
+                                        if (c.getElementList().contains(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element))))
+                                            c.getElementList().remove(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element)));
                                     }
                                     list.get(index).setName(et.getText().toString());
                                     ((MainActivity)activity).getModel().notification();
 
-                                    Log.i(getClass().getSimpleName(), "update Category("+index+")(" + et.getText().toString() + ")");
-                                }*/
+                                    Log.i(getClass().getSimpleName(), "update Category("+index+")(" + et.getText().toString() + ")");*/
+                                }
                             }
                         })
                 .setNegativeButton("Cancel",

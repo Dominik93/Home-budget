@@ -44,9 +44,11 @@ public class User {
     }
 
     public User(Cursor cursor) {
-        this.name = cursor.getString(0);
-        this.token = cursor.getString(1);
-        this.savings = cursor.getFloat(2);
+        this.id = cursor.getInt(0);
+        this.name = cursor.getString(1);
+        this.token = cursor.getString(2);
+        this.savings = cursor.getFloat(3);
+        this.settings = new Settings();
     }
 
     public String getToken() {
