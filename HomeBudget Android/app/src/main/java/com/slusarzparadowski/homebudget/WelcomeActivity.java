@@ -140,8 +140,7 @@ public class WelcomeActivity extends MyActivity {
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b3 offline");
                 if(!spinner.getSelectedItem().toString().equals("Add user")){
-                    User user = modelDataSource.getUser(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
-                    modelDataSource.deleteUser(user);
+                    modelDataSource.deleteModel(modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
                     spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
                     if((spinner.getSelectedItem()).toString().equals("Add user")){
                         editText.setVisibility(View.VISIBLE);

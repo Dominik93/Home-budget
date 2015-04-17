@@ -129,15 +129,21 @@ public class ModelDataSource {
         }
 
         cursor.close();
-        return category;
+        return categoryNew;
     }
 
     public void deleteCategory(Category category){
+        for(int i = 0; i < category.getElementList().size(); i++){
+            this.deleteElement(category.getElementList().get(i));
+        }
         database.delete(SQLite.TABLE_CATEGORY, SQLite.COLUMN_ID + " = " + category.getId(), null);
     }
 
     public void updateCategory(Category category){
-
+        ContentValues values = new ContentValues();
+        values.put(SQLite.COLUMN_NAME, category.getName());
+        values.put(SQLite.COLUMN_TYPE, category.getType());
+        database.update(SQLite.TABLE_CATEGORY, values, SQLite.COLUMN_ID+"="+category.getId() ,null);
     }
 
     public Settings getSettings(long id_user){
@@ -248,7 +254,13 @@ public class ModelDataSource {
     }
 
     public void deleteModel(Model model){
-
+        this.deleteUser(model.getUser());
+        for(int i = 0; i < model.getOutcome().size(); i++){
+            this.deleteCategory(model.getOutcome().get(i));
+        }
+        for(int i = 0; i < model.getIncome().size(); i++){
+            this.deleteCategory(model.getIncome().get(i));
+        }
     }
 
     public void updateModel(Model model){

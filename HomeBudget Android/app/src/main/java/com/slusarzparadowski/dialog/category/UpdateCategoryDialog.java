@@ -14,6 +14,7 @@ import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -41,18 +42,24 @@ public class UpdateCategoryDialog extends CategoryDialog {
                                 Log.i(getClass().getSimpleName(), "OK");
 
                                 if (!et.getText().toString().trim().equals("")) {
-                                    /*
+
                                     if (list.contains(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
                                         list.remove(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
 
-                                    for(Category c : list){
+                                    for (Category c : list) {
                                         if (c.getElementList().contains(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element))))
                                             c.getElementList().remove(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element)));
                                     }
+                                    try {
+                                        modelDataSource.open();
+                                    } catch (SQLException e) {
+                                        Log.i(getClass().getSimpleName(), e.toString());
+                                    }
+                                    modelDataSource.updateCategory(list.get(index));
                                     list.get(index).setName(et.getText().toString());
-                                    ((MainActivity)activity).getModel().notification();
+                                    ((MainActivity) activity).getModel().notification();
 
-                                    Log.i(getClass().getSimpleName(), "update Category("+index+")(" + et.getText().toString() + ")");*/
+                                    Log.i(getClass().getSimpleName(), "update Category(" + index + ")(" + et.getText().toString() + ")");
                                 }
                             }
                         })
