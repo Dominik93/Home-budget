@@ -1,6 +1,7 @@
 package com.slusarzparadowski.model;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
@@ -14,16 +15,22 @@ import java.util.ArrayList;
  */
 public class Settings {
 
-    private final String SETTINGS = "settings";
-
+    private int idUser;
     private boolean autoSaving;
     private boolean autoDeleting;
 
     public Settings(){}
 
     public Settings(boolean autoSaving,  boolean autoDeleting){
+        this.idUser = 0;
         this.autoSaving = autoSaving;
         this.autoDeleting = autoDeleting;
+    }
+
+    public Settings(Cursor cursor) {
+        this.idUser = cursor.getInt(0);
+        this.autoSaving = cursor.getInt(1) == 0 ? false : true;
+        this.autoDeleting = cursor.getInt(2) == 0 ? false : true;
     }
 
     public boolean isAutoSaving() {
@@ -42,4 +49,11 @@ public class Settings {
         this.autoDeleting = autoDeleting;
     }
 
+    public int getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
 }

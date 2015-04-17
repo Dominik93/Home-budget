@@ -137,7 +137,7 @@ public class Database {
             }
             for(int i = 0; i < listId.length(); i++){
                 Log.d(Database.class.toString(), "getList Category("+listId.getInt("id["+i+"]")+", "+listName.getString("name["+i+"]")+", "+type+")");
-                returnList.add(new Category(listId.getInt("id["+i+"]"), listName.getString("name["+i+"]"), type));
+                //returnList.add(new Category(listId.getInt("id["+i+"]"), listName.getString("name["+i+"]"), type));
             }
             for(Category el : returnList){
                 el.setElementList(Database.getElement(token, el.getId()));
@@ -187,7 +187,7 @@ public class Database {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
-            return new User(token, (float)json.getDouble("response_savings"), new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete")));
+            return new User(token, "name", (float)json.getDouble("response_savings"), new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete")));
         } catch (JSONException e) {
             Log.e(Database.class.toString(), "getUser "+e.toString());
             return null ;

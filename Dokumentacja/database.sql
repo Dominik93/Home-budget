@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2015-04-16 22:55
+-- Generated: 2015-04-17 11:44
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -13,6 +13,7 @@ CREATE SCHEMA IF NOT EXISTS `u906935981_pz` DEFAULT CHARACTER SET utf8 COLLATE u
 
 CREATE TABLE IF NOT EXISTS `u906935981_pz`.`user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
   `token` VARCHAR(32) NOT NULL,
   `savings` DOUBLE NULL DEFAULT NULL,
   PRIMARY KEY (`id`))

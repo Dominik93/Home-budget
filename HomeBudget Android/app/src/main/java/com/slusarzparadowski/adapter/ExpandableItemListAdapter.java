@@ -47,13 +47,14 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         this.list = list;
 
         //TODO: dodanie do listy add category i add element
+        /*
         if (!this.list.contains(new Category(-1, context.getString(R.string.add_category), "ADD")))
             this.list.add(new Category(-1, context.getString(R.string.add_category), "ADD"));
 
         for(Category c : this.list){
             if (!c.getElementList().contains(new Element(-1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, context.getString(R.string.add_element)));
-        }
+        }*/
         vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -177,13 +178,14 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public ArrayList<Category> getArrayListCategory(){
+        /*
         if (this.list.contains(new Category(-1, context.getString(R.string.add_category), "ADD")))
             this.list.remove(new Category(-1, context.getString(R.string.add_category), "ADD"));
 
         for(Category c : this.list){
             if (!c.getElementList().contains(new Element(-1, context.getString(R.string.add_element))))
                 c.getElementList().remove(new Element(-1, context.getString(R.string.add_element)));
-        }
+        }*/
         return this.list;
     }
 

@@ -18,37 +18,37 @@ public abstract class MyActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         Log.i(getClass().getSimpleName(), "onStart");
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         Log.i(getClass().getSimpleName(), "onResume");
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         Log.i(getClass().getSimpleName(), "onPause");
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
         Log.i(getClass().getSimpleName(), "onStop");
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
         Log.i(getClass().getSimpleName(), "onDestroy");
     }
 
     @Override
-    public void onRestart() {
+    protected void onRestart() {
         super.onRestart();
         Log.i(getClass().getSimpleName(), "onRestart");
     }

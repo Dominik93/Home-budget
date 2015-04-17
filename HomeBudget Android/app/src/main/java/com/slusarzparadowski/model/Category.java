@@ -1,5 +1,6 @@
 package com.slusarzparadowski.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,6 +16,7 @@ public class Category {
 
     private ArrayList<Element> elementList;
     private int id;
+    private int idUser;
     private String name;
     private String type;
 
@@ -22,11 +24,20 @@ public class Category {
         this.id = id;
     }
 
-    public Category(int id, String name, String type){
+    public Category(int id, int idUser, String name, String type){
         this.id = id;
+        this.idUser = idUser;
         this.name = name;
         this.type = type;
-        this.elementList = new ArrayList<Element>();
+        this.elementList = new ArrayList<>();
+    }
+
+    public Category(Cursor cursor) {
+        this.id = cursor.getInt(0);
+        this.idUser = cursor.getInt(1);
+        this.name = cursor.getString(2);
+        this.type = cursor.getString(3);
+        this.elementList = new ArrayList<>();
     }
 
     public ArrayList<Element> getElementList() {
@@ -59,6 +70,14 @@ public class Category {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
     @Override

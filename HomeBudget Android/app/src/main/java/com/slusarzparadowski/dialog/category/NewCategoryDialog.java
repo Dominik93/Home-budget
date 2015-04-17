@@ -37,6 +37,7 @@ public class NewCategoryDialog extends CategoryDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(getClass().getSimpleName(), "OK");
+                                /*
                                 if (!et.getText().toString().trim().equals("")) {
                                     if (list.contains(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
                                         list.remove(new Category(-1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
@@ -49,7 +50,7 @@ public class NewCategoryDialog extends CategoryDialog {
                                     ((MainActivity)activity).getModel().notification();
 
                                     Log.i(getClass().getSimpleName(), "new Category(0, " + et.getText().toString() + ", " + type + ")");
-                                }
+                                }*/
                             }
                         })
                 .setNegativeButton("Cancel",

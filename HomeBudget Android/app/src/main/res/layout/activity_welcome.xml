@@ -39,7 +39,17 @@
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerUsers"
         android:layout_below="@+id/buttonOnline"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextUserName"
+        android:layout_below="@+id/spinnerUsers"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 </RelativeLayout>

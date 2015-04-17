@@ -31,6 +31,7 @@ public class Model implements IObserver, IBundle, IFile{
     private User user;
     private ArrayList<Category> income;
     private ArrayList<Category> outcome;
+
     private ArrayList<Placeholder> views;
 
     public Model(boolean mode) {
@@ -208,6 +209,18 @@ public class Model implements IObserver, IBundle, IFile{
 
     public User getUser(){
         return this.user;
+    }
+
+    public boolean isMode() {
+        return mode;
+    }
+
+    public void setMode(boolean mode) {
+        this.mode = mode;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean getMode() {
