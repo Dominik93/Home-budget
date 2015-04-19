@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.slusarzparadowski.database.Database;
 import com.slusarzparadowski.model.token.Token;
@@ -43,7 +45,7 @@ public class Model implements IObserver, IBundle{
     }
 
     public Model(Bundle bundle){
-        Gson gson = new Gson();
+        Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
         this.mode = gson.fromJson(bundle.getString(MODE), boolean.class);
         this.user = gson.fromJson(bundle.getString(USER), User.class);
         this.income = gson.fromJson(bundle.getString(INCOME), new TypeToken<ArrayList<Category>>(){}.getType());
@@ -71,7 +73,7 @@ public class Model implements IObserver, IBundle{
     @Override
     public Bundle saveToBundle(){
         Bundle bundle = new Bundle();
-        Gson gson = new Gson();
+        Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
         bundle.putString(MODE, gson.toJson(this.mode));
         bundle.putString(USER, gson.toJson(this.user));
         bundle.putString(INCOME, gson.toJson(this.income));
@@ -81,7 +83,7 @@ public class Model implements IObserver, IBundle{
 
     @Override
     public Bundle addToBundle(Bundle bundle){
-        Gson gson = new Gson();
+        Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
         bundle.putString(MODE, gson.toJson(this.mode));
         bundle.putString(USER, gson.toJson(this.user));
         bundle.putString(INCOME, gson.toJson(this.income));

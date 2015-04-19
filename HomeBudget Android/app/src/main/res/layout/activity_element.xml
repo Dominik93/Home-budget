@@ -41,7 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextElementName"
-                android:text="@string/type_name"
                 android:inputType="text" />
 
             <TextView
@@ -56,47 +55,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
-                android:id="@+id/editTextElementValue"
-                android:text="@string/type_value" />
+                android:id="@+id/editTextElementValue" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/editTextElementdValue"
-                android:text="@string/type_value" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/editTextElemenetValue"
-                android:text="@string/type_value" />
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/editTextElemewntValue"
-                android:text="@string/type_value" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/editTrextElemewntValue"
-                android:text="@string/type_value" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/edietTextElemewntValue"
-                android:text="@string/type_value" />
             <CheckBox
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

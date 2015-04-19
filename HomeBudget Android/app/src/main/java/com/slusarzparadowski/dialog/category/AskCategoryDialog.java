@@ -36,8 +36,7 @@ public class AskCategoryDialog extends CategoryDialog{
                                 Log.i(getClass().getSimpleName(), "Update");
                                 dialog.cancel();
                                 new UpdateCategoryDialog(activity, R.layout.prompts_category, list, modelDataSource, index).buildDialog().show();
-                                //TODO: new dialog with update current category
-                            }
+                                }
                         })
                 .setNeutralButton("Cancel",
                         new DialogInterface.OnClickListener() {

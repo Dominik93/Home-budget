@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -23,12 +25,16 @@ public class AskElementDialog extends MyDialog {
 
     ArrayList<Category> list;
     int indexCategory, indexElement;
+    String type;
+    ModelDataSource modelDataSource;
 
-    public AskElementDialog(Activity activity, int recourse, ArrayList<Category> list, int indexCategory, int indexElement) {
+    public AskElementDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource, String type, int indexCategory, int indexElement) {
         super(activity, recourse);
         this.indexCategory = indexCategory;
         this.indexElement = indexElement;
         this.list = list;
+        this.type = type;
+        this.modelDataSource = modelDataSource;
     }
 
     public MyDialog buildDialog(){
@@ -48,7 +54,7 @@ public class AskElementDialog extends MyDialog {
                                 bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
                                 bundle.putInt("category", indexCategory);
                                 bundle.putInt("element", indexElement);
-                                bundle.putBoolean("modify", true);
+                                bundle.putString("type", type);
                                 intent.putExtras(bundle);
                                 activity.startActivityForResult(intent, 2);
                             }
@@ -63,6 +69,13 @@ public class AskElementDialog extends MyDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+indexCategory+") E("+indexElement+")");
+                                try {
+                                    modelDataSource.open();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                modelDataSource.deleteElement(list.get(indexCategory).getElementList().get(indexElement));
+                                modelDataSource.close();
                                 list.get(indexCategory).getElementList().remove(indexElement);
                                 ((MainActivity)activity).getModel().notification();
                                 dialog.cancel();

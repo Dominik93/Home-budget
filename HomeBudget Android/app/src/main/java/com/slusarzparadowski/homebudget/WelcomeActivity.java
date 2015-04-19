@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,15 +18,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.google.gson.Gson;
 import com.slusarzparadowski.database.ModelDataSource;
-import com.slusarzparadowski.database.SQLite;
 import com.slusarzparadowski.dialog.InternetAccessDialog;
 import com.slusarzparadowski.model.Model;
-import com.slusarzparadowski.model.Settings;
-import com.slusarzparadowski.model.User;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -289,14 +281,7 @@ public class WelcomeActivity extends MyActivity {
             }
             else{
                 model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
-                spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
-                if((spinner.getSelectedItem()).toString().equals("Add user")){
-                    editText.setVisibility(View.VISIBLE);
-                }
-                else{
-                    editText.setVisibility(View.GONE);
-                }
-                return  true;
+                return true;
             }
         }
 

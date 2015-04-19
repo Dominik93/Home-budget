@@ -9,6 +9,7 @@ import com.slusarzparadowski.model.User;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class Database {
                                                 listName.getString("name[" + i + "]"),
                                                 (float)listValue.getDouble("value[" + i + "]"),
                                                 listConst.getBoolean("const[" + i + "]"),
-                                                listDate.getString("date[" + i + "]")));
+                                                new LocalDate(listDate.getString("date[" + i + "]"))));
             }
             return returnList;
         } catch (JSONException e) {

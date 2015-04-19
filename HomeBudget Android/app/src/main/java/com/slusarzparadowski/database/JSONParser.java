@@ -42,6 +42,7 @@ public class JSONParser {
             if(method.equals("POST")){
                 // request method is POST
                 // defaultHttpClient
+
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(url);
                 httpPost.setEntity(new UrlEncodedFormEntity(params));

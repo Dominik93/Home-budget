@@ -18,7 +18,7 @@ public class Element {
     private String name;
     private float value;
     private boolean constant;
-    private String date;
+    private LocalDate date;
 
     public Element(int id){
         this.id = id;
@@ -36,20 +36,20 @@ public class Element {
         this.name = cursor.getString(2);
         this.value = cursor.getFloat(3);
         this.constant = cursor.getInt(4) == 0 ? false : true;
-        this.date = cursor.getString(5);
+        if( cursor.getString(5) == null)
+            this.date = null;
+        else if(cursor.getString(5).equals(""))
+            this.date = null;
+        else
+            this.date = new LocalDate(cursor.getString(5));
     }
 
-    public Element(int id, String name, float value, boolean constant, String date){
+    public Element(int id, String name, float value, boolean constant, LocalDate date){
         this.id = id;
         this.name = name;
         this.value = value;
         this.constant = constant;
-        try {
-            this.date = date;
-        }catch (IllegalArgumentException e){
-            Log.d(getClass().getSimpleName(), "constructor "+ e.toString());
-            this.date = null;
-        }
+        this.date = date;
     }
 
     public int getId() {
@@ -80,11 +80,11 @@ public class Element {
         return constant;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -102,7 +102,7 @@ public class Element {
 
     @Override
     public String toString(){
-        return this.id +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : " ");
+        return this.id +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
     }
 
     @Override

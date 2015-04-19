@@ -87,7 +87,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     if(child.getId() != -1){
                         Log.i(getClass().getSimpleName(), "getChildView onLongClick ask element");
-                        new AskElementDialog(activity, R.layout.prompts_ask, list, groupPosition, childPosition).buildDialog().show();
+                        new AskElementDialog(activity, R.layout.prompts_ask, list, new ModelDataSource(context),type, groupPosition, childPosition).buildDialog().show();
                     }
                     return false;
                 }
@@ -100,9 +100,9 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                         Intent intent = new Intent(activity, ElementActivity.class);
                         Bundle bundle = new Bundle();
                         bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
-                        bundle.putInt("group", groupPosition);
+                        bundle.putInt("category", groupPosition);
+                        bundle.putInt("element", -1);
                         bundle.putString("type", type);
-                        bundle.putBoolean("modify", false);
                         intent.putExtras(bundle);
                         activity.startActivityForResult(intent, 2);
                     }

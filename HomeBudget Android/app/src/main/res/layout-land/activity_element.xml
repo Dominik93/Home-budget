@@ -1,91 +1,107 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.slusarzparadowski.homebudget.ElementActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView" >
+        android:id="@+id/license_agree_scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/element"
-            android:id="@+id/textView"
-            android:gravity="center" />
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/element"
+                android:id="@+id/textView"
+                android:gravity="center" />
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/name"
-            android:id="@+id/textView3" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/name"
+                android:id="@+id/textView3" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:id="@+id/button" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextElementName"
+                android:text="@string/type_name"
+                android:inputType="text" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:id="@+id/button2" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/value"
+                android:id="@+id/textView4"/>
 
-        <CheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/constant_element"
-            android:id="@+id/checkBox3" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/editTextElementValue"
+                android:text="@string/type_value" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText"
-            android:text="@string/type_name"
-            android:inputType="text" />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/constant_element"
+                android:id="@+id/checkBoxElementConstant" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/value"
-            android:id="@+id/textView4"/>
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ask_date"
+                android:id="@+id/checkBoxElementDate" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/editText2"
-            android:text="@string/type_value" />
+            <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePickerElementDate"
+                android:visibility="gone" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/date"
-            android:id="@+id/textView6"/>
-
-        <CheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ask_date"
-            android:id="@+id/checkBox4" />
-
-        <DatePicker
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/datePicker"/>
-
-
+        </LinearLayout>
     </ScrollView>
 
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout2">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:id="@+id/buttonElementSave" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/buttonElementCancel" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -75,7 +75,8 @@ public class ModelDataSource {
         values.put(SQLite.COLUMN_NAME, element.getName());
         values.put(SQLite.COLUMN_VALUE, element.getValue());
         values.put(SQLite.COLUMN_CONST, element.isConstant() ? 1 : 0);
-        values.put(SQLite.COLUMN_DATE, element.getDate());
+        if (element.getDate() != null)
+            values.put(SQLite.COLUMN_DATE, element.getDate().toString());
         long insertId = database.insert(SQLite.TABLE_ELEMENT, null,
                 values);
         Cursor cursor = database.query(SQLite.TABLE_ELEMENT,
@@ -96,7 +97,7 @@ public class ModelDataSource {
         values.put(SQLite.COLUMN_NAME, element.getName());
         values.put(SQLite.COLUMN_VALUE, element.getValue());
         values.put(SQLite.COLUMN_CONST, element.isConstant() ? 1 : 0);
-        values.put(SQLite.COLUMN_DATE, element.getDate());
+        values.put(SQLite.COLUMN_DATE, element.getDate().toString());
         database.update(SQLite.TABLE_ELEMENT, values, SQLite.COLUMN_ID+"="+element.getId() ,null);
     }
 

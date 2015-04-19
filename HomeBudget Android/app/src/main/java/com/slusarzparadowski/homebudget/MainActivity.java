@@ -160,14 +160,14 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
             if (resultCode == RESULT_OK) {
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
                 this.model = new Model(data.getExtras());
-
+                this.model.notification();
             }
             else if (resultCode == RESULT_CANCELED) {
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_CANCELED);
 
             }
         }
-        else if (requestCode == 1) {
+        else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
                 this.model = new Model(data.getExtras());
