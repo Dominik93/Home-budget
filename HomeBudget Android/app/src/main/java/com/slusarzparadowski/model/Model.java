@@ -10,14 +10,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.slusarzparadowski.database.Database;
+import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.token.Token;
 import com.slusarzparadowski.placeholder.Placeholder;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Dominik on 2015-03-22.
@@ -28,6 +28,8 @@ public class Model implements IObserver, IBundle{
     private final String MODE = "mode";
     private final String INCOME = "income";
     private final String OUTCOME = "outcome";
+
+    private Map<String,  ArrayList<Category> > map = new HashMap<String,  ArrayList<Category>>();
 
     private boolean mode; // true- online false-offline
     private User user;
@@ -42,6 +44,8 @@ public class Model implements IObserver, IBundle{
         this.income = new ArrayList<>();
         this.outcome = new ArrayList<>();
         this.views = new ArrayList<>();
+        map.put("INCOME", income);
+        map.put("OUTCOME", outcome);
     }
 
     public Model(Bundle bundle){
@@ -51,6 +55,9 @@ public class Model implements IObserver, IBundle{
         this.income = gson.fromJson(bundle.getString(INCOME), new TypeToken<ArrayList<Category>>(){}.getType());
         this.outcome = gson.fromJson(bundle.getString(OUTCOME), new TypeToken<ArrayList<Category>>(){}.getType());
         this.views = new ArrayList<>();
+        map.put("INCOME", income);
+        map.put("OUTCOME", outcome);
+
     }
 
     public Model(Model model) {
@@ -59,6 +66,8 @@ public class Model implements IObserver, IBundle{
         this.income = model.getIncome();
         this.outcome = model.getOutcome();
         this.views = new ArrayList<>();
+        map.put("INCOME", income);
+        map.put("OUTCOME", outcome);
     }
 
     public Model(Context context, boolean mode) throws IOException {
@@ -68,6 +77,8 @@ public class Model implements IObserver, IBundle{
         this.loadOutcome();
         this.loadIncome();
         this.views = new ArrayList<>();
+        map.put("INCOME", income);
+        map.put("OUTCOME", outcome);
     }
 
     @Override
@@ -123,6 +134,38 @@ public class Model implements IObserver, IBundle{
         return sum;
     }
 
+    public void addSpecialItem(Context context){
+        if (!income.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
+            income.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
+        for(Category c : income){
+            if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
+                c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
+        }
+
+        if (!outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
+            outcome.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
+        for(Category c : outcome){
+            if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
+                c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
+        }
+    }
+
+    public void removeSpecialItem(Context context){
+        if ( income.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
+            income.remove(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
+        for (Category c : income) {
+            if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
+                c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
+        }
+
+        if ( outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
+            outcome.remove(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
+        for (Category c : outcome) {
+            if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
+                c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
+        }
+    }
+
     public void loadIncome(){
         this.income = Database.getList(user.getToken(), "income");
     }
@@ -165,6 +208,14 @@ public class Model implements IObserver, IBundle{
 
     public void setOutcome(ArrayList<Category> outcome) {
         this.outcome = outcome;
+    }
+
+    public Map<String, ArrayList<Category>> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, ArrayList<Category>> map) {
+        this.map = map;
     }
 
     @Override

@@ -44,8 +44,9 @@ public class Element {
             this.date = new LocalDate(cursor.getString(5));
     }
 
-    public Element(int id, String name, float value, boolean constant, LocalDate date){
+    public Element(int id, int idCategory, String name, float value, boolean constant, LocalDate date){
         this.id = id;
+        this.idCategory = idCategory;
         this.name = name;
         this.value = value;
         this.constant = constant;
@@ -102,7 +103,7 @@ public class Element {
 
     @Override
     public String toString(){
-        return this.id +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
+        return this.id +" "+ this.idCategory +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
     }
 
     @Override

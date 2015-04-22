@@ -103,8 +103,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Log.i(getClass().getSimpleName(), "onSaveInstanceState save model");
-        savedInstanceState = model.addToBundle(savedInstanceState);
-        super.onSaveInstanceState(savedInstanceState);
+        super.onSaveInstanceState(model.addToBundle(savedInstanceState));
     }
 
     @Override

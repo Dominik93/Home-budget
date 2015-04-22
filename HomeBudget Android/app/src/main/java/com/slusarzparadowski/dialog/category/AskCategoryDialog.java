@@ -11,6 +11,7 @@ import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
+import com.slusarzparadowski.model.Element;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -48,14 +49,23 @@ public class AskCategoryDialog extends CategoryDialog{
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+index+")");
+                                if (list.contains(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
+                                    list.remove(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
+
+                                for (Category c : list) {
+                                    if (c.getElementList().contains(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element))))
+                                        c.getElementList().remove(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element)));
+                                }
                                 try {
                                     modelDataSource.open();
                                 } catch (SQLException e) {
                                     Log.i(getClass().getSimpleName(), e.toString());
                                 }
+
                                 modelDataSource.deleteCategory(list.get(index));
                                 modelDataSource.close();
                                 list.remove(index);
+
                                 ((MainActivity)getActivity()).getModel().notification();
                                 dialog.cancel();
                             }

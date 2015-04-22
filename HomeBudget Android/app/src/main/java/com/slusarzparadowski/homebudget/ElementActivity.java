@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.slusarzparadowski.database.ModelDataSource;
+import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Model;
 
@@ -52,30 +53,15 @@ public class ElementActivity extends MyActivity {
         cb1 = (CheckBox)findViewById(R.id.checkBoxElementDate);
         cb2 = (CheckBox)findViewById(R.id.checkBoxElementConstant);
 
-        if(type.equals("INCOME")){
-            if(element != -1){
-                et1.setText(model.getIncome().get(category).getElementList().get(element).getName());
-                et2.setText(String .valueOf(model.getIncome().get(category).getElementList().get(element).getValue()));
-                cb2.setChecked(model.getIncome().get(category).getElementList().get(element).isConstant());
-                if(model.getIncome().get(category).getElementList().get(element).getDate() != null ){
-                    cb1.setChecked(true);
-                    org.joda.time.LocalDate localDate = new org.joda.time.LocalDate(model.getIncome().get(category).getElementList().get(element).getDate());
-                    dp.setVisibility(View.VISIBLE);
-                    dp.updateDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
-                }
-            }
-        }
-        else if(type.equals("OUTCOME")){
-            if(element != -1){
-                et1.setText(model.getOutcome().get(category).getElementList().get(element).getName());
-                et2.setText(String .valueOf(model.getOutcome().get(category).getElementList().get(element).getValue()));
-                cb2.setChecked(model.getOutcome().get(category).getElementList().get(element).isConstant());
-                if(model.getOutcome().get(category).getElementList().get(element).getDate() != null ){
-                    cb1.setChecked(true);
-                    org.joda.time.LocalDate localDate = new org.joda.time.LocalDate(model.getOutcome().get(category).getElementList().get(element).getDate());
-                    dp.setVisibility(View.VISIBLE);
-                    dp.updateDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
-                }
+        if(element != -1){
+            et1.setText(model.getMap().get(type).get(category).getElementList().get(element).getName());
+            et2.setText(String .valueOf((model.getMap().get(type).get(category).getElementList().get(element).getValue())));
+            cb2.setChecked(model.getMap().get(type).get(category).getElementList().get(element).isConstant());
+            if(model.getMap().get(type).get(category).getElementList().get(element).getDate() != null ){
+                cb1.setChecked(true);
+                LocalDate localDate = new LocalDate(model.getMap().get(type).get(category).getElementList().get(element).getDate());
+                dp.setVisibility(View.VISIBLE);
+                dp.updateDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
             }
         }
     }
@@ -107,6 +93,7 @@ public class ElementActivity extends MyActivity {
                 Log.i(getClass().getSimpleName(), "onClick ");
                 Intent returnIntent = new Intent();
 
+                model.removeSpecialItem(getApplicationContext());
 
                 Element elementObj;
                 try {
@@ -116,16 +103,28 @@ public class ElementActivity extends MyActivity {
                 }
                 if(cb2.isChecked()) {
                     LocalDate localDate = new LocalDate(dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
-                    elementObj = modelDataSource.insertElement(new Element(0, et1.getText().toString(), Float.valueOf(et2.getText().toString()), cb2.isChecked(), localDate));
+                    elementObj = new Element(
+                                                                0,
+                                                                model.getMap().get(type).get(category).getId(),
+                                                                et1.getText().toString(),
+                                                                Float.valueOf(et2.getText().toString()),
+                                                                cb2.isChecked(),
+                                                                localDate);
                 }
                 else{
-                    elementObj = modelDataSource.insertElement(new Element(0, et1.getText().toString(), Float.valueOf(et2.getText().toString()), cb2.isChecked(), null));
+                    elementObj = new Element(
+                                                                0,
+                                                                model.getMap().get(type).get(category).getId(),
+                                                                et1.getText().toString(),
+                                                                Float.valueOf(et2.getText().toString()),
+                                                                cb2.isChecked(),
+                                                                null);
                 }
+                Log.i(getClass().getSimpleName(), elementObj.toString());
+                elementObj = modelDataSource.insertElement(elementObj);
+                Log.i(getClass().getSimpleName(), elementObj.toString());
                 modelDataSource.close();
-                if(type.equals("INCOME"))
-                    model.getIncome().get(category).getElementList().add(elementObj);
-                else if(type.equals("OUTCOME"))
-                    model.getOutcome().get(category).getElementList().add(elementObj);
+                model.getMap().get(type).get(category).getElementList().add(elementObj);
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);
                 finish();

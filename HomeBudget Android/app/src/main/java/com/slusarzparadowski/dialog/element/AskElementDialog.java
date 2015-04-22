@@ -12,6 +12,7 @@ import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
+import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
 
@@ -69,6 +70,13 @@ public class AskElementDialog extends MyDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+indexCategory+") E("+indexElement+")");
+                                if (!list.contains(new Category(-1, -1, activity.getString(R.string.add_category), "ADD")))
+                                    list.add(new Category(-1, -1, activity.getString(R.string.add_category), "ADD"));
+
+                                for(Category c : list){
+                                    if (!c.getElementList().contains(new Element(-1, -1, activity.getString(R.string.add_element))))
+                                        c.getElementList().add(new Element(-1, -1, activity.getString(R.string.add_element)));
+                                }
                                 try {
                                     modelDataSource.open();
                                 } catch (SQLException e) {

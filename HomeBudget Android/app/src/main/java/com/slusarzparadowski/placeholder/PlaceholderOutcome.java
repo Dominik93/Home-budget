@@ -43,9 +43,17 @@ public class PlaceholderOutcome extends Placeholder {
         return rootView;
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(getClass().getSimpleName(), "onResume");
+        expandableListView.setAdapter((new ExpandableItemListAdapter(getActivity().getApplicationContext(), getActivity(), ((MainActivity)getActivity()).getModel().getOutcome(), "OUTCOME")));
+    }
+
     @Override
     public void update(Model model) {
         Log.i(getClass().getSimpleName(), "update");
-        expandableListView.setAdapter((new ExpandableItemListAdapter(getActivity().getApplicationContext(), getActivity(), model.getOutcome(), "OUTCOME")));
+        expandableListView.setAdapter((new ExpandableItemListAdapter(getActivity().getApplicationContext(), getActivity(), ((MainActivity)getActivity()).getModel().getOutcome(), "OUTCOME")));
     }
 }

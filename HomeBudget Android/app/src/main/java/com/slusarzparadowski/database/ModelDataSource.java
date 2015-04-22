@@ -73,6 +73,7 @@ public class ModelDataSource {
     public Element insertElement(Element element){
         ContentValues values = new ContentValues();
         values.put(SQLite.COLUMN_NAME, element.getName());
+        values.put(SQLite.COLUMN_ID_CATEGORY, element.getIdCategory());
         values.put(SQLite.COLUMN_VALUE, element.getValue());
         values.put(SQLite.COLUMN_CONST, element.isConstant() ? 1 : 0);
         if (element.getDate() != null)

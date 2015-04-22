@@ -94,6 +94,7 @@ public class Database {
 
             Log.d(String.valueOf(value), message);
             JSONObject listId = json.getJSONObject("response_array_id");
+            JSONObject listIdCategory = json.getJSONObject("response_array_id_category");
             JSONObject listName = json.getJSONObject("response_array_name");
             JSONObject listValue = json.getJSONObject("response_array_element_value");
             JSONObject listConst = json.getJSONObject("response_array_const");
@@ -104,6 +105,7 @@ public class Database {
             for(int i = 0; i < listId.length(); i++){
                     Log.d(Database.class.toString(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
                     returnList.add(new Element(listId.getInt("id[" + i + "]"),
+                                                listIdCategory.getInt("idCategory[" + i + "]"),
                                                 listName.getString("name[" + i + "]"),
                                                 (float)listValue.getDouble("value[" + i + "]"),
                                                 listConst.getBoolean("const[" + i + "]"),
