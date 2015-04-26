@@ -49,8 +49,4 @@ public class TokenDialog extends MyDialog {
         return this;
     }
 
-    @Override
-    public void show( ) {
-        this.getAlertDialog().show();
-    }
 }

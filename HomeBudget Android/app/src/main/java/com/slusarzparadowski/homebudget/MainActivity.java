@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import com.slusarzparadowski.model.Model;
-import com.slusarzparadowski.placeholder.PlaceholderIncome;
-import com.slusarzparadowski.placeholder.PlaceholderOutcome;
+import com.slusarzparadowski.placeholder.PlaceholderConcreteList;
 import com.slusarzparadowski.placeholder.PlaceholderSummary;
 
 
@@ -224,7 +223,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
 
             switch(position){
                 case 0:
-                    PlaceholderIncome placeholderIncome = PlaceholderIncome.newInstance(position + 1);
+                    PlaceholderConcreteList placeholderIncome = PlaceholderConcreteList.newInstance(position + 1, "INCOME");
                     model.attachPlaceholder(placeholderIncome);
                     return placeholderIncome;
                 case 1:
@@ -232,7 +231,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
                     model.attachPlaceholder(placeholderSummary);
                     return placeholderSummary;
                 case 2:
-                    PlaceholderOutcome placeholderOutcome = PlaceholderOutcome.newInstance(position + 1);
+                    PlaceholderConcreteList placeholderOutcome = PlaceholderConcreteList.newInstance(position + 1, "OUTCOME");
                     model.attachPlaceholder(placeholderOutcome);
                     return placeholderOutcome;
                 default:

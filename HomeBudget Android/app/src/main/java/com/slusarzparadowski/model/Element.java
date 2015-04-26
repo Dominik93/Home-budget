@@ -2,37 +2,30 @@ package com.slusarzparadowski.model;
 
 
 import android.database.Cursor;
-import android.util.Log;
 
 import org.joda.time.LocalDate;
-
-import java.util.Date;
 
 /**
  * Created by Dominik on 2015-03-22.
  */
-public class Element {
+public class Element extends DatabaseObjectChild {
 
-    private int id;
-    private int idCategory;
     private String name;
     private float value;
     private boolean constant;
     private LocalDate date;
 
     public Element(int id){
-        this.id = id;
+        super(id, 0);
     }
 
     public Element(int id, int idCategory, String name){
-        this.id = id;
+        super(id, idCategory);
         this.name = name;
-        this.idCategory = idCategory;
     }
 
     public Element(Cursor cursor){
-        this.id = cursor.getInt(0);
-        this.idCategory = cursor.getInt(1);
+        super(cursor.getInt(0), cursor.getInt(1));
         this.name = cursor.getString(2);
         this.value = cursor.getFloat(3);
         this.constant = cursor.getInt(4) == 0 ? false : true;
@@ -45,20 +38,11 @@ public class Element {
     }
 
     public Element(int id, int idCategory, String name, float value, boolean constant, LocalDate date){
-        this.id = id;
-        this.idCategory = idCategory;
+        super(id, idCategory);
         this.name = name;
         this.value = value;
         this.constant = constant;
         this.date = date;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -93,17 +77,9 @@ public class Element {
         this.constant = constant;
     }
 
-    public int getIdCategory() {
-        return idCategory;
-    }
-
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
-    }
-
     @Override
     public String toString(){
-        return this.id +" "+ this.idCategory +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
+        return this.id +" "+ this.idParent +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
     }
 
     @Override

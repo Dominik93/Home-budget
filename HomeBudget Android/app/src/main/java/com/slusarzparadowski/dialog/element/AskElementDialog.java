@@ -92,9 +92,4 @@ public class AskElementDialog extends MyDialog {
         this.createDialog();
         return this;
     }
-
-    @Override
-    public void show( ) {
-        this.getAlertDialog().show();
-    }
 }

@@ -36,6 +36,9 @@ public class Model implements IObserver, IBundle{
     private ArrayList<Category> income;
     private ArrayList<Category> outcome;
 
+    private float incomeSum = 0;
+    private float outcomeSum = 0;
+
     private ArrayList<Placeholder> views;
 
     public Model(boolean mode) {
@@ -54,6 +57,8 @@ public class Model implements IObserver, IBundle{
         this.user = gson.fromJson(bundle.getString(USER), User.class);
         this.income = gson.fromJson(bundle.getString(INCOME), new TypeToken<ArrayList<Category>>(){}.getType());
         this.outcome = gson.fromJson(bundle.getString(OUTCOME), new TypeToken<ArrayList<Category>>(){}.getType());
+        calculateIncomeSum();
+        calculateOutcomeSum();
         this.views = new ArrayList<>();
         map.put("INCOME", income);
         map.put("OUTCOME", outcome);
@@ -65,6 +70,8 @@ public class Model implements IObserver, IBundle{
         this.user = model.getUser();
         this.income = model.getIncome();
         this.outcome = model.getOutcome();
+        this.outcomeSum = model.getOutcomeSum();
+        this.incomeSum = model.getIncomeSum();
         this.views = new ArrayList<>();
         map.put("INCOME", income);
         map.put("OUTCOME", outcome);
@@ -76,6 +83,8 @@ public class Model implements IObserver, IBundle{
         this.user = Database.getUser(t.getToken());
         this.loadOutcome();
         this.loadIncome();
+        calculateIncomeSum();
+        calculateOutcomeSum();
         this.views = new ArrayList<>();
         map.put("INCOME", income);
         map.put("OUTCOME", outcome);
@@ -110,28 +119,30 @@ public class Model implements IObserver, IBundle{
         //TODO: database -> file
     }
 
-    public double getSummary(){
+    public float getSummary(){
         return this.getIncomeSum() - this.getOutcomeSum();
     }
 
-    public double getIncomeSum(){
-        double sum = 0;
-        for(Category el : this.income){
-            for(Element e : el.getElementList()){
-                sum += e.getValue();
-            }
+    public void calculateIncomeSum(){
+        for (Category c : income){
+            for(Element e : c.getElementList())
+                incomeSum += e.getValue();
         }
-        return sum;
     }
 
-    public double getOutcomeSum(){
-        double sum = 0;
-        for(Category el : this.outcome){
-            for(Element e : el.getElementList()){
-                sum += e.getValue();
-            }
+    public void calculateOutcomeSum(){
+        for (Category c : outcome){
+            for(Element e : c.getElementList())
+                outcomeSum += e.getValue();
         }
-        return sum;
+    }
+
+    public float getIncomeSum(){
+        return incomeSum;
+    }
+
+    public float getOutcomeSum(){
+        return outcomeSum;
     }
 
     public void addSpecialItem(Context context){
@@ -164,6 +175,34 @@ public class Model implements IObserver, IBundle{
             if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
         }
+    }
+
+    public void addElement(){
+
+    }
+
+    public void addCategory(Category category, String type){
+        this.getMap().get(type).add(category);
+    }
+
+    public void addElementToCategory(Element element, int category, String type){
+        this.getMap().get(type).get(category).getElementList().add(element);
+    }
+
+    public void deleteCategory(int category, String type){
+        this.getMap().get(type).remove(category);
+    }
+
+    public void deleteCategory(Category category, String type){
+        this.getMap().get(type).remove(category);
+    }
+
+    public void removeElementToCategory(Element element, int category, String type){
+        this.getMap().get(type).get(category).getElementList().remove(element);
+    }
+
+    public void removeElementToCategory(int element, int category, String type){
+        this.getMap().get(type).get(category).getElementList().remove(element);
     }
 
     public void loadIncome(){

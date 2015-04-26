@@ -24,6 +24,7 @@ import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Category;
+import com.slusarzparadowski.model.Model;
 
 import java.util.ArrayList;
 
@@ -35,28 +36,19 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     public Context context;
     private Activity activity;
     private LayoutInflater vi;
-    ArrayList<Category> list;
-    final String type;
+    private Model model;
+    private final String type;
 
     private static final int GROUP_ITEM_RESOURCE = R.layout.group_item;
     private static final int CHILD_ITEM_RESOURCE = R.layout.child_item;
 
-    public ExpandableItemListAdapter(Context context, Activity activity, ArrayList<Category> list, String type) {
+    public ExpandableItemListAdapter(Context context, Activity activity, Model model, String type) {
         this.context = context;
         this.activity = activity;
         this.type = type;
-        this.list = list;
-
-        if (!this.list.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
-            this.list.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
-
-        for(Category c : this.list){
-            if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
-                c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
-        }
-
+        this.model = model;
+        this.model.addSpecialItem(context);
         vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
     }
 
     public BaseExpandableListAdapter getExpandableItemListAdapter(){
@@ -64,7 +56,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public Element getChild(int groupPosition, int childPosition) {
-        return list.get(groupPosition).getElementList().get(childPosition);
+        return model.getMap().get(type).get(groupPosition).getElementList().get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -72,7 +64,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public int getChildrenCount(int groupPosition) {
-        return list.get(groupPosition).getElementList().size();
+        return model.getMap().get(type).get(groupPosition).getElementList().size();
     }
 
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
@@ -87,7 +79,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     if(child.getId() != -1){
                         Log.i(getClass().getSimpleName(), "getChildView onLongClick ask element");
-                        new AskElementDialog(activity, R.layout.prompts_ask, list, new ModelDataSource(context),type, groupPosition, childPosition).buildDialog().show();
+                        new AskElementDialog(activity, R.layout.prompts_ask, model.getMap().get(type), new ModelDataSource(context),type, groupPosition, childPosition).buildDialog().show();
                     }
                     return false;
                 }
@@ -114,11 +106,11 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public Category getGroup(int groupPosition) {
-        return list.get(groupPosition);
+        return model.getMap().get(type).get(groupPosition);
     }
 
     public int getGroupCount() {
-        return list.size();
+        return model.getMap().get(type).size();
     }
 
     public long getGroupId(int groupPosition) {
@@ -129,7 +121,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         View v = convertView;
         final Category group;
         long group_id = getGroupId(groupPosition);
-        group = this.list.get((int)group_id);
+        group = this.model.getMap().get(type).get((int)group_id);
         if (group != null) {
             v = vi.inflate(GROUP_ITEM_RESOURCE, null);
             ViewHolder holder = new ViewHolder(v);
@@ -139,7 +131,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public void onClick(View v) {
                     if(group.getId() == -1){
                         Log.i(getClass().getSimpleName(), "getGroupView onClick add category");
-                        new NewCategoryDialog(activity, R.layout.prompts_category, list, new ModelDataSource(context), type).buildDialog().show();
+                        new NewCategoryDialog(activity, R.layout.prompts_category, model.getMap().get(type), new ModelDataSource(context), type).buildDialog().show();
                     }
                     else{
                         if(isExpanded)
@@ -154,7 +146,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 @Override
                 public boolean onLongClick(View v) {
                     Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
-                    new AskCategoryDialog(activity, R.layout.prompts_ask, list, new ModelDataSource(context), groupPosition).buildDialog().show();
+                    new AskCategoryDialog(activity, R.layout.prompts_ask, model.getMap().get(type), new ModelDataSource(context), groupPosition).buildDialog().show();
 
                     return false;
                 }
@@ -172,16 +164,9 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         return true;
     }
 
-    public ArrayList<Category> getArrayListCategory(){
-
-        if (this.list.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
-            this.list.remove(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
-
-        for(Category c : this.list){
-            if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
-                c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
-        }
-        return this.list;
+    public Model getModel(){
+        model.removeSpecialItem(context);
+        return this.model;
     }
 
     public class ViewHolder {

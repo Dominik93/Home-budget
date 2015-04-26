@@ -13,6 +13,8 @@ import android.widget.CompoundButton;
 import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.model.Model;
 
+import java.sql.SQLException;
+
 
 public class SettingsActivity extends MyActivity {
 
@@ -41,7 +43,13 @@ public class SettingsActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick");
+                try {
+                    modelDataSource.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 modelDataSource.updateSettings(model.getUser().getSettings());
+                modelDataSource.close();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);

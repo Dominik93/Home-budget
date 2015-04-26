@@ -73,7 +73,7 @@ public class ModelDataSource {
     public Element insertElement(Element element){
         ContentValues values = new ContentValues();
         values.put(SQLite.COLUMN_NAME, element.getName());
-        values.put(SQLite.COLUMN_ID_CATEGORY, element.getIdCategory());
+        values.put(SQLite.COLUMN_ID_CATEGORY, element.getIdParent());
         values.put(SQLite.COLUMN_VALUE, element.getValue());
         values.put(SQLite.COLUMN_CONST, element.isConstant() ? 1 : 0);
         if (element.getDate() != null)
@@ -120,7 +120,7 @@ public class ModelDataSource {
 
     public Category insertCategory(Category category){
         ContentValues values = new ContentValues();
-        values.put(SQLite.COLUMN_ID_USER, category.getIdUser());
+        values.put(SQLite.COLUMN_ID_USER, category.getIdParent());
         values.put(SQLite.COLUMN_NAME, category.getName());
         values.put(SQLite.COLUMN_TYPE, category.getType());
         long insertId = database.insert(SQLite.TABLE_CATEGORY, null,
@@ -132,7 +132,7 @@ public class ModelDataSource {
         Category categoryNew = new Category(cursor);
         categoryNew.setElementList(category.getElementList());
         for(int i =0; i < categoryNew.getElementList().size(); i++){
-            categoryNew.getElementList().get(i).setIdCategory(categoryNew.getId());
+            categoryNew.getElementList().get(i).setIdParent(categoryNew.getId());
             categoryNew.getElementList().set(i, insertElement(categoryNew.getElementList().get(i)));
         }
 
@@ -164,7 +164,7 @@ public class ModelDataSource {
 
     public Settings insertSettings(Settings settings){
         ContentValues values = new ContentValues();
-        values.put(SQLite.COLUMN_ID_USER, settings.getIdUser());
+        values.put(SQLite.COLUMN_ID_USER, settings.getIdParent());
         values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting() ? 1 : 0 );
         values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving() ? 1 : 0);
         long insertId = database.insert(SQLite.TABLE_SETTINGS, null,
@@ -179,15 +179,15 @@ public class ModelDataSource {
     }
 
     public void deleteSettings(Settings settings){
-        database.delete(SQLite.TABLE_SETTINGS, SQLite.COLUMN_ID_USER + " like '" + settings.getIdUser()+"'", null);
+        database.delete(SQLite.TABLE_SETTINGS, SQLite.COLUMN_ID_USER + " like '" + settings.getIdParent()+"'", null);
     }
 
     public void updateSettings(Settings settings){
         ContentValues values = new ContentValues();
-        values.put(SQLite.COLUMN_ID_USER, settings.getIdUser());
+        values.put(SQLite.COLUMN_ID_USER, settings.getIdParent());
         values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting() ? 1 : 0 );
         values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving() ? 1 : 0);
-        database.update(SQLite.TABLE_SETTINGS, values, SQLite.COLUMN_ID+"="+settings.getId() ,null);
+        database.update(SQLite.TABLE_SETTINGS, values, SQLite.COLUMN_ID+"="+settings.getId(), null);
     }
 
     public User getUser(String name, String token){
@@ -231,7 +231,7 @@ public class ModelDataSource {
                 null, null, null);
         cursor.moveToFirst();
         user = new User(cursor);
-        user.getSettings().setIdUser(user.getId());
+        user.getSettings().setIdParent(user.getId());
         cursor.close();
         return user;
     }
