@@ -15,6 +15,7 @@ import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
+import com.slusarzparadowski.model.Model;
 
 import java.util.ArrayList;
 
@@ -23,13 +24,12 @@ import java.util.ArrayList;
  */
 public abstract class CategoryDialog extends MyDialog {
 
-    protected ArrayList<Category> list;
-    protected ModelDataSource modelDataSource;
-
-    public CategoryDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource) {
+    protected Model model;
+    protected String type;
+    public CategoryDialog(Activity activity, int recourse, Model model, String type) {
         super(activity, recourse);
-        this.list = list;
-        this.modelDataSource = modelDataSource;
+        this.model = model;
+        this.type = type;
     }
 
 }

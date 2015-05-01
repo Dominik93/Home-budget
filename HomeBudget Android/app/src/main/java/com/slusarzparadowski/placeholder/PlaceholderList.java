@@ -37,7 +37,7 @@ public abstract class PlaceholderList extends Placeholder {
     }
 
     @Override
-    public void update(Model model) {
+    public void update() {
         Log.i(getClass().getSimpleName(), "update");
         expandableListView.setAdapter((new ExpandableItemListAdapter(getActivity().getApplicationContext(), getActivity(), ((MainActivity)getActivity()).getModel(), type)));
     }

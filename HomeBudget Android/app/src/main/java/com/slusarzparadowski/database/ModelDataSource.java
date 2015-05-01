@@ -29,7 +29,8 @@ public class ModelDataSource {
     private String[] allColumnsSettings = { SQLite.COLUMN_ID,
                                             SQLite.COLUMN_ID_USER,
                                             SQLite.COLUMN_AUTO_DELETE,
-                                            SQLite.COLUMN_AUTO_SAVINGS};
+                                            SQLite.COLUMN_AUTO_SAVINGS,
+                                            SQLite.COLUMN_AUTO_LOCAL_SAVE};
     private String[] allColumnsCategory = { SQLite.COLUMN_ID,
                                             SQLite.COLUMN_ID_USER,
                                             SQLite.COLUMN_NAME,
@@ -167,6 +168,7 @@ public class ModelDataSource {
         values.put(SQLite.COLUMN_ID_USER, settings.getIdParent());
         values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting() ? 1 : 0 );
         values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving() ? 1 : 0);
+        values.put(SQLite.COLUMN_AUTO_LOCAL_SAVE, settings.isAutoLocalSave() ? 1 : 0);
         long insertId = database.insert(SQLite.TABLE_SETTINGS, null,
                 values);
         Cursor cursor = database.query(SQLite.TABLE_SETTINGS,
@@ -187,6 +189,7 @@ public class ModelDataSource {
         values.put(SQLite.COLUMN_ID_USER, settings.getIdParent());
         values.put(SQLite.COLUMN_AUTO_DELETE, settings.isAutoDeleting() ? 1 : 0 );
         values.put(SQLite.COLUMN_AUTO_SAVINGS, settings.isAutoSaving() ? 1 : 0);
+        values.put(SQLite.COLUMN_AUTO_LOCAL_SAVE, settings.isAutoLocalSave() ? 1 : 0);
         database.update(SQLite.TABLE_SETTINGS, values, SQLite.COLUMN_ID+"="+settings.getId(), null);
     }
 
@@ -249,8 +252,8 @@ public class ModelDataSource {
         database.update(SQLite.TABLE_USER, values, SQLite.COLUMN_ID+"="+user.getId() ,null);
     }
 
-    public Model getModel(String name, String token){
-        Model model = new Model(false);
+    public Model getModel(String name, String token, Context context){
+        Model model = new Model(false, context);
         model.setUser(getUser(name, token));
         model.setIncome(getCategory(model.getUser().getId(), "INCOME"));
         model.setOutcome(getCategory(model.getUser().getId(), "OUTCOME"));

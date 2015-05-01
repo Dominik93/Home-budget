@@ -20,7 +20,7 @@ public class VersionActivity extends MyActivity {
 
     @Override
     void initElements() {
-        model = new Model(getIntent().getExtras());
+        model = new Model(getIntent().getExtras(), getApplicationContext());
 
         tv = (TextView)findViewById(R.id.textViewTokenValueSettings);
         tv.setText(model.getUser().getToken());

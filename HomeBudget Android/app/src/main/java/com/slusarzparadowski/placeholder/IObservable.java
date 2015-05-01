@@ -7,5 +7,5 @@ import com.slusarzparadowski.model.Model;
  */
 public interface IObservable {
 
-    public void update(Model model);
+    public void update();
 }

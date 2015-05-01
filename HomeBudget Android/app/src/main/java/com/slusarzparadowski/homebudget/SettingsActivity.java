@@ -25,7 +25,7 @@ public class SettingsActivity extends MyActivity {
 
     @Override
     void initElements() {
-        this.model = new Model(getIntent().getExtras());
+        this.model = new Model(getIntent().getExtras(), getApplicationContext());
         this.modelDataSource = new ModelDataSource(getApplicationContext());
 
         this.b1 = (Button)findViewById(R.id.buttonSettingsSave);

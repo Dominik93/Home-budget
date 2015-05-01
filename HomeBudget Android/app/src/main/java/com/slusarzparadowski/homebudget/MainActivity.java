@@ -55,10 +55,10 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
         setContentView(R.layout.activity_main);
         Log.i(getClass().getSimpleName(), "onCreate MainActivity created");
         if (savedInstanceState != null){
-            this.model = new Model(savedInstanceState);
+            this.model = new Model(savedInstanceState, getApplicationContext());
         }
         else{
-            this.model = new Model(getIntent().getExtras());
+            this.model = new Model(getIntent().getExtras(), getApplicationContext());
         }
 
         // Set up the action bar.
@@ -157,7 +157,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
-                this.model = new Model(data.getExtras());
+                this.model = new Model(data.getExtras(), getApplicationContext());
                 this.model.notification();
             }
             else if (resultCode == RESULT_CANCELED) {
@@ -168,7 +168,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
         else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
-                this.model = new Model(data.getExtras());
+                this.model = new Model(data.getExtras(), getApplicationContext());
                 this.model.notification();
             }
             else if (resultCode == RESULT_CANCELED) {

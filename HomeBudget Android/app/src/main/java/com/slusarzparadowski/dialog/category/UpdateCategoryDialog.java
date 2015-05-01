@@ -13,6 +13,7 @@ import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
+import com.slusarzparadowski.model.Model;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,14 +23,14 @@ import java.util.ArrayList;
  */
 public class UpdateCategoryDialog extends CategoryDialog {
 
-    int index;
-    EditText et;
+    private int index;
+    private EditText et;
 
-    public UpdateCategoryDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource, int index) {
-        super(activity, recourse, list, modelDataSource);
+    public UpdateCategoryDialog(Activity activity, int recourse, Model model, String type, int index) {
+        super(activity, recourse, model, type);
         this.index = index;
         this.et = (EditText)this.view.findViewById(R.id.editTextPromptCategoryName);
-        this.et.setText(list.get(index).getName());
+        this.et.setText(model.getMapList().get(type).get(index).getName());
     }
 
     @Override
@@ -43,22 +44,12 @@ public class UpdateCategoryDialog extends CategoryDialog {
 
                                 if (!et.getText().toString().trim().equals("")) {
 
-                                    if (list.contains(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
-                                        list.remove(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
-
-                                    for (Category c : list) {
-                                        if (c.getElementList().contains(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element))))
-                                            c.getElementList().remove(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element)));
-                                    }
-                                    try {
-                                        modelDataSource.open();
-                                    } catch (SQLException e) {
-                                        Log.i(getClass().getSimpleName(), e.toString());
-                                    }
-                                    modelDataSource.updateCategory(list.get(index));
-                                    list.get(index).setName(et.getText().toString());
+                                    model.updateCategory(new Category(model.getMapList().get(type).get(index).getId(),
+                                                                        model.getMapList().get(type).get(index).getIdParent(),
+                                                                        et.getText().toString(),
+                                                                        model.getMapList().get(type).get(index).getType()),
+                                                                        type, index);
                                     ((MainActivity) activity).getModel().notification();
-
                                     Log.i(getClass().getSimpleName(), "update Category(" + index + ")(" + et.getText().toString() + ")");
                                 }
                             }

@@ -23,6 +23,7 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="settings_auto_savings">Auto-savings in first day every month</string>
     <string name="settings_auto_delete">Auto-delete element in first day every month</string>
+    <string name="settings_auto_local_save">Always save in local database</string>
 
     <!-- Summary activity -->
     <string name="summary_income">Income</string>
@@ -69,4 +70,5 @@
 
     <string name="ask">What to do?</string>
     <string name="delete">Delete</string>
+    <string name="title_activity_graph">GraphActivity</string>
 </resources>

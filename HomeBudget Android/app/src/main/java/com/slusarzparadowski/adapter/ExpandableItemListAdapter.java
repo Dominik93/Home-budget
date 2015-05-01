@@ -56,7 +56,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public Element getChild(int groupPosition, int childPosition) {
-        return model.getMap().get(type).get(groupPosition).getElementList().get(childPosition);
+        return model.getMapList().get(type).get(groupPosition).getElementList().get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -64,7 +64,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public int getChildrenCount(int groupPosition) {
-        return model.getMap().get(type).get(groupPosition).getElementList().size();
+        return model.getMapList().get(type).get(groupPosition).getElementList().size();
     }
 
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
@@ -79,7 +79,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public boolean onLongClick(View v) {
                     if(child.getId() != -1){
                         Log.i(getClass().getSimpleName(), "getChildView onLongClick ask element");
-                        new AskElementDialog(activity, R.layout.prompts_ask, model.getMap().get(type), new ModelDataSource(context),type, groupPosition, childPosition).buildDialog().show();
+                        new AskElementDialog(activity, R.layout.prompts_ask, model, type, groupPosition, childPosition).buildDialog().show();
                     }
                     return false;
                 }
@@ -106,11 +106,11 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public Category getGroup(int groupPosition) {
-        return model.getMap().get(type).get(groupPosition);
+        return model.getMapList().get(type).get(groupPosition);
     }
 
     public int getGroupCount() {
-        return model.getMap().get(type).size();
+        return model.getMapList().get(type).size();
     }
 
     public long getGroupId(int groupPosition) {
@@ -121,7 +121,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         View v = convertView;
         final Category group;
         long group_id = getGroupId(groupPosition);
-        group = this.model.getMap().get(type).get((int)group_id);
+        group = this.model.getMapList().get(type).get((int)group_id);
         if (group != null) {
             v = vi.inflate(GROUP_ITEM_RESOURCE, null);
             ViewHolder holder = new ViewHolder(v);
@@ -131,7 +131,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 public void onClick(View v) {
                     if(group.getId() == -1){
                         Log.i(getClass().getSimpleName(), "getGroupView onClick add category");
-                        new NewCategoryDialog(activity, R.layout.prompts_category, model.getMap().get(type), new ModelDataSource(context), type).buildDialog().show();
+                        new NewCategoryDialog(activity, R.layout.prompts_category, model, type).buildDialog().show();
                     }
                     else{
                         if(isExpanded)
@@ -146,7 +146,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 @Override
                 public boolean onLongClick(View v) {
                     Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
-                    new AskCategoryDialog(activity, R.layout.prompts_ask, model.getMap().get(type), new ModelDataSource(context), groupPosition).buildDialog().show();
+                    new AskCategoryDialog(activity, R.layout.prompts_ask, model, type, groupPosition).buildDialog().show();
 
                     return false;
                 }

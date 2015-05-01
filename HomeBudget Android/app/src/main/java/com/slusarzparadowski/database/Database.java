@@ -190,7 +190,7 @@ public class Database {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
-            return new User(0, token, "name", (float)json.getDouble("response_savings"), new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete")));
+            return new User(0, token, "name", (float)json.getDouble("response_savings"), new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete"), json.getBoolean("response_auto_local_save")));
         } catch (JSONException e) {
             Log.e(Database.class.toString(), "getUser "+e.toString());
             return null ;

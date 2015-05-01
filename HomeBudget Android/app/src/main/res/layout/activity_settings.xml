@@ -19,6 +19,12 @@
         android:text="@string/settings_auto_delete"
         android:id="@+id/checkBoxSettingsDelete" />
 
+    <CheckBox
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_auto_local_save"
+        android:id="@+id/checkBoxLocalSave" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

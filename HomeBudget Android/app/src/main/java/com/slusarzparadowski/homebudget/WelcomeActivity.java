@@ -132,7 +132,7 @@ public class WelcomeActivity extends MyActivity {
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b3 offline");
                 if(!spinner.getSelectedItem().toString().equals("Add user")){
-                    modelDataSource.deleteModel(modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
+                    modelDataSource.deleteModel(modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext()));
                     spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
                     if((spinner.getSelectedItem()).toString().equals("Add user")){
                         editText.setVisibility(View.VISIBLE);
@@ -229,13 +229,8 @@ public class WelcomeActivity extends MyActivity {
         }
 
         protected Boolean doInBackground(String... args) {
-            try {
-                model = new Model(getApplicationContext(), true);
-                return true;
-            } catch (IOException e) {
-                Log.e(getClass().getSimpleName(), "doInBackground " + e.toString());
-                return false;
-            }
+            //model = new Model(getApplicationContext(), true);
+            return true;
         }
 
         protected void onPostExecute(Boolean return_value) {
@@ -267,20 +262,13 @@ public class WelcomeActivity extends MyActivity {
             Log.i(getClass().getSimpleName(), "doInBackground");
             Log.i(getClass().getSimpleName(), "doInBackground created new model");
             if((spinner.getSelectedItem()).toString().equals("Add user")){
-                model = new Model(false);
+                model = new Model(false, getApplicationContext());
                 model.getUser().setName(editText.getText().toString());
                 modelDataSource.insertModel(model);
-                spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
-                if((spinner.getSelectedItem()).toString().equals("Add user")){
-                    editText.setVisibility(View.VISIBLE);
-                }
-                else{
-                    editText.setVisibility(View.GONE);
-                }
                 return true;
             }
             else{
-                model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
                 return true;
             }
         }

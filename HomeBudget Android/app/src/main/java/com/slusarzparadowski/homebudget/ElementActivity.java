@@ -42,7 +42,7 @@ public class ElementActivity extends MyActivity {
 
     @Override
     void initElements() {
-        this.model = new Model(getIntent().getExtras());
+        this.model = new Model(getIntent().getExtras(), getApplicationContext());
         this.modelDataSource = new ModelDataSource(this);
 
         et1 = (EditText)findViewById(R.id.editTextElementName);
@@ -54,12 +54,12 @@ public class ElementActivity extends MyActivity {
         cb2 = (CheckBox)findViewById(R.id.checkBoxElementConstant);
 
         if(element != -1){
-            et1.setText(model.getMap().get(type).get(category).getElementList().get(element).getName());
-            et2.setText(String .valueOf((model.getMap().get(type).get(category).getElementList().get(element).getValue())));
-            cb2.setChecked(model.getMap().get(type).get(category).getElementList().get(element).isConstant());
-            if(model.getMap().get(type).get(category).getElementList().get(element).getDate() != null ){
+            et1.setText(model.getMapList().get(type).get(category).getElementList().get(element).getName());
+            et2.setText(String .valueOf((model.getMapList().get(type).get(category).getElementList().get(element).getValue())));
+            cb2.setChecked(model.getMapList().get(type).get(category).getElementList().get(element).isConstant());
+            if(model.getMapList().get(type).get(category).getElementList().get(element).getDate() != null ){
                 cb1.setChecked(true);
-                LocalDate localDate = new LocalDate(model.getMap().get(type).get(category).getElementList().get(element).getDate());
+                LocalDate localDate = new LocalDate(model.getMapList().get(type).get(category).getElementList().get(element).getDate());
                 dp.setVisibility(View.VISIBLE);
                 dp.updateDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
             }
@@ -93,38 +93,31 @@ public class ElementActivity extends MyActivity {
                 Log.i(getClass().getSimpleName(), "onClick ");
                 Intent returnIntent = new Intent();
 
-                model.removeSpecialItem(getApplicationContext());
-
                 Element elementObj;
-                try {
-                    modelDataSource.open();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                if(cb2.isChecked()) {
-                    LocalDate localDate = new LocalDate(dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
+                if (cb1.isChecked()) {
                     elementObj = new Element(
-                                                                0,
-                                                                model.getMap().get(type).get(category).getId(),
-                                                                et1.getText().toString(),
-                                                                Float.valueOf(et2.getText().toString()),
-                                                                cb2.isChecked(),
-                                                                localDate);
+                            0,
+                            model.getMapList().get(type).get(category).getId(),
+                            et1.getText().toString(),
+                            Float.valueOf(et2.getText().toString()),
+                            cb2.isChecked(),
+                            new LocalDate(dp.getYear(), dp.getMonth(), dp.getDayOfMonth()));
+                } else {
+                    elementObj = new Element(
+                            0,
+                            model.getMapList().get(type).get(category).getId(),
+                            et1.getText().toString(),
+                            Float.valueOf(et2.getText().toString()),
+                            cb2.isChecked(),
+                            null);
+                }
+                if(element == -1) {
+                    model.addElementToCategory(elementObj, category, type);
                 }
                 else{
-                    elementObj = new Element(
-                                                                0,
-                                                                model.getMap().get(type).get(category).getId(),
-                                                                et1.getText().toString(),
-                                                                Float.valueOf(et2.getText().toString()),
-                                                                cb2.isChecked(),
-                                                                null);
+                    model.updateElement(elementObj, element, category, type);
                 }
-                Log.i(getClass().getSimpleName(), elementObj.toString());
-                elementObj = modelDataSource.insertElement(elementObj);
-                Log.i(getClass().getSimpleName(), elementObj.toString());
-                modelDataSource.close();
-                model.getMap().get(type).get(category).getElementList().add(elementObj);
+                model.removeSpecialItem(getApplicationContext());
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);
                 finish();

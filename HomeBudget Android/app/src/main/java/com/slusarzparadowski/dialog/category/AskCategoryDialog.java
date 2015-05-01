@@ -12,6 +12,7 @@ import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
+import com.slusarzparadowski.model.Model;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,12 +20,12 @@ import java.util.ArrayList;
 /**
  * Created by Dominik on 2015-04-09.
  */
-public class AskCategoryDialog extends CategoryDialog{
+public class AskCategoryDialog extends CategoryDialog {
 
-    int index;
+    private int index;
 
-    public AskCategoryDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource, int index) {
-        super(activity, recourse, list, modelDataSource);
+    public AskCategoryDialog(Activity activity, int recourse, Model model, String type, int index) {
+        super(activity, recourse, model, type);
         this.index = index;
     }
 
@@ -36,7 +37,7 @@ public class AskCategoryDialog extends CategoryDialog{
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Update");
                                 dialog.cancel();
-                                new UpdateCategoryDialog(activity, R.layout.prompts_category, list, modelDataSource, index).buildDialog().show();
+                                new UpdateCategoryDialog(activity, R.layout.prompts_category, model, type, index).buildDialog().show();
                                 }
                         })
                 .setNeutralButton("Cancel",
@@ -49,23 +50,8 @@ public class AskCategoryDialog extends CategoryDialog{
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+index+")");
-                                if (list.contains(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD")))
-                                    list.remove(new Category(-1, -1, activity.getApplicationContext().getString(R.string.add_category), "ADD"));
-
-                                for (Category c : list) {
-                                    if (c.getElementList().contains(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element))))
-                                        c.getElementList().remove(new Element(-1, -1, activity.getApplicationContext().getString(R.string.add_element)));
-                                }
-                                try {
-                                    modelDataSource.open();
-                                } catch (SQLException e) {
-                                    Log.i(getClass().getSimpleName(), e.toString());
-                                }
-
-                                modelDataSource.deleteCategory(list.get(index));
-                                modelDataSource.close();
-                                list.remove(index);
-
+                                model.removeCategory(model.getMapList().get(type).get(index), type);
+                                model.removeSpecialItem(activity);
                                 ((MainActivity)getActivity()).getModel().notification();
                                 dialog.cancel();
                             }

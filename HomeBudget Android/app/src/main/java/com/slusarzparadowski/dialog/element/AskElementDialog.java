@@ -15,6 +15,7 @@ import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Element;
+import com.slusarzparadowski.model.Model;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,18 +25,16 @@ import java.util.ArrayList;
  */
 public class AskElementDialog extends MyDialog {
 
-    ArrayList<Category> list;
-    int indexCategory, indexElement;
-    String type;
-    ModelDataSource modelDataSource;
+    private Model model;
+    private int indexCategory, indexElement;
+    private String type;
 
-    public AskElementDialog(Activity activity, int recourse, ArrayList<Category> list, ModelDataSource modelDataSource, String type, int indexCategory, int indexElement) {
+    public AskElementDialog(Activity activity, int recourse, Model model, String type, int indexCategory, int indexElement) {
         super(activity, recourse);
         this.indexCategory = indexCategory;
         this.indexElement = indexElement;
-        this.list = list;
+        this.model = model;
         this.type = type;
-        this.modelDataSource = modelDataSource;
     }
 
     public MyDialog buildDialog(){
@@ -70,21 +69,8 @@ public class AskElementDialog extends MyDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+indexCategory+") E("+indexElement+")");
-                                if (!list.contains(new Category(-1, -1, activity.getString(R.string.add_category), "ADD")))
-                                    list.add(new Category(-1, -1, activity.getString(R.string.add_category), "ADD"));
-
-                                for(Category c : list){
-                                    if (!c.getElementList().contains(new Element(-1, -1, activity.getString(R.string.add_element))))
-                                        c.getElementList().add(new Element(-1, -1, activity.getString(R.string.add_element)));
-                                }
-                                try {
-                                    modelDataSource.open();
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
-                                modelDataSource.deleteElement(list.get(indexCategory).getElementList().get(indexElement));
-                                modelDataSource.close();
-                                list.get(indexCategory).getElementList().remove(indexElement);
+                                model.removeElementFromCategory(model.getMapList().get(type).get(indexCategory).getElementList().get(indexElement), indexCategory, type);
+                                model.removeSpecialItem(activity);
                                 ((MainActivity)activity).getModel().notification();
                                 dialog.cancel();
                             }

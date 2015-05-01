@@ -41,6 +41,7 @@ public class SQLite extends SQLiteOpenHelper {
             "  id_user INTEGER NULL DEFAULT NULL," +
             "  auto_delete INTEGER NULL DEFAULT NULL," +
             "  auto_savings INTEGER NULL DEFAULT NULL," +
+            "  auto_local_save INTEGER NULL DEFAULT NULL," +
             "  FOREIGN KEY(id_user) REFERENCES user(id) ON DELETE CASCADE)";
 
     public static final String TABLE_USER = "user";
@@ -60,6 +61,7 @@ public class SQLite extends SQLiteOpenHelper {
     public static final String COLUMN_CONST = "const";
     public static final String COLUMN_AUTO_DELETE = "auto_delete";
     public static final String COLUMN_AUTO_SAVINGS = "auto_savings";
+    public static final String COLUMN_AUTO_LOCAL_SAVE = "auto_local_save";
 
     public SQLite(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

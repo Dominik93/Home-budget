@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:text="@string/generate_graph"
-            android:id="@+id/button4"
+            android:id="@+id/buttonGraph"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </ScrollView>
