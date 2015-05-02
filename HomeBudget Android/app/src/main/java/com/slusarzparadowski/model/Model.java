@@ -222,6 +222,7 @@ public class Model implements IObserver, IBundle{
         if(!mode || user.getSettings().isAutoLocalSave()){
             modelDataSource.updateCategory(category);
         }
+        category.setElementList(mapList.get(type).get(index).getElementList());
         mapList.get(type).set(index, category);
         closeConnection();
     }

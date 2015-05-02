@@ -47,37 +47,34 @@ public class GraphActivity extends MyActivity {
             arrays.add(categorySum);
             categories.add((c.getName()));
         }
-        Data sum = DataUtil.scaleWithinRange(0,  Math.abs(Collections.min(arrays)), arrays);
-        BarChartPlot red = Plots.newBarChartPlot(sum, RED, "SUM");
+        Data sum = DataUtil.scaleWithinRange(0, Collections.max(arrays), arrays);
+        BarChartPlot red = Plots.newBarChartPlot(sum, BLUE, "SUM");
         BarChart chart = GCharts.newBarChart(red);
 
         // Defining axis info and styles
         AxisStyle axisStyle = AxisStyle.newAxisStyle(BLACK, 13, AxisTextAlignment.CENTER);
-        AxisLabels country = AxisLabelsFactory.newAxisLabels("Categories", Math.abs(Collections.min(arrays)));
-        country.setAxisStyle(axisStyle);
-        AxisLabels countries = AxisLabelsFactory.newAxisLabels(categories);
-        countries.setAxisStyle(axisStyle);
-        AxisLabels medals = AxisLabelsFactory.newAxisLabels("Value",  Math.abs(Collections.min(arrays)));
-        medals.setAxisStyle(axisStyle);
-        AxisLabels medalCount = AxisLabelsFactory.newNumericRangeAxisLabels(0,  Math.abs(Collections.min(arrays)));
-        medalCount.setAxisStyle(axisStyle);
+        AxisLabels categoriesLabel = AxisLabelsFactory.newAxisLabels(categories);
+        categoriesLabel.setAxisStyle(axisStyle);
+        AxisLabels valueLabel = AxisLabelsFactory.newAxisLabels("Value", 50);
+        valueLabel.setAxisStyle(axisStyle);
+        AxisLabels value = AxisLabelsFactory.newNumericRangeAxisLabels(0, (Collections.max(arrays)));
+        value.setAxisStyle(axisStyle);
 
 
         // Adding axis info to chart.
-        chart.addXAxisLabels(medalCount);
-        chart.addXAxisLabels(medals);
-        chart.addYAxisLabels(countries);
-        chart.addYAxisLabels(country);
-        chart.addTopAxisLabels(medalCount);
+        chart.addXAxisLabels(value);
+        chart.addXAxisLabels(valueLabel);
+        chart.addYAxisLabels(categoriesLabel);
+        chart.addTopAxisLabels(value);
         chart.setHorizontal(true);
-        chart.setSize(450, 650);
-        chart.setSpaceBetweenGroupsOfBars(30);
+        chart.setSize(450, categories.size() * 100);
+        chart.setSpaceBetweenGroupsOfBars(10);
 
         chart.setTitle("Graph", BLACK, 16);
         ///51 is the max number of medals.
-        chart.setGrid((50.0/ Math.abs(Collections.min(arrays)))*20, 600, 3, 2);
-        chart.setBackgroundFill(Fills.newSolidFill(LIGHTGREY));
-        LinearGradientFill fill = Fills.newLinearGradientFill(0, Color.newColor("E37600"), 100);
+        chart.setGrid((50.0/(Collections.max(arrays)))*20, 600, 1, 1);
+        chart.setBackgroundFill(Fills.newSolidFill(WHITESMOKE));
+        LinearGradientFill fill = Fills.newLinearGradientFill(0, Color.newColor("FFEFD5"), 100);
         fill.addColorAndOffset(Color.newColor("DC4800"), 0);
         chart.setAreaFill(fill);
         String url = chart.toURLString();
