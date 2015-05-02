@@ -1,7 +1,9 @@
 package com.slusarzparadowski.model;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,6 +11,19 @@ import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.googlecode.charts4j.AxisLabels;
+import com.googlecode.charts4j.AxisLabelsFactory;
+import com.googlecode.charts4j.AxisStyle;
+import com.googlecode.charts4j.AxisTextAlignment;
+import com.googlecode.charts4j.BarChart;
+import com.googlecode.charts4j.BarChartPlot;
+import com.googlecode.charts4j.Color;
+import com.googlecode.charts4j.Data;
+import com.googlecode.charts4j.DataUtil;
+import com.googlecode.charts4j.Fills;
+import com.googlecode.charts4j.GCharts;
+import com.googlecode.charts4j.LinearGradientFill;
+import com.googlecode.charts4j.Plots;
 import com.slusarzparadowski.database.Database;
 import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.homebudget.R;
@@ -18,8 +33,13 @@ import com.slusarzparadowski.placeholder.Placeholder;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.googlecode.charts4j.Color.BLACK;
+import static com.googlecode.charts4j.Color.BLUE;
+import static com.googlecode.charts4j.Color.WHITESMOKE;
 
 /**
  * Created by Dominik on 2015-03-22.
@@ -32,7 +52,7 @@ public class Model implements IObserver, IBundle{
     private final String OUTCOME = "outcome";
     private ModelDataSource modelDataSource;
     
-    private Map<String,  ArrayList<Category> > mapList = new HashMap<String,  ArrayList<Category>>();
+    private Map<String, ArrayList<Category> > mapList = new HashMap<String,  ArrayList<Category>>();
 
     private boolean mode; // true- online false-offline
     private User user;
@@ -126,12 +146,61 @@ public class Model implements IObserver, IBundle{
 
     //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="sync">
+
     public void syncDatabase(Model model){
         //TODO: file -> database
     }
 
     public void syncFile(Model model){
         //TODO: database -> file
+    }
+
+    //</editor-fold>
+
+    public String generateGraph(Activity context){
+        removeSpecialItem(context);
+        ArrayList<Float> arrays = new ArrayList<>();
+        ArrayList<String> categories = new ArrayList<>();
+        for(Category c : this.getOutcome()){
+            float categorySum = 0;
+            for(Element e : c.getElementList()){
+                categorySum += Math.abs(e.getValue());
+            }
+            arrays.add(categorySum);
+            categories.add((c.getName()));
+        }
+        Data sum = DataUtil.scaleWithinRange(0, Collections.max(arrays), arrays);
+        BarChartPlot blue = Plots.newBarChartPlot(sum, BLUE, "SUM");
+        BarChart chart = GCharts.newBarChart(blue);
+
+        // Defining axis info and styles
+        AxisStyle axisStyle = AxisStyle.newAxisStyle(BLACK, 13, AxisTextAlignment.CENTER);
+        AxisLabels categoriesLabel = AxisLabelsFactory.newAxisLabels(categories);
+        categoriesLabel.setAxisStyle(axisStyle);
+        AxisLabels valueLabel = AxisLabelsFactory.newAxisLabels("Value", 50);
+        valueLabel.setAxisStyle(axisStyle);
+        AxisLabels value = AxisLabelsFactory.newNumericRangeAxisLabels(0, (Collections.max(arrays)));
+        value.setAxisStyle(axisStyle);
+
+
+        // Adding axis info to chart.
+        chart.addXAxisLabels(value);
+        chart.addXAxisLabels(valueLabel);
+        chart.addYAxisLabels(categoriesLabel);
+        chart.addTopAxisLabels(value);
+        chart.setHorizontal(true);
+        chart.setSize(context.getWindowManager().getDefaultDisplay().getWidth(), categories.size() * 100);
+        chart.setSpaceBetweenGroupsOfBars(10);
+
+        chart.setTitle("Graph", BLACK, 16);
+        ///51 is the max number of medals.
+        chart.setGrid((50.0/(Collections.max(arrays)))*20, 600, 1, 1);
+        chart.setBackgroundFill(Fills.newSolidFill(WHITESMOKE));
+        LinearGradientFill fill = Fills.newLinearGradientFill(0, Color.newColor("FFEFD5"), 100);
+        fill.addColorAndOffset(Color.newColor("DC4800"), 0);
+        chart.setAreaFill(fill);
+        return chart.toURLString();
     }
 
     public void calculateIncomeSum(){
@@ -154,6 +223,8 @@ public class Model implements IObserver, IBundle{
         for(Category c : income){
             if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
+            if (!c.getElementList().contains(new Element(-2, -1, "Show summary")))
+                c.getElementList().add(new Element(-2, -1, "Show summary"));
         }
 
         if (!outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
@@ -161,6 +232,9 @@ public class Model implements IObserver, IBundle{
         for(Category c : outcome){
             if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
+            if (!c.getElementList().contains(new Element(-2, -1, "Show summary")))
+                c.getElementList().add(new Element(-2, -1, "Show summary"));
+
         }
     }
 
@@ -170,6 +244,8 @@ public class Model implements IObserver, IBundle{
         for (Category c : income) {
             if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
+            if (c.getElementList().contains(new Element(-2, -1, "Show summary")))
+                c.getElementList().remove(new Element(-2, -1, "Show summary"));
         }
 
         if ( outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
@@ -177,6 +253,8 @@ public class Model implements IObserver, IBundle{
         for (Category c : outcome) {
             if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
+            if (c.getElementList().contains(new Element(-2, -1, "Show summary")))
+                c.getElementList().remove(new Element(-2, -1, "Show summary"));
         }
     }
 
