@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
@@ -32,9 +33,11 @@ public class NewCategoryDialog extends CategoryDialog {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(getClass().getSimpleName(), "OK");
                                 if (!editText.getText().toString().trim().equals("")) {
-                                    model.addCategory(new Category(0, ((MainActivity)activity).getModel().getUser().getId(), editText.getText().toString(), type), type);
+                                    model.addCategory(new Category(0, ((MainActivity) activity).getModel().getUser().getId(), editText.getText().toString(), type), type);
                                     model.removeSpecialItem(activity);
-                                    ((MainActivity)activity).getModel().notification();
+                                    ((MainActivity) activity).getModel().notification();
+                                } else {
+                                    Toast.makeText(activity, activity.getString(R.string.toast_category), Toast.LENGTH_LONG).show();
                                 }
                             }
                         })

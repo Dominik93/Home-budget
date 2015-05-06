@@ -10,8 +10,6 @@
     <string name="title_section2">Summary</string>
     <string name="title_section3">Income</string>
 
-    <string name="hello_world">Hello world!</string>
-
     <!-- Version activity -->
     <string name="title_activity_version">VersionActivity</string>
     <string name="token_settings">Token:</string>
@@ -30,6 +28,7 @@
     <string name="summary_outcome">Outcome </string>
     <string name="summary_summary">Summary</string>
     <string name="summary_savings">Savings</string>
+    <string name="generate_graph">Generate graph</string>
 
     <!-- welcome activity -->
     <string name="title_activity_welcome">WelcomeActivity</string>
@@ -61,14 +60,27 @@
 
     <string name="category_name">Type name of category:</string>
     <string name="token_name">Token:</string>
-    <string name="generate_graph">Generate graph</string>
 
-
-    <!-- List adapter activity -->
+    <!-- list adapter -->
     <string name="add_category">Add category</string>
     <string name="add_element">Add element</string>
-
+    <string name="show_summary_category">Show summary</string>
+    <!-- dialog -->
     <string name="ask">What to do?</string>
     <string name="delete">Delete</string>
+    <string name="check_graph">Work ony with internet access</string>
+
+    <!-- graph activity -->
     <string name="title_activity_graph">GraphActivity</string>
+
+    <!-- show summary activity -->
+    <string name="title_activity_show_summary">ShowSummaryActivity</string>
+    <string name="max_element">Max element</string>
+    <string name="min_element">Min element</string>
+    <string name="part_all">Part of all</string>
+    <string name="category">Category</string>
+
+    <!-- toast -->
+    <string name="toast_category">Invalid name</string>
+    <string name="sum_all_elements">Sum of all elements</string>
 </resources>

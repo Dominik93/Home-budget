@@ -44,6 +44,10 @@
             android:name=".GraphActivity"
             android:label="@string/title_activity_graph" >
         </activity>
+        <activity
+            android:name=".ShowSummaryActivity"
+            android:label="@string/title_activity_show_summary" >
+        </activity>
     </application>
 
 </manifest>

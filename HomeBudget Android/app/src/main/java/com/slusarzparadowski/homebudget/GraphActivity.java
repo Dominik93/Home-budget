@@ -42,8 +42,7 @@ public class GraphActivity extends MyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
         this.initElements();
-        // EXAMPLE CODE END. Use this url string in your web or
-        // Internet application.
+        this.initListeners();
     }
 
 

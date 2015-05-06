@@ -20,6 +20,7 @@ import android.widget.Spinner;
 
 import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.InternetAccessDialog;
+import com.slusarzparadowski.dialog.NotificationDialog;
 import com.slusarzparadowski.model.Model;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.sql.SQLException;
 
 public class WelcomeActivity extends MyActivity {
 
-    ProgressDialog pDialog;
+    ProgressDialog progressDialog;
     Model model;
     EditText editText;
     Button b1, b2, b3;
@@ -117,6 +118,7 @@ public class WelcomeActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b1 online");
+
                 new CheckInternetAccess().execute();
             }
         });
@@ -124,6 +126,7 @@ public class WelcomeActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b2 offline");
+
                 new LoadModelFromFile().execute();
             }
         });
@@ -167,11 +170,11 @@ public class WelcomeActivity extends MyActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.i(getClass().getSimpleName(), "onPreExecute");
-            pDialog = new ProgressDialog(WelcomeActivity.this);
-            pDialog.setMessage("Checking internet connection...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+            progressDialog = new ProgressDialog(WelcomeActivity.this);
+            progressDialog.setMessage("Checking internet connection...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         protected Boolean doInBackground(Void... args) {
@@ -181,13 +184,13 @@ public class WelcomeActivity extends MyActivity {
         protected void onPostExecute(Boolean return_value) {
             Log.i(getClass().getSimpleName(), "onPostExecute "+ return_value);
             if(return_value){
-                pDialog.setMessage("Load model form database...");
+                progressDialog.setMessage("Load model form database...");
                 new LoadModelFromDatabase().execute();
             }
             else{
                 Log.i(getClass().getSimpleName(), "onPostExecute No internet access turn on wifi or 3G");
-                pDialog.dismiss();
-                new InternetAccessDialog(activity, R.layout.prompts_internet).buildDialog().show();
+                progressDialog.dismiss();
+                new NotificationDialog(activity, R.layout.notification_dialog, getString(R.string.connection_error)).buildDialog().show();
             }
 
         }
@@ -235,7 +238,7 @@ public class WelcomeActivity extends MyActivity {
 
         protected void onPostExecute(Boolean return_value) {
             Log.i(getClass().getSimpleName(), "onPostExecute "+ return_value);
-            pDialog.dismiss();
+            progressDialog.dismiss();
             if(return_value){
                 Intent intent = new Intent(getApplication(), MainActivity.class);
                 intent.putExtras(model.saveToBundle());
@@ -251,11 +254,11 @@ public class WelcomeActivity extends MyActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.i(getClass().getSimpleName(), "onPreExecute");
-            pDialog = new ProgressDialog(WelcomeActivity.this);
-            pDialog.setMessage("Load model from file...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+            progressDialog = new ProgressDialog(WelcomeActivity.this);
+            progressDialog.setMessage("Load model from file...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -275,7 +278,7 @@ public class WelcomeActivity extends MyActivity {
 
         protected void onPostExecute(Boolean return_value) {
             Log.i(getClass().getSimpleName(), "onPostExecute "+ return_value);
-            pDialog.dismiss();
+            progressDialog.dismiss();
             if(return_value){
                 Intent intent = new Intent(getApplication(), MainActivity.class);
                 intent.putExtras(model.saveToBundle());

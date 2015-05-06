@@ -45,6 +45,10 @@ public class ElementActivity extends MyActivity {
         this.model = new Model(getIntent().getExtras(), getApplicationContext());
         this.modelDataSource = new ModelDataSource(this);
 
+        category = getIntent().getExtras().getInt("category");
+        element = getIntent().getExtras().getInt("element");
+        type = getIntent().getExtras().getString("type");
+
         et1 = (EditText)findViewById(R.id.editTextElementName);
         et2 = (EditText)findViewById(R.id.editTextElementValue);
         b1 = (Button)findViewById(R.id.buttonElementSave);
@@ -138,11 +142,6 @@ public class ElementActivity extends MyActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_element);
-
-        category = getIntent().getExtras().getInt("category");
-        element = getIntent().getExtras().getInt("element");
-        type = getIntent().getExtras().getString("type");
-
         this.initElements();
         this.initListeners();
     }

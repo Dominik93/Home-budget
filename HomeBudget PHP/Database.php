@@ -36,8 +36,8 @@ class Mysql{
      * if query failed
      * a string that describes the error
      */
-    public function insertToken($token){ 
-        $query = "insert into user (id) values ('". $this->clear($token) ."');";
+    public function insertUser($token, $name){ 
+        $query = "insert into user (id, name) values ('". $this->clear($token) ."', '". $this->clear($name) ."');";
         if(mysqli_query($this->link, $query)){
             return true;
         }
@@ -45,7 +45,9 @@ class Mysql{
             return $this->getError();
         }
     }
-    
+    /*
+        TODO:
+    */
     public function insertSettings($token){
         $query = 'INSERT INTO settings(id_user, auto_delete, auto_savings) VALUES ("'. $this->clear($token) .'", 0, 0)';
         mysqli_query($this->link, $query);
@@ -59,10 +61,10 @@ class Mysql{
      * if query failed
      * a string that describes the error
      */
-    public function insertCategory($token, $name, $type){
+    public function insertCategory($id, $name, $type){
         echo $this->clear($name);
         $query = "insert into category (id_user, name, type)"
-                . " values ('". $this->clear($token) ."', '".  $this->clear($name) ."', '". $this->clear($type) ."');";
+                . " values ('". $this->clear($id) ."', '".  $this->clear($name) ."', '". $this->clear($type) ."');";
         if(mysqli_query($this->link, $query)){
            return true;
         }

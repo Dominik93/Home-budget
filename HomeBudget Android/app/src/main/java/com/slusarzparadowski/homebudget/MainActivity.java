@@ -1,6 +1,12 @@
 package com.slusarzparadowski.homebudget;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,8 +20,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Locale;
 
+import com.slusarzparadowski.dialog.InternetAccessDialog;
 import com.slusarzparadowski.model.Model;
 import com.slusarzparadowski.placeholder.PlaceholderConcreteList;
 import com.slusarzparadowski.placeholder.PlaceholderSummary;
@@ -24,6 +33,7 @@ import com.slusarzparadowski.placeholder.PlaceholderSummary;
 public class MainActivity extends MyActivity implements ActionBar.TabListener {
 
     private Model model;
+    Activity activity;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -41,7 +51,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
 
     @Override
     void initElements() {
-
+        activity = this;
     }
 
     @Override
@@ -53,6 +63,7 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initElements();
         Log.i(getClass().getSimpleName(), "onCreate MainActivity created");
         if (savedInstanceState != null){
             this.model = new Model(savedInstanceState, getApplicationContext());

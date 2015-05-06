@@ -15,6 +15,8 @@ public abstract class MyActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //initElements();
+        //initListeners();
     }
 
     @Override

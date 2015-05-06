@@ -22,6 +22,7 @@ import com.slusarzparadowski.dialog.element.AskElementDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
+import com.slusarzparadowski.homebudget.ShowSummaryActivity;
 import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Model;
@@ -98,8 +99,16 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                         intent.putExtras(bundle);
                         activity.startActivityForResult(intent, 2);
                     }
-                    if(child.getId() == -2) {
-                        Log.i(getClass().getSimpleName(), "getChildView onClick add element");
+                    if(child.getId() == -2 && model.getMapList().get(type).get(groupPosition).getElementList().size() > 2) {
+                        Log.i(getClass().getSimpleName(), "getChildView onClick show category");
+                        Intent intent = new Intent(activity, ShowSummaryActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
+                        bundle.putInt("category", groupPosition);
+                        bundle.putInt("element", childPosition);
+                        bundle.putString("type", type);
+                        intent.putExtras(bundle);
+                        activity.startActivity(intent);
                     }
                     Log.i(getClass().getSimpleName(), "getChildView onClick");
                 }

@@ -31,6 +31,31 @@ public class Category extends DatabaseObjectChild {
         this.elementList = new ArrayList<>();
     }
 
+    public float getSumElement(){
+        float sum = 0;
+        for(Element e : this.elementList)
+            sum += Math.abs(e.getValue());
+        return sum;
+    }
+
+    public Element getMinElement(){
+        int i = 0;
+        for (int j = 0; j < this.elementList.size(); j++){
+            if(this.elementList.get(i).getValue() > this.elementList.get(j).getValue())
+                i = j;
+        }
+        return this.elementList.get(i);
+    }
+
+    public Element getMaxElement(){
+        int i = 0;
+        for (int j = 0; j < this.elementList.size(); j++){
+            if(this.elementList.get(i).getValue() < this.elementList.get(j).getValue())
+                i = j;
+        }
+        return this.elementList.get(i);
+    }
+
     public ArrayList<Element> getElementList() {
         return elementList;
     }
@@ -57,7 +82,8 @@ public class Category extends DatabaseObjectChild {
 
     @Override
     public String toString(){
-        return this.id +" "+ this.name + " "+ this.type;
+        return this.name;
+        //return this.id +" "+ this.name + " "+ this.type;
     }
 
     @Override

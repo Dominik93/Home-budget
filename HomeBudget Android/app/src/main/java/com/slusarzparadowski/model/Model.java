@@ -221,19 +221,19 @@ public class Model implements IObserver, IBundle{
         if (!income.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
             income.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
         for(Category c : income){
+            if (!c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))))
+                c.getElementList().add(new Element(-2, -1, context.getString(R.string.show_summary_category)));
             if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
-            if (!c.getElementList().contains(new Element(-2, -1, "Show summary")))
-                c.getElementList().add(new Element(-2, -1, "Show summary"));
         }
 
         if (!outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
             outcome.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
         for(Category c : outcome){
+            if (!c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))))
+                c.getElementList().add(new Element(-2, -1, context.getString(R.string.show_summary_category)));
             if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
-            if (!c.getElementList().contains(new Element(-2, -1, "Show summary")))
-                c.getElementList().add(new Element(-2, -1, "Show summary"));
 
         }
     }
