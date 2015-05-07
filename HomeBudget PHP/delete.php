@@ -5,7 +5,8 @@ $mysql = new Mysql("mysql.hostinger.pl", "u906935981_pz", "Aq12wS", "u906935981_
 
 if(isset($_POST['delete_user'])){
     $mysql->connect();
-    if($result = $mysql->deleteUser($_POST['delete_user'])){
+    $result = $mysql->deleteUser($_POST['delete_user']);
+    if($result === true){
         $response['response_value'] = 1;
         $response['response_message'] = "USER_DELETED";
     }

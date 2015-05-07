@@ -13,6 +13,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.category.AskCategoryDialog;
@@ -99,16 +100,21 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                         intent.putExtras(bundle);
                         activity.startActivityForResult(intent, 2);
                     }
-                    if(child.getId() == -2 && model.getMapList().get(type).get(groupPosition).getElementList().size() > 2) {
-                        Log.i(getClass().getSimpleName(), "getChildView onClick show category");
-                        Intent intent = new Intent(activity, ShowSummaryActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
-                        bundle.putInt("category", groupPosition);
-                        bundle.putInt("element", childPosition);
-                        bundle.putString("type", type);
-                        intent.putExtras(bundle);
-                        activity.startActivity(intent);
+                    else if(child.getId() == -2) {
+                        if(model.getMapList().get(type).get(groupPosition).getElementList().size() > 2){
+                            Log.i(getClass().getSimpleName(), "getChildView onClick show category");
+                            Intent intent = new Intent(activity, ShowSummaryActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle = ((MainActivity) activity).getModel().addToBundle(bundle);
+                            bundle.putInt("category", groupPosition);
+                            bundle.putInt("element", childPosition);
+                            bundle.putString("type", type);
+                            intent.putExtras(bundle);
+                            activity.startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(activity, activity.getString(R.string.toast_no_element), Toast.LENGTH_LONG).show();
+                        }
                     }
                     Log.i(getClass().getSimpleName(), "getChildView onClick");
                 }
@@ -158,8 +164,8 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
                 @Override
                 public boolean onLongClick(View v) {
                     Log.i(getClass().getSimpleName(), "getGroupView onLongClick");
-                    new AskCategoryDialog(activity, R.layout.prompts_ask, model, type, groupPosition).buildDialog().show();
-
+                    if(group.getId() != -1 && group.getId() != -2)
+                        new AskCategoryDialog(activity, R.layout.prompts_ask, model, type, groupPosition).buildDialog().show();
                     return false;
                 }
             });

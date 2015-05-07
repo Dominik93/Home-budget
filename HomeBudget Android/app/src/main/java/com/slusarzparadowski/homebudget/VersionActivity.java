@@ -1,34 +1,40 @@
 package com.slusarzparadowski.homebudget;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import com.slusarzparadowski.dialog.TokenDialog;
 import com.slusarzparadowski.model.Model;
-
-import org.w3c.dom.Text;
 
 
 public class VersionActivity extends MyActivity {
 
     Model model;
-    TextView tv;
+    TextView textView0, textView1;
+    Activity activity;
 
     @Override
     void initElements() {
+        activity = this;
         model = new Model(getIntent().getExtras(), getApplicationContext());
-
-        tv = (TextView)findViewById(R.id.textViewTokenValueSettings);
-        tv.setText(model.getUser().getToken());
+        textView0 = (TextView)findViewById(R.id.textViewTokenValue);
+        textView0.setText(model.getUser().getToken());
+        textView1 = (TextView)findViewById(R.id.textViewToken);
     }
 
     @Override
     void initListeners() {
-
+        textView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TokenDialog(activity, R.layout.prompts_token, model.getUser()).buildDialog().show();
+            }
+        });
     }
 
     @Override

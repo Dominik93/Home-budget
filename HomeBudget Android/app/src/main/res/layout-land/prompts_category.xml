@@ -11,12 +11,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/category_name"
-        android:id="@+id/textViewPromptCategory" />
+        android:id="@+id/textViewPromptCategory"
+        android:gravity="left"
+        android:textColor="#ffffffff" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextPromptCategoryName"
         android:inputType="text"
-        android:editable="false" />
+        android:editable="false"
+        android:background="#ffffffff" />
 </LinearLayout>

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/token_settings"
-        android:id="@+id/textView5"
+        android:id="@+id/textViewToken"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -24,12 +24,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/token_value_settings"
         android:textSize="12sp"
-        android:id="@+id/textViewTokenValueSettings"
-        android:layout_below="@+id/textView5"
+        android:id="@+id/textViewTokenValue"
+        android:layout_below="@+id/textViewToken"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5"
+        android:layout_alignRight="@+id/textViewToken"
+        android:layout_alignEnd="@+id/textViewToken"
         android:layout_alignParentRight="true" />
 
     <TextView
@@ -37,12 +37,12 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/version_settings"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/textViewTokenValueSettings"
+        android:id="@+id/textViewVersion"
+        android:layout_below="@+id/textViewTokenValue"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textViewTokenValueSettings"
-        android:layout_alignEnd="@+id/textViewTokenValueSettings" />
+        android:layout_alignRight="@+id/textViewTokenValue"
+        android:layout_alignEnd="@+id/textViewTokenValue" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -51,11 +51,11 @@
         android:text="@string/version_value_settings"
         android:textSize="12sp"
         android:id="@+id/textView8"
-        android:layout_below="@+id/textView7"
+        android:layout_below="@+id/textViewVersion"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView7"
-        android:layout_alignEnd="@+id/textView7"
+        android:layout_alignRight="@+id/textViewVersion"
+        android:layout_alignEnd="@+id/textViewVersion"
         android:layout_alignParentRight="true" />
 
 </RelativeLayout>

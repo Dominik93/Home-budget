@@ -15,7 +15,7 @@
         android:text="@string/welcome"
         android:id="@+id/textView2"
         android:gravity="center_horizontal"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="157dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -35,4 +35,30 @@
         android:id="@+id/buttonOffline"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerUsers"
+        android:layout_below="@+id/buttonOnline"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextUserName"
+        android:layout_below="@+id/spinnerUsers"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        android:id="@+id/buttonDelete"
+        android:layout_below="@+id/spinnerUsers"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible" />
 </RelativeLayout>

@@ -26,13 +26,13 @@ public class ShowSummaryActivity extends MyActivity {
         tv1 = (TextView) findViewById(R.id.textViewMaxElementValue);
         tv2 = (TextView) findViewById(R.id.textViewMinElementValue);
         tv3 = (TextView) findViewById(R.id.textViewPartAllValue);
-        tv3 = (TextView) findViewById(R.id.textViewSumAllElementsValue);
+        tv4 = (TextView) findViewById(R.id.textViewSumAllElementsValue);
 
         tv0.setText(tv0.getText() + " "+ model.getMapList().get(type).get(category).getName());
         tv1.setText(model.getMapList().get(type).get(category).getMaxElement().toString());
         tv2.setText(model.getMapList().get(type).get(category).getMinElement().toString());
-        tv3.setText(String.valueOf(model.getMapList().get(type).get(category).getSumElement()));
-        
+        tv4.setText(String.valueOf(model.getMapList().get(type).get(category).getSumElement()));
+
         float percent = 0;
         if(type.equals("INCOME")){
             percent = model.getMapList().get(type).get(category).getSumElement() / model.getIncomeSum();

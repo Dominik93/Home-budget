@@ -4,6 +4,7 @@
 echo  '<form action="insert.php" method="post">
         insert Token:<br>
         <input type="text" name="insert_token" placeholder="token">
+        <input type="text" name="insert_token_name" placeholder="name">
         <input type="submit" value="Submit">
         </form> ';
 
@@ -23,7 +24,6 @@ echo  '<form action="insert.php" method="post">
 
 echo  '<form action="insert.php" method="post">
         insert element:<br>
-        <input type="text" name="insert_element" placeholder="token">
         <input type="text" name="insert_element_id_category" placeholder="id_category">
         <input type="text" name="insert_element_name" placeholder="name">
         <input type="text" name="insert_element_value" placeholder="value">
@@ -60,15 +60,13 @@ echo  '<form action="get.php" method="post">
 
 echo  '<form action="update.php" method="post">
         update category:<br>
-        <input type="text" name="update_category" placeholder="token">
-        <input type="text" name="update_category_id" placeholder="id">
+        <input type="text" name="update_category" placeholder="id">
         <input type="text" name="update_category_name" placeholder="name">
         <input type="submit" value="Submit">
         </form> ';
 
 echo  '<form action="update.php" method="post">
         update element:<br>
-        <input type="text" name="update_element" placeholder="token">
         <input type="text" name="update_element_id" placeholder="id">
         <input type="text" name="update_element_name" placeholder="name">
         <input type="text" name="update_element_value" placeholder="value">

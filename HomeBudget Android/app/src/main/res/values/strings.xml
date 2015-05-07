@@ -15,7 +15,7 @@
     <string name="token_settings">Token:</string>
     <string name="token_value_settings">Token value</string>
     <string name="version_settings">Version</string>
-    <string name="version_value_settings">1.6</string>
+    <string name="version_value_settings">2.2</string>
 
     <!-- Settings activity -->
     <string name="title_activity_settings">SettingsActivity</string>
@@ -57,7 +57,7 @@
     <string name="clear_database">Clear database</string>
     <string name="clear_file">Clear file</string>
 
-
+    <!-- sync activity -->
     <string name="category_name">Type name of category:</string>
     <string name="token_name">Token:</string>
 
@@ -65,6 +65,7 @@
     <string name="add_category">Add category</string>
     <string name="add_element">Add element</string>
     <string name="show_summary_category">Show summary</string>
+
     <!-- dialog -->
     <string name="ask">What to do?</string>
     <string name="delete">Delete</string>
@@ -75,12 +76,14 @@
 
     <!-- show summary activity -->
     <string name="title_activity_show_summary">ShowSummaryActivity</string>
+    <string name="category">Category</string>
     <string name="max_element">Max element</string>
     <string name="min_element">Min element</string>
     <string name="part_all">Part of all</string>
-    <string name="category">Category</string>
+    <string name="sum_all_elements">Sum of all elements</string>
 
     <!-- toast -->
     <string name="toast_category">Invalid name</string>
-    <string name="sum_all_elements">Sum of all elements</string>
+    <string name="toast_no_element">No element in category</string>
+
 </resources>
