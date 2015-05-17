@@ -19,7 +19,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.slusarzparadowski.database.ModelDataSource;
-import com.slusarzparadowski.dialog.InternetAccessDialog;
+import com.slusarzparadowski.database.ModelDataSourceMySQL;
+import com.slusarzparadowski.database.ModelDataSourceSQLite;
 import com.slusarzparadowski.dialog.NotificationDialog;
 import com.slusarzparadowski.model.Model;
 
@@ -70,7 +71,7 @@ public class WelcomeActivity extends MyActivity {
     @Override
     void initElements() {
         this.activity = this;
-        modelDataSource = new ModelDataSource(getApplicationContext());
+        modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
         try {
             modelDataSource.open();
         } catch (SQLException e) {
@@ -232,8 +233,38 @@ public class WelcomeActivity extends MyActivity {
         }
 
         protected Boolean doInBackground(String... args) {
-            //model = new Model(getApplicationContext(), true);
-            return true;
+            modelDataSource = new ModelDataSourceMySQL();
+            if((spinner.getSelectedItem()).toString().equals("Add user")){
+                try {
+                    model = new Model(false, editText.getText().toString());
+                    modelDataSource.insertModel(model);
+                    modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
+                    modelDataSource.insertUser(model.getUser());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+            else{
+                if(spinner.getSelectedItem().toString().split("-")[1].equals("Offline mode")){
+                    modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
+                    modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
+                    try {
+                        model.createTokenForOfflineUser();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    modelDataSource.updateUser(model.getUser());
+                    modelDataSource = new ModelDataSourceMySQL();
+                    modelDataSource.insertModel(model);
+                    // get model form sqlite, create new token, save token save model to remote database
+                }
+                else {
+                    modelDataSource = new ModelDataSourceMySQL();
+                    model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
+                }
+                return true;
+            }
         }
 
         protected void onPostExecute(Boolean return_value) {

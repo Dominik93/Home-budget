@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import com.slusarzparadowski.database.ModelDataSource;
+import com.slusarzparadowski.database.ModelDataSourceSQLite;
 import com.slusarzparadowski.model.Model;
 
 import java.sql.SQLException;
@@ -21,12 +21,12 @@ public class SettingsActivity extends MyActivity {
     Model model;
     Button b1,b2;
     CheckBox cb1,cb2;
-    ModelDataSource modelDataSource;
+    ModelDataSourceSQLite modelDataSourceSQLite;
 
     @Override
     void initElements() {
         this.model = new Model(getIntent().getExtras(), getApplicationContext());
-        this.modelDataSource = new ModelDataSource(getApplicationContext());
+        this.modelDataSourceSQLite = new ModelDataSourceSQLite(getApplicationContext());
 
         this.b1 = (Button)findViewById(R.id.buttonSettingsSave);
         this.b2 = (Button)findViewById(R.id.buttonSettingsCancel);
@@ -44,12 +44,12 @@ public class SettingsActivity extends MyActivity {
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick");
                 try {
-                    modelDataSource.open();
+                    modelDataSourceSQLite.open();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                modelDataSource.updateSettings(model.getUser().getSettings());
-                modelDataSource.close();
+                modelDataSourceSQLite.updateSettings(model.getUser().getSettings());
+                modelDataSourceSQLite.close();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);

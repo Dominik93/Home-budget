@@ -15,10 +15,6 @@ public class Element extends DatabaseObjectChild {
     private boolean constant;
     private LocalDate date;
 
-    public Element(int id){
-        super(id, 0);
-    }
-
     public Element(int id, int idCategory, String name){
         super(id, idCategory);
         this.name = name;

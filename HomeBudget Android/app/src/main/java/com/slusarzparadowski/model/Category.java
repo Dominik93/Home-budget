@@ -13,10 +13,6 @@ public class Category extends DatabaseObjectChild {
     private String name;
     private String type;
 
-    public Category(int id){
-        super(id, 0);
-    }
-
     public Category(int id, int idUser, String name, String type){
         super(id, idUser);
         this.name = name;
@@ -25,7 +21,7 @@ public class Category extends DatabaseObjectChild {
     }
 
     public Category(Cursor cursor) {
-        super(cursor.getInt(0),  cursor.getInt(1));
+        super(cursor.getInt(0), cursor.getInt(1));
         this.name = cursor.getString(2);
         this.type = cursor.getString(3);
         this.elementList = new ArrayList<>();

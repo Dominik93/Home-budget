@@ -15,9 +15,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.category.AskCategoryDialog;
-import com.slusarzparadowski.dialog.category.CategoryDialog;
 import com.slusarzparadowski.dialog.category.NewCategoryDialog;
 import com.slusarzparadowski.dialog.element.AskElementDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
@@ -27,8 +25,6 @@ import com.slusarzparadowski.homebudget.ShowSummaryActivity;
 import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Model;
-
-import java.util.ArrayList;
 
 /**
  * Created by Dominik on 2015-03-31.

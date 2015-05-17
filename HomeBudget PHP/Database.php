@@ -24,6 +24,10 @@ class Mysql{
         return mysqli_error($this->link);
     }
     
+    public function lastID(){
+        return $this->link->insert_id;
+    }
+    
     public function close(){
         mysqli_close($this->link);
     }
@@ -104,7 +108,6 @@ class Mysql{
             return $this->getError();
         }
     }
-    
     
     public function deleteUser($id){
         if($this->deleteElements($id) !== true){
@@ -284,12 +287,11 @@ class Mysql{
      * if query failed
      * a string that describes the error
      */
-    public function getElements($id_user, $id_category){
+    public function getElements($id_category){
         $query = 'select element.* from element '
                 . 'join category on category.id = element.id_category '
                 . 'join user on user.id = category.id_user '
-                . 'where category.id like "'.$this->clear($id_category).'" and '
-                . 'user.id like "'.  $this->clear($id_user) .'";';
+                . 'where category.id like "'.$this->clear($id_category);
         return mysqli_query($this->link, $query);
     }
     

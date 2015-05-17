@@ -20,6 +20,7 @@ if(isset($_POST['get_user'])){
             $row = mysqli_fetch_array($result);
             $response['response_value'] = 1;
             $response['response_message']= 'GET_SUCCESS';
+            $response['response_id'] = $row['id'];
             $response['response_savings'] = $row['savings'];
             $response['response_auto_save'] = $tab_bool[$row['auto_savings']];
             $response['response_auto_delete'] = $tab_bool[$row['auto_delete']];
@@ -81,10 +82,10 @@ if(isset($_POST['get_category']) && isset($_POST['get_category_type'])){
     $mysql->close();
 }
 
-if(isset($_POST['get_element']) && isset($_POST['get_category_id'])){
+if(isset($_POST['get_element'])){
     $response = array();
     $mysql->connect();
-    $result = $mysql->getElements($_POST['get_element'], $_POST['get_category_id']);
+    $result = $mysql->getElements($_POST['get_element']);
     if($result === false){
         $response['response_value'] = 0;
         $response['response_message'] = $mysql->getError();

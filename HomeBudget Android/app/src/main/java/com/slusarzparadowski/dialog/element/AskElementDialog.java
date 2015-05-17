@@ -6,19 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import com.slusarzparadowski.database.ModelDataSource;
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
-import com.slusarzparadowski.homebudget.R;
-import com.slusarzparadowski.model.Category;
-import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Model;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * Created by Dominik on 2015-04-05.

@@ -1,7 +1,6 @@
 package com.slusarzparadowski.homebudget;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,24 +11,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.slusarzparadowski.database.ModelDataSource;
-import com.slusarzparadowski.model.Category;
+import com.slusarzparadowski.database.ModelDataSourceSQLite;
 import com.slusarzparadowski.model.Element;
 import com.slusarzparadowski.model.Model;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-
-import java.sql.SQLException;
 
 
 public class ElementActivity extends MyActivity {
 
     Model model;
-    ModelDataSource modelDataSource;
+    ModelDataSourceSQLite modelDataSourceSQLite;
     CheckBox cb1, cb2;
     DatePicker dp;
 
@@ -43,7 +36,7 @@ public class ElementActivity extends MyActivity {
     @Override
     void initElements() {
         this.model = new Model(getIntent().getExtras(), getApplicationContext());
-        this.modelDataSource = new ModelDataSource(this);
+        this.modelDataSourceSQLite = new ModelDataSourceSQLite(this);
 
         category = getIntent().getExtras().getInt("category");
         element = getIntent().getExtras().getInt("element");

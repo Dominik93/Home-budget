@@ -3,7 +3,6 @@ package com.slusarzparadowski.model;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -24,8 +23,9 @@ import com.googlecode.charts4j.Fills;
 import com.googlecode.charts4j.GCharts;
 import com.googlecode.charts4j.LinearGradientFill;
 import com.googlecode.charts4j.Plots;
-import com.slusarzparadowski.database.Database;
 import com.slusarzparadowski.database.ModelDataSource;
+import com.slusarzparadowski.database.ModelDataSourceMySQL;
+import com.slusarzparadowski.database.ModelDataSourceSQLite;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.token.Token;
 import com.slusarzparadowski.placeholder.Placeholder;
@@ -68,7 +68,7 @@ public class Model implements IObserver, IBundle{
 
     public Model(boolean mode, Context context) {
         this.mode = mode;
-        modelDataSource = new ModelDataSource(context);
+        modelDataSource = new ModelDataSourceSQLite(context);
         this.user = new User();
         this.income = new ArrayList<>();
         this.outcome = new ArrayList<>();
@@ -79,7 +79,7 @@ public class Model implements IObserver, IBundle{
 
     public Model(Bundle bundle, Context context){
         Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
-        modelDataSource = new ModelDataSource(context);
+        modelDataSource = new ModelDataSourceSQLite(context);
         this.mode = gson.fromJson(bundle.getString(MODE), boolean.class);
         this.user = gson.fromJson(bundle.getString(USER), User.class);
         this.income = gson.fromJson(bundle.getString(INCOME), new TypeToken<ArrayList<Category>>(){}.getType());
@@ -93,7 +93,7 @@ public class Model implements IObserver, IBundle{
     }
 
     public Model(Model model, Context context) {
-        modelDataSource = new ModelDataSource(context);
+        modelDataSource = new ModelDataSourceSQLite(context);
         this.mode = model.isMode();
         this.user = model.getUser();
         this.income = model.getIncome();
@@ -104,20 +104,28 @@ public class Model implements IObserver, IBundle{
         mapList.put("INCOME", income);
         mapList.put("OUTCOME", outcome);
     }
-/*
-    public Model(Context context, boolean mode) throws IOException {
+
+    public Model(boolean mode, String name) throws IOException {
         this.mode = mode;
-        modelDataSource = new ModelDataSource(context);
-        Token t = new Token(context);
-        this.user = Database.getUser(t.getToken());
+        modelDataSource = new ModelDataSourceMySQL();
+        Token t = new Token();
+        this.user = new User();
+        this.user.setName(name);
+        while(true){
+            t.createToken();
+            if(((ModelDataSourceMySQL)modelDataSource).checkToken(t.getToken()).equals("NOT_EXIST")){
+                user.setToken(t.getToken());
+                break;
+            }
+        }
         this.loadOutcome();
         this.loadIncome();
-        calculateIncomeSum();
-        calculateOutcomeSum();
+        this.calculateIncomeSum();
+        this.calculateOutcomeSum();
         this.views = new ArrayList<>();
         mapList.put("INCOME", income);
         mapList.put("OUTCOME", outcome);
-    }*/
+    }
 
     // </editor-fold>
 
@@ -157,6 +165,20 @@ public class Model implements IObserver, IBundle{
     }
 
     //</editor-fold>
+
+
+    public void createTokenForOfflineUser() throws IOException {
+        modelDataSource = new ModelDataSourceMySQL();
+        Token t = new Token();
+        while(true){
+            t.createToken();
+            if(((ModelDataSourceMySQL)modelDataSource).checkToken(t.getToken()).equals("NOT_EXIST")){
+                user.setToken(t.getToken());
+                modelDataSource.insertUser(user);
+                break;
+            }
+        }
+    }
 
     public String generateGraph(Activity context){
         removeSpecialItem(context);
@@ -259,11 +281,11 @@ public class Model implements IObserver, IBundle{
     }
 
     public void loadIncome(){
-        this.income = Database.getList(user.getToken(), "income");
+        this.income = modelDataSource.getCategory(user.getId(), "INCOME");
     }
 
     public void loadOutcome(){
-        this.outcome = Database.getList(user.getToken(), "outcome");
+        this.outcome = modelDataSource.getCategory(user.getId(), "OUTCOME");
     }
 
     // <editor-fold defaultstate="collapsed" desc="category">
@@ -481,5 +503,6 @@ public class Model implements IObserver, IBundle{
         for(Placeholder placeholder : views)
             placeholder.update();
     }
+
     //</editor-fold>
 }
