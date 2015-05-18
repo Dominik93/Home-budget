@@ -92,7 +92,7 @@ public class ModelDataSourceSQLite extends ModelDataSource{
     }
 
     @Override
-    public ArrayList<Category> getCategories(long id_user, String type){
+    public ArrayList<Category> getCategory(long id_user, String type){
         ArrayList<Category> categories = new ArrayList<>();
 
         Cursor cursor = database.query(SQLite.TABLE_CATEGORY, allColumnsCategory, SQLite.COLUMN_ID_USER+"="+ id_user+" and "+SQLite.COLUMN_TYPE+" like '"+type+"'", null, null, null, null);
@@ -257,8 +257,8 @@ public class ModelDataSourceSQLite extends ModelDataSource{
     public Model getModel(String name, String token, Context context){
         Model model = new Model(false, context);
         model.setUser(getUser(name, token));
-        model.setIncome(getCategories(model.getUser().getId(), "INCOME"));
-        model.setOutcome(getCategories(model.getUser().getId(), "OUTCOME"));
+        model.setIncome(getCategory(model.getUser().getId(), "INCOME"));
+        model.setOutcome(getCategory(model.getUser().getId(), "OUTCOME"));
         return model;
     }
 

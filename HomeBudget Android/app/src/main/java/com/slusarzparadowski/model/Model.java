@@ -65,11 +65,6 @@ public class Model implements IObserver, IBundle{
     private ArrayList<Placeholder> views;
 
     // <editor-fold defaultstate="collapsed" desc="constructors">
-    public Model(){
-
-        mapList.put("INCOME", income);
-        mapList.put("OUTCOME", outcome);
-    }
 
     public Model(boolean mode, Context context) {
         this.mode = mode;
@@ -286,11 +281,11 @@ public class Model implements IObserver, IBundle{
     }
 
     public void loadIncome(){
-        this.income = modelDataSource.getCategories(user.getId(), "INCOME");
+        this.income = modelDataSource.getCategory(user.getId(), "INCOME");
     }
 
     public void loadOutcome(){
-        this.outcome = modelDataSource.getCategories(user.getId(), "OUTCOME");
+        this.outcome = modelDataSource.getCategory(user.getId(), "OUTCOME");
     }
 
     // <editor-fold defaultstate="collapsed" desc="category">

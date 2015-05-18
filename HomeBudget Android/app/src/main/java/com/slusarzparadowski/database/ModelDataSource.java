@@ -46,7 +46,7 @@ public abstract class ModelDataSource {
 
     public abstract void updateElement(Element element);
 
-    public abstract ArrayList<Category> getCategories(long id_user, String type);
+    public abstract ArrayList<Category> getCategory(long id_user, String type);
 
     public abstract Category insertCategory(Category category);
 
