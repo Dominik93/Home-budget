@@ -16,7 +16,6 @@ import java.io.IOException;
 public class Token {
 
     private String token = "";
-    private final String FILENAME = "hb_config";
 
     public String getToken(){
         return this.token;

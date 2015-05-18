@@ -240,10 +240,10 @@ public class WelcomeActivity extends MyActivity {
                     modelDataSource.insertModel(model);
                     modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
                     modelDataSource.insertUser(model.getUser());
+                    return true;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return true;
             }
             else{
                 if(spinner.getSelectedItem().toString().split("-")[1].equals("Offline mode")){
@@ -265,6 +265,7 @@ public class WelcomeActivity extends MyActivity {
                 }
                 return true;
             }
+            return false;
         }
 
         protected void onPostExecute(Boolean return_value) {

@@ -156,7 +156,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
     }
 
     @Override
-    public ArrayList<Category> getCategory(long id_user, String type) {
+    public ArrayList<Category> getCategories(long id_user, String type) {
         ArrayList<Category> returnList = new ArrayList<>();
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("get_category", String.valueOf(id_user)));
@@ -388,13 +388,17 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
     @Override
     public Model getModel(String name, String token, Context context) {
-        return null;
+        Model model = new Model();
+        model.setMode(true);
+        model.setUser(this.getUser(name, token));
+        model.setIncome(this.getCategories(model.getUser().getId(), "INCOME"));
+        model.setIncome(this.getCategories(model.getUser().getId(), "OUTCOME"));
+        return model;
     }
 
     @Override
     public Model insertModel(Model model) {
         model.setUser(this.insertUser(model.getUser()));
-        model.getUser().setSettings(this.insertSettings(model.getUser().getSettings()));
         for(int i = 0; i < model.getOutcome().size(); i++){
             model.getOutcome().set(i, this.insertCategory(model.getOutcome().get(i)));
         }
