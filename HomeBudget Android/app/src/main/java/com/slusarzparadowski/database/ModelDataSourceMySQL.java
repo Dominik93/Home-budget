@@ -35,6 +35,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
     private JSONParser jsonParser = new JSONParser();
 
+    // <editor-fold defaultstate="collapsed" desc="element">
     @Override
     public ArrayList<Element> getElements(long id_category) {
         ArrayList<Element> returnList = new ArrayList<>();
@@ -63,7 +64,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
                 return null;
             }
             for(int i = 0; i < listId.length(); i++){
-                Log.d(ModelDataSourceMySQL.class.toString(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
+                Log.d(getClass().getSimpleName(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
                 returnList.add(new Element(listId.getInt("id[" + i + "]"),
                         listIdCategory.getInt("idCategory[" + i + "]"),
                         listName.getString("name[" + i + "]"),
@@ -73,7 +74,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             }
             return returnList;
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "getElement"+ e.toString());
+            Log.e(getClass().getSimpleName(), "getElement"+ e.toString());
             return returnList;
         }
     }
@@ -102,7 +103,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
             return element;
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "getElement"+ e.toString());
+            Log.e(getClass().getSimpleName(), "getElement"+ e.toString());
             return null;
         }
 
@@ -125,7 +126,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "getElement"+ e.toString());
+            Log.e(getClass().getSimpleName(), "getElement"+ e.toString());
         }
     }
 
@@ -151,12 +152,14 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             element.setId(Integer.valueOf(json.getString("id_created_element")));
             Log.d(String.valueOf(value), message);
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "updateElement"+ e.toString());
+            Log.e(getClass().getSimpleName(), "updateElement"+ e.toString());
         }
     }
+    //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="category">
     @Override
-    public ArrayList<Category> getCategory(long id_user, String type) {
+    public ArrayList<Category> getCategories(long id_user, String type) {
         ArrayList<Category> returnList = new ArrayList<>();
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("get_category", String.valueOf(id_user)));
@@ -189,7 +192,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             Log.d(String.valueOf(value), message);
             return returnList;
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "getList"+ e.toString());
+            Log.e(getClass().getSimpleName(), "getList"+ e.toString());
             return returnList;
         }
     }
@@ -215,7 +218,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             Log.d(String.valueOf(value), message);
             return category;
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "insertCategory"+ e.toString());
+            Log.e(getClass().getSimpleName(), "insertCategory"+ e.toString());
             return null;
         }
     }
@@ -237,7 +240,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "deleteCategory"+ e.toString());
+            Log.e(getClass().getSimpleName(), "deleteCategory"+ e.toString());
         }
     }
 
@@ -259,14 +262,16 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "insertCategory"+ e.toString());
+            Log.e(getClass().getSimpleName(), "insertCategory"+ e.toString());
         }
     }
+    //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="settings">
     @Override
     public Settings getSettings(long id_user) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("get_user", String.valueOf(id_user)));
+        params.add(new BasicNameValuePair("get_settings", String.valueOf(id_user)));
 
         // getting JSON Object
         JSONObject json = jsonParser.makeHttpRequest(URL_GET, "POST", params);
@@ -282,10 +287,9 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             Log.d(String.valueOf(value), message);
             return settings;
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "getSettings"+ e.toString());
+            Log.e(getClass().getSimpleName(), "getSettings"+ e.toString());
             return null;
         }
-
     }
 
     @Override
@@ -300,9 +304,29 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
     @Override
     public void updateSettings(Settings settings) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("update_settings", String.valueOf(settings.getId())));
+        params.add(new BasicNameValuePair("update_auto_savings", String.valueOf(settings.isAutoSaving())));
+        params.add(new BasicNameValuePair("update_auto_delete", String.valueOf(settings.isAutoDeleting())));
+        params.add(new BasicNameValuePair("update_auto_local_save", String.valueOf(settings.isAutoLocalSave())));
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(URL_UPDATE, "POST", params);
 
+        // check log cat fro response
+        Log.d("Create Response", json.toString());
+
+        // check for success tag
+        try {
+            int value = json.getInt(TAG_VALUE);
+            String message = json.getString(TAG_MESSAGE);
+            Log.d(String.valueOf(value), message);
+        } catch (JSONException e) {
+            Log.e(getClass().getSimpleName(), "getSettings"+ e.toString());
+        }
     }
+    //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="user">
     @Override
     public User getUser(String name, String token) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -319,12 +343,10 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
-            return new User((int) json.getDouble("response_id"), token,
-                    json.getString("response_name"),
-                    (float) json.getDouble("response_savings"),
-                    new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete"), json.getBoolean("response_auto_local_save")));
+            return new User(json.getInt("response_id"), token, name,
+                    (float) json.getDouble("response_savings"), new Settings());
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "getUser " + e.toString());
+            Log.e(getClass().getSimpleName(), "getUser " + e.toString());
             return null;
         }
     }
@@ -354,7 +376,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             user.setId(json.getInt("response_id_created_user"));
             return user;
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "insertToken" + e.toString());
+            Log.e(getClass().getSimpleName(), "insertToken" + e.toString());
             return null;
         }
     }
@@ -362,7 +384,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
     @Override
     public void deleteUser(User user) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("insert_token", String.valueOf(user.getId())));
+        params.add(new BasicNameValuePair("delete_user", String.valueOf(user.getId())));
 
         // getting JSON Object
         // Note that create product url accepts POST method
@@ -377,24 +399,51 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
         } catch (JSONException e) {
-            Log.e(ModelDataSourceMySQL.class.toString(), "deleteUser" + e.toString());
+            Log.e(getClass().getSimpleName(), "deleteUser" + e.toString());
         }
     }
 
     @Override
     public void updateUser(User user) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("update_user", String.valueOf(user.getId())));
+        params.add(new BasicNameValuePair("update_user_name", String.valueOf(user.getName())));
+        params.add(new BasicNameValuePair("update_user_savings", String.valueOf(user.getSavings())));
+        // getting JSON Object
+        // Note that create product url accepts POST method
+        JSONObject json = jsonParser.makeHttpRequest(URL_UPDATE, "POST", params);
 
+        // check log cat fro response
+        Log.d("Create Response", json.toString());
+
+        // check for success tag
+        try {
+            int value = json.getInt(TAG_VALUE);
+            String message = json.getString(TAG_MESSAGE);
+            Log.d(String.valueOf(value), message);
+        } catch (JSONException e) {
+            Log.e(getClass().getSimpleName(), "updateUser" + e.toString());
+        }
     }
+    //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="model">
     @Override
     public Model getModel(String name, String token, Context context) {
-        return null;
+        Model model = new Model();
+        model.setMode(true);
+        model.setUser(this.getUser(name, token));
+        model.getUser().setSettings(this.getSettings(model.getUser().getId()));
+        model.setIncome(this.getCategories(model.getUser().getId(), "INCOME"));
+        model.setOutcome(this.getCategories(model.getUser().getId(), "OUTCOME"));
+        model.calculateIncomeSum();
+        model.calculateOutcomeSum();
+        return model;
     }
 
     @Override
     public Model insertModel(Model model) {
         model.setUser(this.insertUser(model.getUser()));
-        model.getUser().setSettings(this.insertSettings(model.getUser().getSettings()));
         for(int i = 0; i < model.getOutcome().size(); i++){
             model.getOutcome().set(i, this.insertCategory(model.getOutcome().get(i)));
         }
@@ -406,13 +455,27 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
     @Override
     public void deleteModel(Model model) {
-
+        this.deleteUser(model.getUser());
     }
 
     @Override
     public void updateModel(Model model) {
-
+        this.updateUser(model.getUser());
+        this.updateSettings(model.getUser().getSettings());
+        for(int i = 0; i < model.getOutcome().size(); i++){
+            for(int j = 0; j < model.getOutcome().get(i).getElementList().size(); j++){
+                this.updateElement(model.getOutcome().get(i).getElementList().get(j));
+            }
+            this.updateCategory(model.getOutcome().get(i));
+        }
+        for(int i = 0; i < model.getIncome().size(); i++){
+            for(int j = 0; j < model.getIncome().get(i).getElementList().size(); j++){
+                this.updateElement(model.getIncome().get(i).getElementList().get(j));
+            }
+            this.updateCategory(model.getIncome().get(i));
+        }
     }
+    //</editor-fold>
 
     @Override
     public void open() throws SQLException {

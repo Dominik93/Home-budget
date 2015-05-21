@@ -86,3 +86,20 @@ if(isset($_POST['insert_element_id_category'])
     $mysql->close();
     echo json_encode($response);
 }
+
+if(isset($_POST['insert_settings'])){
+    $response = array();
+    $mysql->connect();
+    $result = $mysql->insertSettings($_POST['insert_settings']);
+    if($result === true){
+        $response['response_value'] = 1;
+        $response['response_id_created_user'] = $mysql->lastID();
+        $response['response_message'] = "SETTINGS_ADDED";
+    }
+    else{
+        $response['response_value'] = 0;
+        $response['response_message'] = $result;
+    }
+    $mysql->close();
+    echo json_encode($response);
+}

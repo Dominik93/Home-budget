@@ -21,10 +21,7 @@ if(isset($_POST['get_user'])){
             $response['response_value'] = 1;
             $response['response_message']= 'GET_SUCCESS';
             $response['response_id'] = $row['id'];
-            $response['response_savings'] = $row['savings'];
-            $response['response_auto_save'] = $tab_bool[$row['auto_savings']];
-            $response['response_auto_delete'] = $tab_bool[$row['auto_delete']];
-            $response['response_auto_local_save'] = $tab_bool[$row['auto_local_save']];            
+            $response['response_savings'] = $row['savings'];          
         }        
         else{
             $response['response_value'] = 2;
@@ -35,18 +32,6 @@ if(isset($_POST['get_user'])){
     $mysql->close();
 }
 
-/*
- * return value array
- * valuse = 0
- * message = error while execute query
- * -----------------
- * valuse = 1
- * message = GET_SUCCESS
- * array = array
- * -----------------
- * valuse = 2
- * message = GET_SUCCESS_NULL
- */
 if(isset($_POST['get_category']) && isset($_POST['get_category_type'])){
     $response = array();
     $mysql->connect();

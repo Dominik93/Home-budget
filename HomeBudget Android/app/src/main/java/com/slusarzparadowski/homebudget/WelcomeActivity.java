@@ -239,14 +239,23 @@ public class WelcomeActivity extends MyActivity {
                     model = new Model(false, editText.getText().toString());
                     modelDataSource.insertModel(model);
                     modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
+                    modelDataSource.open();
                     modelDataSource.insertUser(model.getUser());
+                    modelDataSource.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 return true;
             }
             else{
                 if(spinner.getSelectedItem().toString().split("-")[1].equals("Offline mode")){
+                    try {
+                        modelDataSource.open();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
                     modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
                     try {
@@ -255,6 +264,7 @@ public class WelcomeActivity extends MyActivity {
                         e.printStackTrace();
                     }
                     modelDataSource.updateUser(model.getUser());
+                    modelDataSource.close();
                     modelDataSource = new ModelDataSourceMySQL();
                     modelDataSource.insertModel(model);
                     // get model form sqlite, create new token, save token save model to remote database

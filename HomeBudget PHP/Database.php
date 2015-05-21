@@ -1,6 +1,6 @@
-
 <?php
 class Mysql{
+    
     private $host;
     private $user;
     private $password;
@@ -32,14 +32,6 @@ class Mysql{
         mysqli_close($this->link);
     }
     
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
     public function insertUser($token, $name){ 
         $query = "insert into user (token, name, savings) values ('". $this->clear($token) ."', '". $this->clear($name) ."', 0);";
         if(mysqli_query($this->link, $query)){
@@ -52,10 +44,44 @@ class Mysql{
         }
     }
         
-    /*
-        TODO:
-    */
-    private function insertSettings($id){
+    public function deleteUser($id){
+        if($this->deleteElements($id) !== true){
+            return $this->getError();
+        }
+        if($this->deleteCategories($id) !== true){
+            return $this->getError();
+        }
+        if($this->deleteSettings($id) !== true){
+            return $this->getError();
+        }
+        $query = 'delete from user '
+                . 'where id like "'.$this->clear($id).'"';
+        if(mysqli_query($this->link, $query) === true)
+            return true;
+        else 
+            return $this->getError();
+    }
+    
+    public function updateUser($id, $name, $savings){
+        $query = 'update user '
+                . 'set name="'.$this->clear($name).'" '
+                . 'set savings="'.$this->clear($savings).'" '
+                . 'where id="'.$this->clear($id).'";';
+        if(mysqli_query($this->link, $query)){
+           return true;
+        }
+        else{
+            return $this->getError();
+        }
+    }
+    
+    public function getUser($token){
+        $query = 'select user.* from user '
+                . 'where token like "'. $this->clear($token) .'";';
+        return mysqli_query($this->link, $query);
+    }
+    
+    public function insertSettings($id){
         $query = 'INSERT INTO settings(id_user, auto_delete, auto_savings, auto_local_save)'
                 . ' VALUES ("'. $this->clear($id) .'", 0, 0, 0)';
         if(mysqli_query($this->link, $query))
@@ -64,14 +90,38 @@ class Mysql{
             return false;
     } 
     
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
+    public function deleteSettings($id_user){
+        $query = 'delete from settings '
+                . 'where settings.id_user = '
+                . '(select id from user where id = "'.$this->clear($id_user).'");';
+        if(mysqli_query($this->link, $query)){
+           return true;
+        }
+        else{
+            return $this->getError();
+        }
+    }
+    
+    public function updateSettings($id, $auto_savings, $auto_delete, $auto_local_save){
+        $query = 'update settings '
+                . 'set auto_delete='.$this->clear($auto_delete).'" '
+                . 'auto_local_save='.$this->clear($auto_local_save).'" '
+                . 'auto_savings='.$this->clear($auto_savings).'" '
+                . 'where id="'.$this->clear($id).'";';
+        if(mysqli_query($this->link, $query)){
+           return true;
+        }
+        else{
+            return $this->getError();
+        }
+    }
+    
+    public function getSettings($id_user){
+        $query = 'select settings.* from settings'
+                . 'where id_user like "'. $this->clear($id_user) .'";';
+        return mysqli_query($this->link, $query);
+    }
+    
     public function insertCategory($id, $name, $type){
         echo $this->clear($name);
         $query = "insert into category (id_user, name, type)"
@@ -83,63 +133,7 @@ class Mysql{
             return $this->getError();
         }
     }
-    
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
-    public function insertElement($category_id, $name, $value, $const, $date = null){
-        if($date == null){
-          $query = "insert into element (id_category, name, value, const)"
-                . " values ('". $this->clear($category_id) ."', '". $this->clear($name) ."', '". $this->clear($value) ."','". $this->clear($const) ."');";
-        }
-        else{
-        $query = "insert into element (id_category, name, value, const, date)"
-                . " values ('". $this->clear($category_id) ."', '". $this->clear($name) ."', '". $this->clear($value) ."','". $this->clear($const) ."','". $this->clear($date) ."');";
-        }
-        if(mysqli_query($this->link, $query)){
-           return true;
-        }
-        else{
-            return $this->getError();
-        }
-    }
-    
-    public function deleteUser($id){
-        if($this->deleteElements($id) !== true){
-            echo '1';
-            return $this->getError();
-        }
-        if($this->deleteCategories($id) !== true){
-            echo '2';
-            return $this->getError();
-        }
-        if($this->deleteSettings($id) !== true){
-            echo '3';
-            return $this->getError();
-        }
-        $query = 'delete from user '
-                . 'where id like "'.$this->clear($id).'"';
-        
-        if(mysqli_query($this->link, $query) === true)
-            return true;
-        
-        else 
-            return $this->getError();
-    }
-    
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
+       
     public function deleteCategory($id){
         $query = 'select * from element '
                 . 'join category on category.id = element.id_category '
@@ -170,14 +164,43 @@ class Mysql{
         }
     }
     
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
+    public function updateCategory($id, $name){
+        $query = 'update category '
+                . 'set name="'.$this->clear($name).'" '
+                . 'where id="'.$this->clear($id).'";';
+        if(mysqli_query($this->link, $query)){
+           return true;
+        }
+        else{
+            return $this->getError();
+        }
+    }
+    
+    public function getCategories($id_user, $type){
+        $query = 'select category.* from category '
+                . 'join user on user.id = category.id_user '
+                . 'where category.type like "'.$this->clear($type).'" and '
+                . 'user.id like "'. $this->clear($id_user) .'";';
+        return mysqli_query($this->link, $query);
+    }
+    
+    public function insertElement($category_id, $name, $value, $const, $date = null){
+        if($date == null){
+          $query = "insert into element (id_category, name, value, const)"
+                . " values ('". $this->clear($category_id) ."', '". $this->clear($name) ."', '". $this->clear($value) ."','". $this->clear($const) ."');";
+        }
+        else{
+        $query = "insert into element (id_category, name, value, const, date)"
+                . " values ('". $this->clear($category_id) ."', '". $this->clear($name) ."', '". $this->clear($value) ."','". $this->clear($const) ."','". $this->clear($date) ."');";
+        }
+        if(mysqli_query($this->link, $query)){
+           return true;
+        }
+        else{
+            return $this->getError();
+        }
+    }
+    
     public function deleteElement($id){
         $query = 'delete from element '
                 . 'where id = "'. $this->clear($id) .'";';
@@ -202,46 +225,6 @@ class Mysql{
         }
     }
       
-    public function deleteSettings($id_user){
-        $query = 'delete from settings '
-                . 'where settings.id_user = '
-                . '(select id from user where id = "'.$this->clear($id_user).'");';
-        if(mysqli_query($this->link, $query)){
-           return true;
-        }
-        else{
-            return $this->getError();
-        }
-    }
-    
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
-    public function updateCategory($id, $name){
-        $query = 'update category '
-                . 'set name="'.$this->clear($name).'" '
-                . 'where id="'.$this->clear($id).'";';
-        if(mysqli_query($this->link, $query)){
-           return true;
-        }
-        else{
-            return $this->getError();
-        }
-    }
-    
-    /*
-     * return value boolean or string
-     * if query successed
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
     public function updateElement($id, $name, $value, $const, $date){
         $query = 'update element '
                 . 'set name = "'.$this->clear($name).'", '
@@ -256,37 +239,6 @@ class Mysql{
         }
     }
     
-    public function getUser($token){
-        $query = 'select user.*, settings.auto_delete, settings.auto_savings, settings.auto_local_save'
-                . ' from user join settings on settings.id_user = user.id '
-                . 'where user.token like "'. $this->clear($token) .'";';
-        return mysqli_query($this->link, $query);
-    }
-            
-    /*
-     * return value mysqli_result object or string
-     * if query successed
-     * mysqli_result object
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
-    public function getCategories($id_user, $type){
-        $query = 'select category.* from category '
-                . 'join user on user.id = category.id_user '
-                . 'where category.type like "'.$this->clear($type).'" and '
-                . 'user.id like "'. $this->clear($id_user) .'";';
-        return mysqli_query($this->link, $query);
-    }
-    
-    /*
-     * return value mysqli_result object or string
-     * if query successed
-     * mysqli_result object
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
     public function getElements($id_category){
         $query = 'select element.* from element '
                 . 'join category on category.id = element.id_category '
@@ -295,18 +247,6 @@ class Mysql{
         return mysqli_query($this->link, $query);
     }
     
-    
-    /*
-     * return value boolean or string
-     * if query successed and query return row
-     * true
-     * -----------
-     * if query successed and query dont return row
-     * true
-     * -----------
-     * if query failed
-     * a string that describes the error
-     */
     public function tokenExist($token){
         $query = "select * from user where token = '". $this->clear($token)."';";
         $result = mysqli_query($this->link, $query);
@@ -318,7 +258,6 @@ class Mysql{
         }
         return false;
     }
-    
     
     private function clear($text){
         if(empty($text)){

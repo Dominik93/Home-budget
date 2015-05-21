@@ -92,7 +92,7 @@ public class ModelDataSourceSQLite extends ModelDataSource{
     }
 
     @Override
-    public ArrayList<Category> getCategory(long id_user, String type){
+    public ArrayList<Category> getCategories(long id_user, String type){
         ArrayList<Category> categories = new ArrayList<>();
 
         Cursor cursor = database.query(SQLite.TABLE_CATEGORY, allColumnsCategory, SQLite.COLUMN_ID_USER+"="+ id_user+" and "+SQLite.COLUMN_TYPE+" like '"+type+"'", null, null, null, null);
@@ -226,8 +226,7 @@ public class ModelDataSourceSQLite extends ModelDataSource{
         values.put(SQLite.COLUMN_NAME, user.getName());
         values.put(SQLite.COLUMN_TOKEN, user.getToken());
         values.put(SQLite.COLUMN_SAVINGS, user.getSavings());
-        long insertId = database.insert(SQLite.TABLE_USER, null,
-                values);
+        long insertId = database.insert(SQLite.TABLE_USER, null, values);
         Cursor cursor = database.query(SQLite.TABLE_USER,
                 allColumnsUser, SQLite.COLUMN_ID + " = " + insertId, null,
                 null, null, null);
@@ -241,7 +240,6 @@ public class ModelDataSourceSQLite extends ModelDataSource{
     @Override
     public void deleteUser(User user){
         database.delete(SQLite.TABLE_USER, SQLite.COLUMN_NAME + " like '" + user.getName() + "' and "+ SQLite.COLUMN_TOKEN +" like '"+ user.getToken() +"'", null);
-        //this.deleteSettings(user.getSettings());
     }
 
     @Override
@@ -257,8 +255,8 @@ public class ModelDataSourceSQLite extends ModelDataSource{
     public Model getModel(String name, String token, Context context){
         Model model = new Model(false, context);
         model.setUser(getUser(name, token));
-        model.setIncome(getCategory(model.getUser().getId(), "INCOME"));
-        model.setOutcome(getCategory(model.getUser().getId(), "OUTCOME"));
+        model.setIncome(getCategories(model.getUser().getId(), "INCOME"));
+        model.setOutcome(getCategories(model.getUser().getId(), "OUTCOME"));
         return model;
     }
 
@@ -278,12 +276,6 @@ public class ModelDataSourceSQLite extends ModelDataSource{
     @Override
     public void deleteModel(Model model){
         this.deleteUser(model.getUser());
-        /*for(int i = 0; i < model.getOutcome().size(); i++){
-            this.deleteCategory(model.getOutcome().get(i));
-        }
-        for(int i = 0; i < model.getIncome().size(); i++){
-            this.deleteCategory(model.getIncome().get(i));
-        }*/
     }
 
     @Override

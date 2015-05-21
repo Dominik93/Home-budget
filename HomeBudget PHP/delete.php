@@ -17,14 +17,7 @@ if(isset($_POST['delete_user'])){
     $mysql->close();
     echo json_encode($response);
 }
-/*
- * return value array()
- * value = 0
- * message = error while execute query
- * -----------------
- * value = 1
- * message = ELEMENT_DELETED
- */
+
 if(isset($_POST['delete_category'])){
     $mysql->connect();
     if($result = $mysql->deleteCategory($_POST['delete_category'])){
@@ -39,19 +32,25 @@ if(isset($_POST['delete_category'])){
     echo json_encode($response);
 }
 
-/*
- * return value array()
- * value = 0
- * message = error while execute query
- * -----------------
- * value = 1
- * message = ELEMENT_DETAIL_DELETED
- */
 if(isset($_POST['delete_element'])){
     $mysql->connect();
     if($result = $mysql->deleteElement($_POST['delete_element'])){
         $response['response_value'] = 1;
         $response['response_message'] = "ELEMENT_DELETED";
+    }
+    else{
+        $response['response_value'] = 0;
+        $response['response_message'] = $result;
+    }
+    $mysql->close();
+    echo json_encode($response);
+}
+
+if(isset($_POST['delete_settings'])){
+    $mysql->connect();
+    if($result = $mysql->deleteSettings($_POST['delete_settings'])){
+        $response['response_value'] = 1;
+        $response['response_message'] = "SETTIGNS_DELETED";
     }
     else{
         $response['response_value'] = 0;
