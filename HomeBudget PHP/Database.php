@@ -117,8 +117,8 @@ class Mysql{
     }
     
     public function getSettings($id_user){
-        $query = 'select settings.* from settings'
-                . 'where id_user like "'. $this->clear($id_user) .'";';
+        $query = 'select * from settings '
+                . 'where id_user = "'. $this->clear($id_user) .'";';
         return mysqli_query($this->link, $query);
     }
     
@@ -243,7 +243,7 @@ class Mysql{
         $query = 'select element.* from element '
                 . 'join category on category.id = element.id_category '
                 . 'join user on user.id = category.id_user '
-                . 'where category.id like "'.$this->clear($id_category);
+                . 'where category.id like "'.$this->clear($id_category).'"';
         return mysqli_query($this->link, $query);
     }
     

@@ -32,6 +32,33 @@ if(isset($_POST['get_user'])){
     $mysql->close();
 }
 
+if(isset($_POST['get_settings'])){
+    $response = array();
+    $mysql->connect();
+    $result = $mysql->getSettings($_POST['get_settings']);
+    if($result === false){
+        $response['response_value'] = 0;
+        $response['response_message'] = $mysql->getError();
+    }
+    else{
+        if(mysqli_num_rows($result) >= 0){
+            $row = mysqli_fetch_array($result);
+            $response['response_value'] = 1;
+            $response['response_message']= 'GET_SUCCESS';
+            $response['response_id'] = $row['id'];
+            $response['response_auto_save'] = $row['auto_savings'];
+            $response['response_auto_delete'] = $row['auto_delete'];
+            $response['response_auto_local_save'] = $row['auto_local_save'];     
+        }        
+        else{
+            $response['response_value'] = 2;
+            $response['response_message'] = 'GET_SUCCESS_NULL';
+        }
+    }
+    echo json_encode($response);
+    $mysql->close();
+}
+
 if(isset($_POST['get_category']) && isset($_POST['get_category_type'])){
     $response = array();
     $mysql->connect();
@@ -55,7 +82,6 @@ if(isset($_POST['get_category']) && isset($_POST['get_category_type'])){
             $response['response_value'] = 1;
             $response['response_message'] = 'GET_SUCCESS';
             $response['response_array_id'] = $temp_id;
-            $response['response_array_id_user'] = $temp_id;
             $response['response_array_name'] = $temp_name;
         }        
         else{
@@ -78,7 +104,6 @@ if(isset($_POST['get_element'])){
     else{
         if(mysqli_num_rows($result) > 0){
             $temp_id = array();
-            $temp_id_category = array();
             $temp_name = array();
             $temp_value = array();
             $temp_const = array();
@@ -86,7 +111,6 @@ if(isset($_POST['get_element'])){
             $i = 0;
             while($row = mysqli_fetch_array($result)){
                 $temp_id['id['.$i.']'] = $row['id'];
-                $temp_id_category['id_category['.$i.']'] = $row['id_category'];
                 $temp_name['name['.$i.']'] = $row['name'];
                 $temp_const['const['.$i.']'] = $tab_bool[$row['const']];
                 $temp_date['date['.$i.']'] = $row['date'];
@@ -95,7 +119,6 @@ if(isset($_POST['get_element'])){
             $response['response_value'] = 1;
             $response['response_message'] = 'GET_SUCCESS';
             $response['response_array_id'] = $temp_id;
-            $response['response_array_id_category'] = $temp_id_category;
             $response['response_array_name'] = $temp_name;
             $response['response_array_element_value'] = $temp_value;
             $response['response_array_const'] = $temp_const;

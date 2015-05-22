@@ -45,6 +45,12 @@ echo  '<form action="get.php" method="post">
         </form> ';
 
 echo  '<form action="get.php" method="post">
+        get settings:<br>
+        <input type="text" name="get_settings" placeholder="id_user">
+        <input type="submit" value="Submit">
+        </form> ';
+
+echo  '<form action="get.php" method="post">
         get category:<br>
         <input type="text" name="get_category" placeholder="token">
         <input type="text" name="get_category_type" placeholder="type">

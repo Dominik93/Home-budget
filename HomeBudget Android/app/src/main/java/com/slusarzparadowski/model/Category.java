@@ -79,7 +79,6 @@ public class Category extends DatabaseObjectChild {
     @Override
     public String toString(){
         return this.name;
-        //return this.id +" "+ this.name + " "+ this.type;
     }
 
     @Override

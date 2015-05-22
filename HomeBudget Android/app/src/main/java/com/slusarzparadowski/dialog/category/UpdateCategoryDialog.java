@@ -11,6 +11,8 @@ import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Model;
 
+import java.sql.SQLException;
+
 /**
  * Created by Dominik on 2015-04-13.
  */
@@ -34,14 +36,16 @@ public class UpdateCategoryDialog extends CategoryDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(getClass().getSimpleName(), "OK");
-
                                 if (!et.getText().toString().trim().equals("")) {
-
-                                    model.updateCategory(new Category(model.getMapList().get(type).get(index).getId(),
-                                                                        model.getMapList().get(type).get(index).getIdParent(),
-                                                                        et.getText().toString(),
-                                                                        model.getMapList().get(type).get(index).getType()),
-                                                                        type, index);
+                                    try {
+                                        model.updateCategory(new Category(model.getMapList().get(type).get(index).getId(),
+                                                                            model.getMapList().get(type).get(index).getIdParent(),
+                                                                            et.getText().toString(),
+                                                                            model.getMapList().get(type).get(index).getType()),
+                                                                            type, index);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
                                     ((MainActivity) activity).getModel().notification();
                                     Log.i(getClass().getSimpleName(), "update Category(" + index + ")(" + et.getText().toString() + ")");
                                 }

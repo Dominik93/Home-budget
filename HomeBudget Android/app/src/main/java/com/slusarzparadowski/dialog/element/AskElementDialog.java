@@ -12,6 +12,8 @@ import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.model.Model;
 
+import java.sql.SQLException;
+
 /**
  * Created by Dominik on 2015-04-05.
  */
@@ -61,8 +63,12 @@ public class AskElementDialog extends MyDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+indexCategory+") E("+indexElement+")");
-                                model.removeElementFromCategory(model.getMapList().get(type).get(indexCategory).getElementList().get(indexElement), indexCategory, type);
-                                model.removeSpecialItem(activity);
+                                try {
+                                    model.removeElementFromCategory(model.getMapList().get(type).get(indexCategory).getElementList().get(indexElement), indexCategory, type);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                model.removeSpecialItem();
                                 ((MainActivity)activity).getModel().notification();
                                 dialog.cancel();
                             }

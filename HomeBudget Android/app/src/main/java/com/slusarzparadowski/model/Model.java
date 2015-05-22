@@ -50,8 +50,9 @@ public class Model implements IObserver, IBundle{
     private final String MODE = "mode";
     private final String INCOME = "income";
     private final String OUTCOME = "outcome";
+
     private ModelDataSource modelDataSource;
-    
+    private Context context;
     private Map<String, ArrayList<Category> > mapList = new HashMap<String,  ArrayList<Category>>();
 
     private boolean mode; // true- online false-offline
@@ -66,14 +67,16 @@ public class Model implements IObserver, IBundle{
 
     // <editor-fold defaultstate="collapsed" desc="constructors">
 
-    public Model(){
+    public Model(Context context){
         mapList.put("INCOME", income);
         mapList.put("OUTCOME", outcome);
+        this.context = context;
     }
 
     public Model(boolean mode, Context context) {
         this.mode = mode;
-        modelDataSource = new ModelDataSourceSQLite(context);
+        this.context = context;
+        setModelDataSource();
         this.user = new User();
         this.income = new ArrayList<>();
         this.outcome = new ArrayList<>();
@@ -84,8 +87,9 @@ public class Model implements IObserver, IBundle{
 
     public Model(Bundle bundle, Context context){
         Gson gson = Converters.registerLocalDate(new GsonBuilder()).create();
-        modelDataSource = new ModelDataSourceSQLite(context);
         this.mode = gson.fromJson(bundle.getString(MODE), boolean.class);
+        this.context = context;
+        setModelDataSource();
         this.user = gson.fromJson(bundle.getString(USER), User.class);
         this.income = gson.fromJson(bundle.getString(INCOME), new TypeToken<ArrayList<Category>>(){}.getType());
         this.outcome = gson.fromJson(bundle.getString(OUTCOME), new TypeToken<ArrayList<Category>>(){}.getType());
@@ -98,8 +102,9 @@ public class Model implements IObserver, IBundle{
     }
 
     public Model(Model model, Context context) {
-        modelDataSource = new ModelDataSourceSQLite(context);
         this.mode = model.isMode();
+        this.context = context;
+        setModelDataSource();
         this.user = model.getUser();
         this.income = model.getIncome();
         this.outcome = model.getOutcome();
@@ -110,9 +115,10 @@ public class Model implements IObserver, IBundle{
         mapList.put("OUTCOME", outcome);
     }
 
-    public Model(boolean mode, String name) throws IOException {
+    public Model(boolean mode, String name, Context context) throws IOException, SQLException {
         this.mode = mode;
-        modelDataSource = new ModelDataSourceMySQL();
+        this.context = context;
+        setModelDataSource();
         Token t = new Token();
         this.user = new User();
         this.user.setName(name);
@@ -171,8 +177,30 @@ public class Model implements IObserver, IBundle{
 
     //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="database connection">
+    public String[] getUsers() throws SQLException {
+        return new ModelDataSourceSQLite(context).getUsers();
+    }
 
-    public void createTokenForOfflineUser() throws IOException {
+    public Model getModel(String name, String token) throws SQLException {
+        return modelDataSource.getModel(name, token, context);
+    }
+
+    public void insertModel() throws SQLException {
+        modelDataSource.insertModel(this);
+    }
+
+    public void updateUser() throws SQLException {
+        modelDataSource.updateUser(user);
+    }
+
+    public void deleteModel(Model model) throws SQLException {
+        new ModelDataSourceSQLite(context).deleteModel(model);
+    }
+
+    //</editor-fold>
+
+    public void createTokenForOfflineUser() throws IOException, SQLException {
         modelDataSource = new ModelDataSourceMySQL();
         Token t = new Token();
         while(true){
@@ -186,7 +214,7 @@ public class Model implements IObserver, IBundle{
     }
 
     public String generateGraph(Activity context){
-        removeSpecialItem(context);
+        removeSpecialItem();
         ArrayList<Float> arrays = new ArrayList<>();
         ArrayList<String> categories = new ArrayList<>();
         for(Category c : this.getOutcome()){
@@ -244,7 +272,7 @@ public class Model implements IObserver, IBundle{
         }
     }
 
-    public void addSpecialItem(Context context){
+    public void addSpecialItem(){
         if (!income.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
             income.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
         for(Category c : income){
@@ -265,14 +293,14 @@ public class Model implements IObserver, IBundle{
         }
     }
 
-    public void removeSpecialItem(Context context){
+    public void removeSpecialItem(){
         if ( income.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
             income.remove(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
         for (Category c : income) {
             if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
-            if (c.getElementList().contains(new Element(-2, -1, "Show summary")))
-                c.getElementList().remove(new Element(-2, -1, "Show summary"));
+            if (c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))))
+                c.getElementList().remove(new Element(-2, -1, context.getString(R.string.show_summary_category)));
         }
 
         if ( outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
@@ -280,23 +308,22 @@ public class Model implements IObserver, IBundle{
         for (Category c : outcome) {
             if (c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().remove(new Element(-1, -1, context.getString(R.string.add_element)));
-            if (c.getElementList().contains(new Element(-2, -1, "Show summary")))
-                c.getElementList().remove(new Element(-2, -1, "Show summary"));
+            if (c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))))
+                c.getElementList().remove(new Element(-2, -1, context.getString(R.string.show_summary_category)));
         }
     }
 
-    public void loadIncome(){
+    public void loadIncome() throws SQLException {
         this.income = modelDataSource.getCategories(user.getId(), "INCOME");
     }
 
-    public void loadOutcome(){
+    public void loadOutcome() throws SQLException {
         this.outcome = modelDataSource.getCategories(user.getId(), "OUTCOME");
     }
 
     // <editor-fold defaultstate="collapsed" desc="category">
 
-    public void addCategory(Category category, String type){
-        openConnection();
+    public void addCategory(Category category, String type) throws SQLException {
         if(mode){
 
         }
@@ -304,23 +331,19 @@ public class Model implements IObserver, IBundle{
             category = modelDataSource.insertCategory(category);
         }
         this.getMapList().get(type).add(category);
-        closeConnection();
     }
 
-    public void removeCategory(Category category, String type){
-        openConnection();
+    public void removeCategory(Category category, String type) throws SQLException {
         if(mode){
 
         }
         if(!mode || user.getSettings().isAutoLocalSave()){
             modelDataSource.deleteCategory(category);
         }
-        closeConnection();
         this.getMapList().get(type).remove(category);
     }
 
-    public void updateCategory(Category category, String type, int index){
-        openConnection();
+    public void updateCategory(Category category, String type, int index) throws SQLException {
         if(mode){
 
         }
@@ -329,15 +352,13 @@ public class Model implements IObserver, IBundle{
         }
         category.setElementList(mapList.get(type).get(index).getElementList());
         mapList.get(type).set(index, category);
-        closeConnection();
     }
 
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="element">
 
-    public void addElementToCategory(Element element, int category, String type){
-        openConnection();
+    public void addElementToCategory(Element element, int category, String type) throws SQLException {
         if(mode){
 
         }
@@ -347,11 +368,9 @@ public class Model implements IObserver, IBundle{
         this.getMapList().get(type).get(category).getElementList().add(element);
         this.calculateOutcomeSum();
         this.calculateIncomeSum();
-        closeConnection();
     }
 
-    public void removeElementFromCategory(Element element, int category, String type){
-        openConnection();
+    public void removeElementFromCategory(Element element, int category, String type) throws SQLException {
         if(mode){
 
         }
@@ -361,11 +380,9 @@ public class Model implements IObserver, IBundle{
         this.getMapList().get(type).get(category).getElementList().remove(element);
         this.calculateOutcomeSum();
         this.calculateIncomeSum();
-        closeConnection();
     }
 
-    public void updateElement(Element element, int index, int category, String type){
-        openConnection();
+    public void updateElement(Element element, int index, int category, String type) throws SQLException {
         if(mode){
 
         }
@@ -375,32 +392,11 @@ public class Model implements IObserver, IBundle{
         mapList.get(type).get(category).getElementList().set(index, element);
         this.calculateOutcomeSum();
         this.calculateIncomeSum();
-        closeConnection();
     }
 
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="getters">
-
-    public String getUSER() {
-        return USER;
-    }
-
-    public String getMODE() {
-        return MODE;
-    }
-
-    public String getINCOME() {
-        return INCOME;
-    }
-
-    public String getOUTCOME() {
-        return OUTCOME;
-    }
-
-    public ModelDataSource getModelDataSource() {
-        return modelDataSource;
-    }
 
     public Map<String, ArrayList<Category>> getMapList() {
         return mapList;
@@ -422,10 +418,6 @@ public class Model implements IObserver, IBundle{
         return outcome;
     }
 
-    public ArrayList<Placeholder> getViews() {
-        return views;
-    }
-
     public float getIncomeSum(){
         return incomeSum;
     }
@@ -442,8 +434,11 @@ public class Model implements IObserver, IBundle{
 
     // <editor-fold defaultstate="collapsed" desc="setters">
 
-    public void setModelDataSource(ModelDataSource modelDataSource) {
-        this.modelDataSource = modelDataSource;
+    private void setModelDataSource() {
+        if(mode)
+            modelDataSource = new ModelDataSourceMySQL();
+        else
+            modelDataSource = new ModelDataSourceSQLite(context);
     }
 
     public void setMapList(Map<String, ArrayList<Category>> mapList) {
@@ -452,6 +447,7 @@ public class Model implements IObserver, IBundle{
 
     public void setMode(boolean mode) {
         this.mode = mode;
+        this.setModelDataSource();
     }
 
     public void setUser(User user) {
@@ -479,18 +475,6 @@ public class Model implements IObserver, IBundle{
     }
 
     //</editor-fold>
-
-    private void openConnection(){
-        try {
-            modelDataSource.open();
-        } catch (SQLException e) {
-            Log.i(getClass().getSimpleName(), e.toString());
-        }
-    }
-
-    private void closeConnection(){
-        modelDataSource.close();
-    }
 
     // <editor-fold defaultstate="collapsed" desc="interface IObserver">
     @Override

@@ -43,13 +43,6 @@ public class SettingsActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick");
-                try {
-                    modelDataSourceSQLite.open();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                modelDataSourceSQLite.updateSettings(model.getUser().getSettings());
-                modelDataSourceSQLite.close();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);

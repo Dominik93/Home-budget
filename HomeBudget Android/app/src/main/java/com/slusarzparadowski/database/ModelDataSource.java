@@ -38,47 +38,47 @@ public abstract class ModelDataSource {
             SQLite.COLUMN_CONST,
             SQLite.COLUMN_DATE };
 
-    public abstract ArrayList<Element> getElements(long id_category);
+    public abstract ArrayList<Element> getElements(long id_category) throws SQLException;
 
-    public abstract Element insertElement(Element element);
+    public abstract Element insertElement(Element element) throws SQLException;
 
-    public abstract void deleteElement(Element element);
+    public abstract void deleteElement(Element element) throws SQLException;
 
-    public abstract void updateElement(Element element);
+    public abstract void updateElement(Element element) throws SQLException;
 
-    public abstract ArrayList<Category> getCategories(long id_user, String type);
+    public abstract ArrayList<Category> getCategories(long id_user, String type) throws SQLException;
 
-    public abstract Category insertCategory(Category category);
+    public abstract Category insertCategory(Category category) throws SQLException;
 
-    public abstract void deleteCategory(Category category);
+    public abstract void deleteCategory(Category category) throws SQLException;
 
-    public abstract void updateCategory(Category category);
+    public abstract void updateCategory(Category category) throws SQLException;
 
-    public abstract Settings getSettings(long id_user);
+    public abstract Settings getSettings(long id_user) throws SQLException;
 
-    public abstract Settings insertSettings(Settings settings);
+    public abstract Settings insertSettings(Settings settings) throws SQLException;
 
-    public abstract void deleteSettings(Settings settings);
+    public abstract void deleteSettings(Settings settings) throws SQLException;
 
-    public abstract void updateSettings(Settings settings);
+    public abstract void updateSettings(Settings settings) throws SQLException;
 
-    public abstract User getUser(String name, String token);
+    public abstract User getUser(String name, String token) throws SQLException;
 
-    public abstract String[] getUsers();
+    public abstract String[] getUsers() throws SQLException;
 
-    public abstract User insertUser(User user);
+    public abstract User insertUser(User user) throws SQLException;
 
-    public abstract void deleteUser(User user);
+    public abstract void deleteUser(User user) throws SQLException;
 
-    public abstract void updateUser(User user);
+    public abstract void updateUser(User user) throws SQLException;
 
-    public abstract Model getModel(String name, String token, Context context);
+    public abstract Model getModel(String name, String token, Context context) throws SQLException;
 
-    public abstract Model insertModel(Model model);
+    public abstract Model insertModel(Model model) throws SQLException;
 
-    public abstract void deleteModel(Model model);
+    public abstract void deleteModel(Model model) throws SQLException;
 
-    public abstract void updateModel(Model model);
+    public abstract void updateModel(Model model) throws SQLException;
 
     public abstract void open() throws SQLException;
 

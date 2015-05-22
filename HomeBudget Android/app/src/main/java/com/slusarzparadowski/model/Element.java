@@ -76,7 +76,6 @@ public class Element extends DatabaseObjectChild {
     @Override
     public String toString(){
         return this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
-        //return this.id +" "+ this.idParent +" "+ this.name + " "+ ((this.value != 0) ? this.value : " ") + " "+ ((this.date != null) ? this.date : "");
     }
 
     @Override

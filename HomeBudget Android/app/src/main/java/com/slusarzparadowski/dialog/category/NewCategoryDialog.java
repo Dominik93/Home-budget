@@ -12,6 +12,8 @@ import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Category;
 import com.slusarzparadowski.model.Model;
 
+import java.sql.SQLException;
+
 /**
  * Created by Dominik on 2015-04-13.
  */
@@ -33,8 +35,12 @@ public class NewCategoryDialog extends CategoryDialog {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(getClass().getSimpleName(), "OK");
                                 if (!editText.getText().toString().trim().equals("")) {
-                                    model.addCategory(new Category(0, ((MainActivity) activity).getModel().getUser().getId(), editText.getText().toString(), type), type);
-                                    model.removeSpecialItem(activity);
+                                    try {
+                                        model.addCategory(new Category(0, ((MainActivity) activity).getModel().getUser().getId(), editText.getText().toString(), type), type);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    model.removeSpecialItem();
                                     ((MainActivity) activity).getModel().notification();
                                 } else {
                                     Toast.makeText(activity, activity.getString(R.string.toast_category), Toast.LENGTH_LONG).show();

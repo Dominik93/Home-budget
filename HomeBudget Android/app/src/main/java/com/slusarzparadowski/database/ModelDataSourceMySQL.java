@@ -55,7 +55,6 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
             Log.d(String.valueOf(value), message);
             JSONObject listId = json.getJSONObject("response_array_id");
-            JSONObject listIdCategory = json.getJSONObject("response_array_id_category");
             JSONObject listName = json.getJSONObject("response_array_name");
             JSONObject listValue = json.getJSONObject("response_array_element_value");
             JSONObject listConst = json.getJSONObject("response_array_const");
@@ -65,8 +64,16 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             }
             for(int i = 0; i < listId.length(); i++){
                 Log.d(getClass().getSimpleName(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
+                if(listDate.getString("date[" + i + "]").equals("null"))
+                    returnList.add(new Element(listId.getInt("id[" + i + "]"),
+                            (int)id_category,
+                            listName.getString("name[" + i + "]"),
+                            (float)listValue.getDouble("value[" + i + "]"),
+                            listConst.getBoolean("const[" + i + "]"),
+                            null));
+                else
                 returnList.add(new Element(listId.getInt("id[" + i + "]"),
-                        listIdCategory.getInt("idCategory[" + i + "]"),
+                        (int)id_category,
                         listName.getString("name[" + i + "]"),
                         (float)listValue.getDouble("value[" + i + "]"),
                         listConst.getBoolean("const[" + i + "]"),
@@ -180,9 +187,9 @@ public class ModelDataSourceMySQL extends ModelDataSource {
                 return null;
             }
             for(int i = 0; i < listId.length(); i++){
-                Log.d(getClass().getSimpleName(), "getList Category("+listId.getInt("id["+i+"]")+", "+ listId.getInt("id_user["+i+"]") +", "+listName.getString("name["+i+"]")+", "+type+")");
+                Log.d(getClass().getSimpleName(), "getList Category("+listId.getInt("id["+i+"]")+", "+ id_user +", "+listName.getString("name["+i+"]")+", "+type+")");
                 returnList.add(new Category(listId.getInt("id["+i+"]"),
-                                listId.getInt("id_user["+i+"]"),
+                                 (int)id_user,
                                 listName.getString("name["+i+"]"),
                                 type));
             }
@@ -284,6 +291,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
             Settings settings = new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete"), json.getBoolean("response_auto_local_save"));
+            settings.setIdParent((int)id_user);
             Log.d(String.valueOf(value), message);
             return settings;
         } catch (JSONException e) {
@@ -430,8 +438,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
     // <editor-fold defaultstate="collapsed" desc="model">
     @Override
     public Model getModel(String name, String token, Context context) {
-        Model model = new Model();
-        model.setMode(true);
+        Model model = new Model(true, context);
         model.setUser(this.getUser(name, token));
         model.getUser().setSettings(this.getSettings(model.getUser().getId()));
         model.setIncome(this.getCategories(model.getUser().getId(), "INCOME"));

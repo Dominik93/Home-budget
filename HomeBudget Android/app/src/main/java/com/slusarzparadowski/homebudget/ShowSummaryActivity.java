@@ -18,7 +18,7 @@ public class ShowSummaryActivity extends MyActivity {
     @Override
     void initElements() {
         this.model = new Model(getIntent().getExtras(), getApplicationContext());
-        this.model.removeSpecialItem(getApplicationContext());
+        this.model.removeSpecialItem();
         category = getIntent().getExtras().getInt("category");
         type = getIntent().getExtras().getString("type");
 

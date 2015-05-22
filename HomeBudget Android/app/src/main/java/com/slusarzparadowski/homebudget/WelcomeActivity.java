@@ -39,7 +39,6 @@ public class WelcomeActivity extends MyActivity {
     Button b1, b2, b3;
     Activity activity;
     Spinner spinner;
-    ModelDataSource modelDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +70,17 @@ public class WelcomeActivity extends MyActivity {
     @Override
     void initElements() {
         this.activity = this;
-        modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
-        try {
-            modelDataSource.open();
-        } catch (SQLException e) {
-            Log.e(getClass().getSimpleName(), e.toString());
-        }
+        model = new Model(false, getApplicationContext());
         b1 = (Button)findViewById(R.id.buttonOnline);
         b2 = (Button)findViewById(R.id.buttonOffline);
         b3 = (Button)findViewById(R.id.buttonDelete);
         editText = (EditText)findViewById(R.id.editTextUserName);
         spinner = (Spinner) findViewById(R.id.spinnerUsers);
-        spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+        try {
+            spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, model.getUsers()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if((spinner.getSelectedItem()).toString().equals("Add user")){
             editText.setVisibility(View.VISIBLE);
             b3.setVisibility(View.GONE);
@@ -91,8 +89,6 @@ public class WelcomeActivity extends MyActivity {
             editText.setVisibility(View.GONE);
             b3.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override
@@ -134,10 +130,14 @@ public class WelcomeActivity extends MyActivity {
         this.b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(getClass().getSimpleName(), "onClick b3 offline");
+                Log.i(getClass().getSimpleName(), "onClick b3 delete");
                 if(!spinner.getSelectedItem().toString().equals("Add user")){
-                    modelDataSource.deleteModel(modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext()));
-                    spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, modelDataSource.getUsers()));
+                    try {
+                        model.deleteModel(model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
+                        spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, model.getUsers()));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     if((spinner.getSelectedItem()).toString().equals("Add user")){
                         editText.setVisibility(View.VISIBLE);
                     }
@@ -151,17 +151,11 @@ public class WelcomeActivity extends MyActivity {
 
     @Override
     protected void onResume() {
-        try {
-            modelDataSource.open();
-        } catch (SQLException e) {
-            Log.e(getClass().getSimpleName(), e.toString());
-        }
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        modelDataSource.close();
         super.onPause();
     }
 
@@ -233,47 +227,31 @@ public class WelcomeActivity extends MyActivity {
         }
 
         protected Boolean doInBackground(String... args) {
-            modelDataSource = new ModelDataSourceMySQL();
-            if((spinner.getSelectedItem()).toString().equals("Add user")){
-                try {
-                    model = new Model(false, editText.getText().toString());
-                    modelDataSource.insertModel(model);
-                    modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
-                    modelDataSource.open();
-                    modelDataSource.insertUser(model.getUser());
-                    modelDataSource.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            try {
+                if((spinner.getSelectedItem()).toString().equals("Add user")){
+                    model = new Model(false, editText.getText().toString(), getApplicationContext());
+                    model.insertModel();
+                    model.setMode(true);
+                    model.insertModel();
+                    return true;
                 }
-                return true;
-            }
-            else{
-                if(spinner.getSelectedItem().toString().split("-")[1].equals("Offline mode")){
-                    try {
-                        modelDataSource.open();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    modelDataSource = new ModelDataSourceSQLite(getApplicationContext());
-                    modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
-                    try {
+                else{
+                    if(spinner.getSelectedItem().toString().split("-")[1].equals("Offline mode")){
+                        model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
                         model.createTokenForOfflineUser();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        model.updateUser();
+                        model.setMode(true);
+                        model.insertModel();
                     }
-                    modelDataSource.updateUser(model.getUser());
-                    modelDataSource.close();
-                    modelDataSource = new ModelDataSourceMySQL();
-                    modelDataSource.insertModel(model);
-                    // get model form sqlite, create new token, save token save model to remote database
+                    else {
+                        model.setMode(true);
+                        model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                    }
+                    return true;
                 }
-                else {
-                    modelDataSource = new ModelDataSourceMySQL();
-                    model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
-                }
-                return true;
+            }catch (IOException | SQLException e) {
+                e.printStackTrace();
+                return false;
             }
         }
 
@@ -304,16 +282,19 @@ public class WelcomeActivity extends MyActivity {
 
         protected Boolean doInBackground(String... args) {
             Log.i(getClass().getSimpleName(), "doInBackground");
-            Log.i(getClass().getSimpleName(), "doInBackground created new model");
-            if((spinner.getSelectedItem()).toString().equals("Add user")){
-                model = new Model(false, getApplicationContext());
-                model.getUser().setName(editText.getText().toString());
-                modelDataSource.insertModel(model);
+            try {
+                if((spinner.getSelectedItem()).toString().equals("Add user")){
+                    model.getUser().setName(editText.getText().toString());
+                    model.insertModel();
+                }
+                else {
+                    model = model.getModel(spinner.getSelectedItem().toString().split("-")[0],
+                            spinner.getSelectedItem().toString().split("-")[1]);
+                }
                 return true;
-            }
-            else{
-                model = modelDataSource.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1], getApplicationContext());
-                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
             }
         }
 

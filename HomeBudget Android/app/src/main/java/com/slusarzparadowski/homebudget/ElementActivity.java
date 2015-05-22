@@ -18,6 +18,8 @@ import com.slusarzparadowski.model.Model;
 
 import org.joda.time.LocalDate;
 
+import java.sql.SQLException;
+
 
 public class ElementActivity extends MyActivity {
 
@@ -107,14 +109,17 @@ public class ElementActivity extends MyActivity {
                             Float.valueOf(et2.getText().toString()),
                             cb2.isChecked(),
                             null);
+                }try {
+                    if(element == -1) {
+                        model.addElementToCategory(elementObj, category, type);
+                    }
+                    else{
+                        model.updateElement(elementObj, element, category, type);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                if(element == -1) {
-                    model.addElementToCategory(elementObj, category, type);
-                }
-                else{
-                    model.updateElement(elementObj, element, category, type);
-                }
-                model.removeSpecialItem(getApplicationContext());
+                model.removeSpecialItem();
                 returnIntent.putExtras(model.saveToBundle());
                 setResult(RESULT_OK, returnIntent);
                 finish();

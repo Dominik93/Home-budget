@@ -9,6 +9,8 @@ import com.slusarzparadowski.homebudget.MainActivity;
 import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Model;
 
+import java.sql.SQLException;
+
 /**
  * Created by Dominik on 2015-04-09.
  */
@@ -42,8 +44,12 @@ public class AskCategoryDialog extends CategoryDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 Log.i(getClass().getSimpleName(), "Delete C("+index+")");
-                                model.removeCategory(model.getMapList().get(type).get(index), type);
-                                model.removeSpecialItem(activity);
+                                try {
+                                    model.removeCategory(model.getMapList().get(type).get(index), type);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                model.removeSpecialItem();
                                 ((MainActivity)getActivity()).getModel().notification();
                                 dialog.cancel();
                             }

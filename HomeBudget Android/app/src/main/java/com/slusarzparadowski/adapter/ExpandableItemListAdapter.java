@@ -45,7 +45,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
         this.activity = activity;
         this.type = type;
         this.model = model;
-        this.model.addSpecialItem(context);
+        this.model.addSpecialItem();
         vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -179,7 +179,7 @@ public class ExpandableItemListAdapter extends BaseExpandableListAdapter impleme
     }
 
     public Model getModel(){
-        model.removeSpecialItem(context);
+        model.removeSpecialItem();
         return this.model;
     }
 

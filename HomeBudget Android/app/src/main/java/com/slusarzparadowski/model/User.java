@@ -14,6 +14,7 @@ public class User extends DatabaseObjectParent {
 
     public User() {
         super(0);
+        this.name = null;
         this.token = "OFFLINE MODE";
         this.savings = 0;
         this.settings = new Settings();
@@ -26,15 +27,6 @@ public class User extends DatabaseObjectParent {
         this.savings = savings;
         this.settings = settings;
     }
-
-    public User(User user){
-        super(user.getId());
-        this.token = user.getToken();
-        this.name = user.getName();
-        this.savings = user.getSavings();
-        this.settings = user.getSettings();
-    }
-
     public User(Cursor cursor) {
         super(cursor.getInt(0));
         this.name = cursor.getString(1);
