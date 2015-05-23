@@ -64,20 +64,13 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             }
             for(int i = 0; i < listId.length(); i++){
                 Log.d(getClass().getSimpleName(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
-                if(listDate.getString("date[" + i + "]").equals("null"))
-                    returnList.add(new Element(listId.getInt("id[" + i + "]"),
+                returnList.add(new Element(listId.getInt("id[" + i + "]"),
                             (int)id_category,
                             listName.getString("name[" + i + "]"),
                             (float)listValue.getDouble("value[" + i + "]"),
                             listConst.getBoolean("const[" + i + "]"),
-                            null));
-                else
-                returnList.add(new Element(listId.getInt("id[" + i + "]"),
-                        (int)id_category,
-                        listName.getString("name[" + i + "]"),
-                        (float)listValue.getDouble("value[" + i + "]"),
-                        listConst.getBoolean("const[" + i + "]"),
-                        new LocalDate(listDate.getString("date[" + i + "]"))));
+                            listDate.getString("date[" + i + "]").equals("null") ? new LocalDate(listDate.getString("date[" + i + "]")) : null));
+
             }
             return returnList;
         } catch (JSONException e) {
@@ -190,8 +183,8 @@ public class ModelDataSourceMySQL extends ModelDataSource {
                 Log.d(getClass().getSimpleName(), "getList Category("+listId.getInt("id["+i+"]")+", "+ id_user +", "+listName.getString("name["+i+"]")+", "+type+")");
                 returnList.add(new Category(listId.getInt("id["+i+"]"),
                                  (int)id_user,
-                                listName.getString("name["+i+"]"),
-                                type));
+                                 listName.getString("name["+i+"]"),
+                                 type));
             }
             for(Category el : returnList){
                 el.setElementList(this.getElements(el.getId()));

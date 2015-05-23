@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.ElementActivity;
 import com.slusarzparadowski.homebudget.MainActivity;
+import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.Model;
 
 import java.sql.SQLException;
@@ -65,6 +67,7 @@ public class AskElementDialog extends MyDialog {
                                 Log.i(getClass().getSimpleName(), "Delete C("+indexCategory+") E("+indexElement+")");
                                 try {
                                     model.removeElementFromCategory(model.getMapList().get(type).get(indexCategory).getElementList().get(indexElement), indexCategory, type);
+                                    Toast.makeText(activity, "Element deleted", Toast.LENGTH_LONG).show();
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }

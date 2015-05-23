@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
@@ -43,6 +44,7 @@ public class UpdateCategoryDialog extends CategoryDialog {
                                                                             et.getText().toString(),
                                                                             model.getMapList().get(type).get(index).getType()),
                                                                             type, index);
+                                        Toast.makeText(activity, "Category updated", Toast.LENGTH_LONG).show();
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }

@@ -236,14 +236,15 @@ public class WelcomeActivity extends MyActivity {
                     return true;
                 }
                 else{
-                    if(spinner.getSelectedItem().toString().split("-")[1].equals("Offline mode")){
+                    if(spinner.getSelectedItem().toString().split("-")[1].equals("OFFLINE MODE")){
                         model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
                         model.createTokenForOfflineUser();
                         model.updateUser();
                         model.setMode(true);
                         model.insertModel();
+                        model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
                     }
-                    else {
+                    else{
                         model.setMode(true);
                         model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
                     }

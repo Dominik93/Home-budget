@@ -19,8 +19,8 @@ import java.sql.SQLException;
 public class SettingsActivity extends MyActivity {
 
     Model model;
-    Button b1,b2;
-    CheckBox cb1,cb2;
+    Button button1, button2;
+    CheckBox checkBox1, checkBox2, checkBox3;
     ModelDataSourceSQLite modelDataSourceSQLite;
 
     @Override
@@ -28,28 +28,35 @@ public class SettingsActivity extends MyActivity {
         this.model = new Model(getIntent().getExtras(), getApplicationContext());
         this.modelDataSourceSQLite = new ModelDataSourceSQLite(getApplicationContext());
 
-        this.b1 = (Button)findViewById(R.id.buttonSettingsSave);
-        this.b2 = (Button)findViewById(R.id.buttonSettingsCancel);
+        this.button1 = (Button)findViewById(R.id.buttonSettingsSave);
+        this.button2 = (Button)findViewById(R.id.buttonSettingsCancel);
 
-        this.cb1 = (CheckBox)findViewById(R.id.checkBoxSettingsSavings);
-        this.cb2 = (CheckBox)findViewById(R.id.checkBoxSettingsDelete);
-        this.cb1.setChecked(this.model.getUser().getSettings().isAutoSaving());
-        this.cb2.setChecked(this.model.getUser().getSettings().isAutoDeleting());
+        this.checkBox1 = (CheckBox)findViewById(R.id.checkBoxSettingsSavings);
+        this.checkBox2 = (CheckBox)findViewById(R.id.checkBoxSettingsDelete);
+        this.checkBox3 = (CheckBox)findViewById(R.id.checkBoxLocalSave);
+        this.checkBox1.setChecked(this.model.getUser().getSettings().isAutoSaving());
+        this.checkBox2.setChecked(this.model.getUser().getSettings().isAutoDeleting());
+        this.checkBox3.setChecked(this.model.getUser().getSettings().isAutoLocalSave());
     }
 
     @Override
     void initListeners() {
-        b1.setOnClickListener(new View.OnClickListener() {
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(getClass().getSimpleName(), "onClick");
-                Intent returnIntent = new Intent();
-                returnIntent.putExtras(model.saveToBundle());
-                setResult(RESULT_OK, returnIntent);
-                finish();
+                try {
+                    Log.i(getClass().getSimpleName(), "onClick");
+                    Intent returnIntent = new Intent();
+                    model.updateSettings();
+                    returnIntent.putExtras(model.saveToBundle());
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        b2.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick");
@@ -59,18 +66,25 @@ public class SettingsActivity extends MyActivity {
             }
         });
 
-        cb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i(getClass().getSimpleName(), "onCheckedChanged "+isChecked);
                 model.getUser().getSettings().setAutoSaving(isChecked);
             }
         });
-        cb2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i(getClass().getSimpleName(), "onCheckedChanged " +isChecked);
                 model.getUser().getSettings().setAutoDeleting(isChecked);
+            }
+        });
+        checkBox3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i(getClass().getSimpleName(), "onCheckedChanged " +isChecked);
+                model.getUser().getSettings().setAutoLocalSave(isChecked);
             }
         });
     }

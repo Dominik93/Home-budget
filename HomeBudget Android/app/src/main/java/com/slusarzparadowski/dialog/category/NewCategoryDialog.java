@@ -37,6 +37,7 @@ public class NewCategoryDialog extends CategoryDialog {
                                 if (!editText.getText().toString().trim().equals("")) {
                                     try {
                                         model.addCategory(new Category(0, ((MainActivity) activity).getModel().getUser().getId(), editText.getText().toString(), type), type);
+                                        Toast.makeText(activity, "Category added", Toast.LENGTH_LONG).show();
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }

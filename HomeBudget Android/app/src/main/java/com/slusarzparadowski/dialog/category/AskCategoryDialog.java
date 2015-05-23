@@ -3,6 +3,7 @@ package com.slusarzparadowski.dialog.category;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.slusarzparadowski.dialog.MyDialog;
 import com.slusarzparadowski.homebudget.MainActivity;
@@ -46,6 +47,7 @@ public class AskCategoryDialog extends CategoryDialog {
                                 Log.i(getClass().getSimpleName(), "Delete C("+index+")");
                                 try {
                                     model.removeCategory(model.getMapList().get(type).get(index), type);
+                                    Toast.makeText(activity, "Category deleted", Toast.LENGTH_LONG).show();
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }

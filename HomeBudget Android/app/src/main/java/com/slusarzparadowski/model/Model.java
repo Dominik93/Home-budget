@@ -30,6 +30,11 @@ import com.slusarzparadowski.homebudget.R;
 import com.slusarzparadowski.model.token.Token;
 import com.slusarzparadowski.placeholder.Placeholder;
 
+import org.joda.time.LocalDate;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,6 +55,7 @@ public class Model implements IObserver, IBundle{
     private final String MODE = "mode";
     private final String INCOME = "income";
     private final String OUTCOME = "outcome";
+    private final String MONTH = "month";
 
     private ModelDataSource modelDataSource;
     private Context context;
@@ -198,16 +204,19 @@ public class Model implements IObserver, IBundle{
         new ModelDataSourceSQLite(context).deleteModel(model);
     }
 
+    public void updateSettings() throws SQLException {
+        modelDataSource.updateSettings(this.user.getSettings());
+    }
+
     //</editor-fold>
 
     public void createTokenForOfflineUser() throws IOException, SQLException {
-        modelDataSource = new ModelDataSourceMySQL();
+        ModelDataSourceMySQL modelDataSource = new ModelDataSourceMySQL();
         Token t = new Token();
         while(true){
             t.createToken();
-            if(((ModelDataSourceMySQL)modelDataSource).checkToken(t.getToken()).equals("NOT_EXIST")){
+            if((modelDataSource).checkToken(t.getToken()).equals("NOT_EXIST")){
                 user.setToken(t.getToken());
-                modelDataSource.insertUser(user);
                 break;
             }
         }
@@ -321,34 +330,96 @@ public class Model implements IObserver, IBundle{
         this.outcome = modelDataSource.getCategories(user.getId(), "OUTCOME");
     }
 
+    public LocalDate loadMonth() throws IOException {
+        FileInputStream fin = context.openFileInput(MONTH);
+        int c;
+        String temp="";
+        while( (c = fin.read()) != -1){
+            temp = temp + Character.toString((char)c);
+        }
+        fin.close();
+        return new LocalDate(temp);
+    }
+
+    public void saveMonth() throws IOException {
+        FileOutputStream fos = context.openFileOutput(MONTH, Context.MODE_PRIVATE);
+        fos.write(new LocalDate().toString().getBytes());
+        fos.close();
+    }
+
+    public void newMonth() throws IOException, SQLException {
+        LocalDate now = new LocalDate();
+        LocalDate before = loadMonth();
+        if(now.getMonthOfYear() != before.getMonthOfYear()){
+            if(this.user.getSettings().isAutoSaving()){
+                this.user.setSavings(this.user.getSavings() + this.getIncomeSum());
+                modelDataSource.updateUser(this.user);
+                if(mode && user.getSettings().isAutoLocalSave()){
+                    new ModelDataSourceSQLite(context).updateUser(this.user);
+                }
+            }
+            if(this.user.getSettings().isAutoDeleting()){
+                for(Category c : this.getOutcome()){
+                    for(int i = c.getElementList().size(); i > 0; i--){
+                        if(!c.getElementList().get(i).isConstant()){
+                            modelDataSource.deleteElement(c.getElementList().get(i));
+                            c.getElementList().remove(i);
+                        }
+                    }
+                }
+                for(Category c : this.getIncome()){
+                    for(int i = c.getElementList().size(); i > 0; i--){
+                        if(!c.getElementList().get(i).isConstant()){
+                            modelDataSource.deleteElement(c.getElementList().get(i));
+                            c.getElementList().remove(i);
+                        }
+                    }
+                }
+                if(mode && user.getSettings().isAutoLocalSave()){
+                    ModelDataSource modelDataSource = new ModelDataSourceSQLite(context);
+                    ArrayList<Category> lista = modelDataSource.getCategories(this.user.getId(), "OUTCOME");
+                    for(Category c : lista){
+                        for(int i = c.getElementList().size(); i > 0; i--){
+                            if(!c.getElementList().get(i).isConstant()){
+                                modelDataSource.deleteElement(c.getElementList().get(i));
+                            }
+                        }
+                    }
+                    lista = modelDataSource.getCategories(this.user.getId(), "INCOME");
+                    for(Category c : lista){
+                        for(int i = c.getElementList().size(); i > 0; i--){
+                            if(!c.getElementList().get(i).isConstant()){
+                                modelDataSource.deleteElement(c.getElementList().get(i));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc="category">
 
     public void addCategory(Category category, String type) throws SQLException {
-        if(mode){
-
-        }
-        if(!mode || user.getSettings().isAutoLocalSave()){
-            category = modelDataSource.insertCategory(category);
+        category = modelDataSource.insertCategory(category);
+        if(mode && user.getSettings().isAutoLocalSave()){
+            new ModelDataSourceSQLite(context).insertCategory(category);
         }
         this.getMapList().get(type).add(category);
     }
 
     public void removeCategory(Category category, String type) throws SQLException {
-        if(mode){
-
-        }
-        if(!mode || user.getSettings().isAutoLocalSave()){
-            modelDataSource.deleteCategory(category);
+        modelDataSource.deleteCategory(category);
+        if(mode || user.getSettings().isAutoLocalSave()){
+            new ModelDataSourceSQLite(context).deleteCategory(category);
         }
         this.getMapList().get(type).remove(category);
     }
 
     public void updateCategory(Category category, String type, int index) throws SQLException {
-        if(mode){
-
-        }
-        if(!mode || user.getSettings().isAutoLocalSave()){
-            modelDataSource.updateCategory(category);
+        modelDataSource.updateCategory(category);
+        if(mode || user.getSettings().isAutoLocalSave()){
+            new ModelDataSourceSQLite(context).updateCategory(category);
         }
         category.setElementList(mapList.get(type).get(index).getElementList());
         mapList.get(type).set(index, category);
@@ -359,11 +430,9 @@ public class Model implements IObserver, IBundle{
     // <editor-fold defaultstate="collapsed" desc="element">
 
     public void addElementToCategory(Element element, int category, String type) throws SQLException {
-        if(mode){
-
-        }
-        if(!mode || user.getSettings().isAutoLocalSave()){
-            element = modelDataSource.insertElement(element);
+        element = modelDataSource.insertElement(element);
+        if(mode || user.getSettings().isAutoLocalSave()){
+            new ModelDataSourceSQLite(context).insertElement(element);
         }
         this.getMapList().get(type).get(category).getElementList().add(element);
         this.calculateOutcomeSum();
@@ -371,11 +440,9 @@ public class Model implements IObserver, IBundle{
     }
 
     public void removeElementFromCategory(Element element, int category, String type) throws SQLException {
-        if(mode){
-
-        }
-        if(!mode || user.getSettings().isAutoLocalSave()){
-            modelDataSource.deleteElement(element);
+        modelDataSource.deleteElement(element);
+        if(mode || user.getSettings().isAutoLocalSave()){
+            new ModelDataSourceSQLite(context).deleteElement(element);
         }
         this.getMapList().get(type).get(category).getElementList().remove(element);
         this.calculateOutcomeSum();
@@ -383,11 +450,9 @@ public class Model implements IObserver, IBundle{
     }
 
     public void updateElement(Element element, int index, int category, String type) throws SQLException {
-        if(mode){
-
-        }
-        if(!mode || user.getSettings().isAutoLocalSave()){
-            modelDataSource.updateElement(element);
+        modelDataSource.updateElement(element);
+        if(mode || user.getSettings().isAutoLocalSave()){
+            new ModelDataSourceSQLite(context).updateElement(element);
         }
         mapList.get(type).get(category).getElementList().set(index, element);
         this.calculateOutcomeSum();
@@ -492,6 +557,8 @@ public class Model implements IObserver, IBundle{
         for(Placeholder placeholder : views)
             placeholder.update();
     }
+
+
 
     //</editor-fold>
 }

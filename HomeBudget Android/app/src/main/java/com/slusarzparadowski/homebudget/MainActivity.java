@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -164,27 +165,26 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
                 this.model = new Model(data.getExtras(), getApplicationContext());
                 this.model.notification();
+                Toast.makeText(activity, "Settings saved", Toast.LENGTH_LONG).show();
             }
-            else if (resultCode == RESULT_CANCELED) {
+            else if(resultCode == RESULT_CANCELED){
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_CANCELED);
-
             }
         }
-        else if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
+        else if(requestCode == 2){
+            if (resultCode == RESULT_OK){
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
                 this.model = new Model(data.getExtras(), getApplicationContext());
                 this.model.notification();
+                Toast.makeText(activity, "Element saved/updated", Toast.LENGTH_LONG).show();
             }
-            else if (resultCode == RESULT_CANCELED) {
+            else if (resultCode == RESULT_CANCELED){
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_CANCELED);
-
             }
         }
     }
