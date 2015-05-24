@@ -71,7 +71,7 @@ public class AskElementDialog extends MyDialog {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                model.removeSpecialItem();
+                                //model.removeSpecialItem();
                                 ((MainActivity)activity).getModel().notification();
                                 dialog.cancel();
                             }

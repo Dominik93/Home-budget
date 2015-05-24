@@ -37,7 +37,7 @@ class Mysql{
         if(mysqli_query($this->link, $query)){
             $query = "select id from user where token = '". $this->clear($token) ."'";
             $row = mysqli_fetch_array(mysqli_query($this->link, $query));
-            return $this->insertSettings($row['id']);
+            return true;
         }
         else{
             return $this->getError();
@@ -81,9 +81,9 @@ class Mysql{
         return mysqli_query($this->link, $query);
     }
     
-    public function insertSettings($id){
+    public function insertSettings($id, $auto_delete, $auto_savings, $auto_local_save){
         $query = 'INSERT INTO settings(id_user, auto_delete, auto_savings, auto_local_save)'
-                . ' VALUES ("'. $this->clear($id) .'", 0, 0, 0)';
+                . ' VALUES ("'. $this->clear($id) .'", "'. $this->clear($auto_delete) .'", "'. $this->clear($auto_savings) .'", "'. $this->clear($auto_local_save) .'")';
         if(mysqli_query($this->link, $query))
             return true;
         else 
@@ -104,9 +104,9 @@ class Mysql{
     
     public function updateSettings($id, $auto_savings, $auto_delete, $auto_local_save){
         $query = 'update settings '
-                . 'set auto_delete='.$this->clear($auto_delete).'" '
-                . 'auto_local_save='.$this->clear($auto_local_save).'" '
-                . 'auto_savings='.$this->clear($auto_savings).'" '
+                . 'set auto_delete="'.$this->clear($auto_delete).'", '
+                . 'auto_local_save="'.$this->clear($auto_local_save).'", '
+                . 'auto_savings="'.$this->clear($auto_savings).'" '
                 . 'where id="'.$this->clear($id).'";';
         if(mysqli_query($this->link, $query)){
            return true;
@@ -123,7 +123,6 @@ class Mysql{
     }
     
     public function insertCategory($id, $name, $type){
-        echo $this->clear($name);
         $query = "insert into category (id_user, name, type)"
                 . " values ('". $this->clear($id) ."', '".  $this->clear($name) ."', '". $this->clear($type) ."');";
         if(mysqli_query($this->link, $query)){
@@ -186,11 +185,11 @@ class Mysql{
     
     public function insertElement($category_id, $name, $value, $const, $date = null){
         if($date == null){
-          $query = "insert into element (id_category, name, value, const)"
+            $query = "insert into element (id_category, name, value, const)"
                 . " values ('". $this->clear($category_id) ."', '". $this->clear($name) ."', '". $this->clear($value) ."','". $this->clear($const) ."');";
         }
         else{
-        $query = "insert into element (id_category, name, value, const, date)"
+            $query = "insert into element (id_category, name, value, const, date)"
                 . " values ('". $this->clear($category_id) ."', '". $this->clear($name) ."', '". $this->clear($value) ."','". $this->clear($const) ."','". $this->clear($date) ."');";
         }
         if(mysqli_query($this->link, $query)){

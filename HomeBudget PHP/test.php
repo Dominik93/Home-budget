@@ -16,7 +16,7 @@ echo  '<form action="delete.php" method="post">
 
 echo  '<form action="insert.php" method="post">
         insert category:<br>
-        <input type="text" name="insert_category" placeholder="token">
+        <input type="text" name="insert_category" placeholder="id_user">
         <input type="text" name="insert_category_name" placeholder="name">
         <input type="text" name="insert_category_type" placeholder="type">
         <input type="submit" value="Submit">
@@ -59,8 +59,7 @@ echo  '<form action="get.php" method="post">
 
 echo  '<form action="get.php" method="post">
         get element:<br>
-        <input type="text" name="get_element" placeholder="token">
-        <input type="text" name="get_category_id" placeholder="category_id">
+        <input type="text" name="get_element" placeholder="id_category">
         <input type="submit" value="Submit">
         </form> ';
 
@@ -78,5 +77,14 @@ echo  '<form action="update.php" method="post">
         <input type="text" name="update_element_value" placeholder="value">
         <input type="text" name="update_element_const" placeholder="const">
         <input type="text" name="update_element_date" placeholder="date">
+        <input type="submit" value="Submit">
+        </form> ';
+
+echo  '<form action="update.php" method="post">
+        update settings:<br>
+        <input type="text" name="update_settings" placeholder="id">
+        <input type="text" name="update_settings_auto_savings" placeholder="auto_savings">
+        <input type="text" name="update_settings_auto_delete" placeholder="auto_deteting">
+        <input type="text" name="update_settings_auto_local_save" placeholder="auto_local_save">
         <input type="submit" value="Submit">
         </form> ';

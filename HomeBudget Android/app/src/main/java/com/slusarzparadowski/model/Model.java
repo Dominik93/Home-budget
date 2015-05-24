@@ -130,7 +130,7 @@ public class Model implements IObserver, IBundle{
         this.user.setName(name);
         while(true){
             t.createToken();
-            if(((ModelDataSourceMySQL)modelDataSource).checkToken(t.getToken()).equals("NOT_EXIST")){
+            if(new ModelDataSourceMySQL().checkToken(t.getToken()).equals("NOT_EXIST")){
                 user.setToken(t.getToken());
                 break;
             }
@@ -268,6 +268,7 @@ public class Model implements IObserver, IBundle{
     }
 
     public void calculateIncomeSum(){
+        incomeSum = 0;
         for (Category c : income){
             for(Element e : c.getElementList())
                 incomeSum += e.getValue();
@@ -275,6 +276,7 @@ public class Model implements IObserver, IBundle{
     }
 
     public void calculateOutcomeSum(){
+        outcomeSum = 0;
         for (Category c : outcome){
             for(Element e : c.getElementList())
                 outcomeSum += e.getValue();
@@ -285,7 +287,8 @@ public class Model implements IObserver, IBundle{
         if (!income.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
             income.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
         for(Category c : income){
-            if (!c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))))
+            if (!c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))) &&
+                    c.getElementList().size() != 0  )
                 c.getElementList().add(new Element(-2, -1, context.getString(R.string.show_summary_category)));
             if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
@@ -294,11 +297,11 @@ public class Model implements IObserver, IBundle{
         if (!outcome.contains(new Category(-1, -1, context.getString(R.string.add_category), "ADD")))
             outcome.add(new Category(-1, -1, context.getString(R.string.add_category), "ADD"));
         for(Category c : outcome){
-            if (!c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))))
+            if (!c.getElementList().contains(new Element(-2, -1, context.getString(R.string.show_summary_category))) &&
+                    c.getElementList().size() != 0 )
                 c.getElementList().add(new Element(-2, -1, context.getString(R.string.show_summary_category)));
             if (!c.getElementList().contains(new Element(-1, -1, context.getString(R.string.add_element))))
                 c.getElementList().add(new Element(-1, -1, context.getString(R.string.add_element)));
-
         }
     }
 
@@ -331,14 +334,22 @@ public class Model implements IObserver, IBundle{
     }
 
     public LocalDate loadMonth() throws IOException {
-        FileInputStream fin = context.openFileInput(MONTH);
-        int c;
-        String temp="";
-        while( (c = fin.read()) != -1){
-            temp = temp + Character.toString((char)c);
+        try{
+            FileInputStream fin = context.openFileInput(MONTH);
+            int c;
+            String temp="";
+            while( (c = fin.read()) != -1){
+                temp = temp + Character.toString((char)c);
+            }
+            fin.close();
+            return new LocalDate(temp);
+        }catch(IOException e){
+            FileOutputStream fos = context.openFileOutput(MONTH, Context.MODE_PRIVATE);
+            LocalDate localDate = new LocalDate();
+            fos.write(localDate.toString().getBytes());
+            fos.close();
+            return localDate;
         }
-        fin.close();
-        return new LocalDate(temp);
     }
 
     public void saveMonth() throws IOException {
@@ -347,9 +358,10 @@ public class Model implements IObserver, IBundle{
         fos.close();
     }
 
-    public void newMonth() throws IOException, SQLException {
+    public void isNewMonth() throws IOException, SQLException {
         LocalDate now = new LocalDate();
         LocalDate before = loadMonth();
+        saveMonth();
         if(now.getMonthOfYear() != before.getMonthOfYear()){
             if(this.user.getSettings().isAutoSaving()){
                 this.user.setSavings(this.user.getSavings() + this.getIncomeSum());
@@ -410,7 +422,7 @@ public class Model implements IObserver, IBundle{
 
     public void removeCategory(Category category, String type) throws SQLException {
         modelDataSource.deleteCategory(category);
-        if(mode || user.getSettings().isAutoLocalSave()){
+        if(mode && user.getSettings().isAutoLocalSave()){
             new ModelDataSourceSQLite(context).deleteCategory(category);
         }
         this.getMapList().get(type).remove(category);
@@ -418,7 +430,7 @@ public class Model implements IObserver, IBundle{
 
     public void updateCategory(Category category, String type, int index) throws SQLException {
         modelDataSource.updateCategory(category);
-        if(mode || user.getSettings().isAutoLocalSave()){
+        if(mode && user.getSettings().isAutoLocalSave()){
             new ModelDataSourceSQLite(context).updateCategory(category);
         }
         category.setElementList(mapList.get(type).get(index).getElementList());
@@ -431,7 +443,7 @@ public class Model implements IObserver, IBundle{
 
     public void addElementToCategory(Element element, int category, String type) throws SQLException {
         element = modelDataSource.insertElement(element);
-        if(mode || user.getSettings().isAutoLocalSave()){
+        if(mode && user.getSettings().isAutoLocalSave()){
             new ModelDataSourceSQLite(context).insertElement(element);
         }
         this.getMapList().get(type).get(category).getElementList().add(element);
@@ -441,7 +453,7 @@ public class Model implements IObserver, IBundle{
 
     public void removeElementFromCategory(Element element, int category, String type) throws SQLException {
         modelDataSource.deleteElement(element);
-        if(mode || user.getSettings().isAutoLocalSave()){
+        if(mode && user.getSettings().isAutoLocalSave()){
             new ModelDataSourceSQLite(context).deleteElement(element);
         }
         this.getMapList().get(type).get(category).getElementList().remove(element);
@@ -451,7 +463,7 @@ public class Model implements IObserver, IBundle{
 
     public void updateElement(Element element, int index, int category, String type) throws SQLException {
         modelDataSource.updateElement(element);
-        if(mode || user.getSettings().isAutoLocalSave()){
+        if(mode && user.getSettings().isAutoLocalSave()){
             new ModelDataSourceSQLite(context).updateElement(element);
         }
         mapList.get(type).get(category).getElementList().set(index, element);

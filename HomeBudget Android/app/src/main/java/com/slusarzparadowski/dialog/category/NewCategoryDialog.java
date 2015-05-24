@@ -41,7 +41,7 @@ public class NewCategoryDialog extends CategoryDialog {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    model.removeSpecialItem();
+                                   // model.removeSpecialItem();
                                     ((MainActivity) activity).getModel().notification();
                                 } else {
                                     Toast.makeText(activity, activity.getString(R.string.toast_category), Toast.LENGTH_LONG).show();

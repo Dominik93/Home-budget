@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Locale;
 
 import com.slusarzparadowski.dialog.InternetAccessDialog;
@@ -169,6 +170,11 @@ public class MainActivity extends MyActivity implements ActionBar.TabListener {
             if(resultCode == RESULT_OK){
                 Log.i(getClass().getSimpleName(), "onActivityResult "+ RESULT_OK);
                 this.model = new Model(data.getExtras(), getApplicationContext());
+                try {
+                    this.model.updateSettings();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 this.model.notification();
                 Toast.makeText(activity, "Settings saved", Toast.LENGTH_LONG).show();
             }

@@ -51,7 +51,7 @@ public class AskCategoryDialog extends CategoryDialog {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                model.removeSpecialItem();
+                                //model.removeSpecialItem();
                                 ((MainActivity)getActivity()).getModel().notification();
                                 dialog.cancel();
                             }

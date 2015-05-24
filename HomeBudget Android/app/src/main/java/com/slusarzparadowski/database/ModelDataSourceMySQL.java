@@ -46,35 +46,34 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_GET, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response getElements " + json.toString());
 
         // check for success tag
         try {
             int value = json.getInt(TAG_VALUE);
-            String message = json.getString(TAG_MESSAGE);
+            if(value == 1){
+                JSONObject listId = json.getJSONObject("response_array_id");
+                JSONObject listName = json.getJSONObject("response_array_name");
+                JSONObject listValue = json.getJSONObject("response_array_element_value");
+                JSONObject listConst = json.getJSONObject("response_array_const");
+                JSONObject listDate = json.getJSONObject("response_array_date");
+                if(listId.length() != listName.length()){
+                    return null;
+                }
+                for(int i = 0; i < listId.length(); i++){
+                    Log.d(getClass().getSimpleName(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
+                    returnList.add(new Element(listId.getInt("id[" + i + "]"),
+                                (int)id_category,
+                                listName.getString("name[" + i + "]"),
+                                (float)listValue.getDouble("value[" + i + "]"),
+                                listConst.getBoolean("const[" + i + "]"),
+                                !listDate.getString("date[" + i + "]").equals("null") ? new LocalDate(listDate.getString("date[" + i + "]")) : null));
 
-            Log.d(String.valueOf(value), message);
-            JSONObject listId = json.getJSONObject("response_array_id");
-            JSONObject listName = json.getJSONObject("response_array_name");
-            JSONObject listValue = json.getJSONObject("response_array_element_value");
-            JSONObject listConst = json.getJSONObject("response_array_const");
-            JSONObject listDate = json.getJSONObject("response_array_date");
-            if(listId.length() != listName.length()){
-                return null;
-            }
-            for(int i = 0; i < listId.length(); i++){
-                Log.d(getClass().getSimpleName(), "getElement Element(" + listId.getInt("id[" + i + "]") + "," + listName.getString("name[" + i + "]") + "," + listValue.getDouble("value[" + i + "]") + "," + listConst.getBoolean("const[" + i + "]") + "," + listDate.getString("date[" + i + "]") + ")");
-                returnList.add(new Element(listId.getInt("id[" + i + "]"),
-                            (int)id_category,
-                            listName.getString("name[" + i + "]"),
-                            (float)listValue.getDouble("value[" + i + "]"),
-                            listConst.getBoolean("const[" + i + "]"),
-                            listDate.getString("date[" + i + "]").equals("null") ? new LocalDate(listDate.getString("date[" + i + "]")) : null));
-
+                }
             }
             return returnList;
         } catch (JSONException e) {
-            Log.e(getClass().getSimpleName(), "getElement"+ e.toString());
+            Log.e(getClass().getSimpleName(), "getElements"+ e.toString());
             return returnList;
         }
     }
@@ -86,21 +85,22 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         params.add(new BasicNameValuePair("insert_element_name", element.getName()));
         params.add(new BasicNameValuePair("insert_element_value", String.valueOf(element.getValue())));
         params.add(new BasicNameValuePair("insert_element_const", String.valueOf(element.isConstant())));
-        params.add(new BasicNameValuePair("insert_element_date", String.valueOf(element.getDate())));
+        if(element.getDate() != null)
+            params.add(new BasicNameValuePair("insert_element_date", element.getDate().toString()));
 
         // getting JSON Object
         JSONObject json = jsonParser.makeHttpRequest(URL_INSERT, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response insertElement " + json.toString());
 
         // check for success tag
         try {
             int value = json.getInt(TAG_VALUE);
-            String message = json.getString(TAG_MESSAGE);
-            element.setId(Integer.valueOf(json.getString("id_created_element")));
-            Log.d(String.valueOf(value), message);
-
+            if(value == 1)
+                element.setId(json.getInt("id_created_element"));
+            else
+                return null;
             return element;
         } catch (JSONException e) {
             Log.e(getClass().getSimpleName(), "getElement"+ e.toString());
@@ -118,7 +118,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_INSERT, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response deleteElement " + json.toString());
 
         // check for success tag
         try {
@@ -143,7 +143,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_UPDATE, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response updateElement " + json.toString());
 
         // check for success tag
         try {
@@ -168,7 +168,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_GET, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response getCategories " + json.toString());
 
         // check for success tag
         try {
@@ -202,19 +202,19 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("insert_category", String.valueOf(category.getIdParent())));
         params.add(new BasicNameValuePair("insert_category_name", category.getName()));
-        params.add(new BasicNameValuePair("insert_category_type", String.valueOf(category.getType())));
+        params.add(new BasicNameValuePair("insert_category_type", category.getType()));
 
         // getting JSON Object
         JSONObject json = jsonParser.makeHttpRequest(URL_INSERT, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response insertCategory " + json.toString());
 
         // check for success tag
         try {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
-            category.setId(Integer.valueOf(json.getString("id_created_category")));
+            category.setId(json.getInt("response_id_created_category"));
             Log.d(String.valueOf(value), message);
             return category;
         } catch (JSONException e) {
@@ -232,7 +232,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_DELETE, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response deleteCategory " + json.toString());
 
         // check for success tag
         try {
@@ -254,7 +254,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_UPDATE, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response updateCategory " + json.toString());
 
         // check for success tag
         try {
@@ -262,7 +262,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
         } catch (JSONException e) {
-            Log.e(getClass().getSimpleName(), "insertCategory"+ e.toString());
+            Log.e(getClass().getSimpleName(), "updateCategory"+ e.toString());
         }
     }
     //</editor-fold>
@@ -277,15 +277,15 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_GET, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response getSettings " + json.toString());
 
         // check for success tag
         try {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
             Settings settings = new Settings(json.getBoolean("response_auto_save"), json.getBoolean("response_auto_delete"), json.getBoolean("response_auto_local_save"));
+            settings.setId(json.getInt("response_id"));
             settings.setIdParent((int)id_user);
-            Log.d(String.valueOf(value), message);
             return settings;
         } catch (JSONException e) {
             Log.e(getClass().getSimpleName(), "getSettings"+ e.toString());
@@ -295,7 +295,28 @@ public class ModelDataSourceMySQL extends ModelDataSource {
 
     @Override
     public Settings insertSettings(Settings settings) {
-        return null;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("insert_settings", String.valueOf(settings.getIdParent())));
+        params.add(new BasicNameValuePair("insert_settings_auto_delete", String.valueOf(settings.isAutoDeleting())));
+        params.add(new BasicNameValuePair("insert_settings_auto_savings", String.valueOf(settings.isAutoSaving())));
+        params.add(new BasicNameValuePair("insert_settings_auto_local_save", String.valueOf(settings.isAutoLocalSave())));
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(URL_INSERT, "POST", params);
+
+        // check log cat fro response
+        Log.d(getClass().getSimpleName(), "Create Response insert_settings " + json.toString());
+
+        // check for success tag
+        try {
+            int value = json.getInt(TAG_VALUE);
+            String message = json.getString(TAG_MESSAGE);
+            settings.setId(json.getInt("response_id_created_settings"));
+            Log.d(String.valueOf(value), message);
+            return settings;
+        } catch (JSONException e) {
+            Log.e(getClass().getSimpleName(), "insert_settings"+ e.toString());
+            return null;
+        }
     }
 
     @Override
@@ -307,14 +328,14 @@ public class ModelDataSourceMySQL extends ModelDataSource {
     public void updateSettings(Settings settings) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("update_settings", String.valueOf(settings.getId())));
-        params.add(new BasicNameValuePair("update_auto_savings", String.valueOf(settings.isAutoSaving())));
-        params.add(new BasicNameValuePair("update_auto_delete", String.valueOf(settings.isAutoDeleting())));
-        params.add(new BasicNameValuePair("update_auto_local_save", String.valueOf(settings.isAutoLocalSave())));
+        params.add(new BasicNameValuePair("update_settings_auto_savings", String.valueOf(settings.isAutoSaving())));
+        params.add(new BasicNameValuePair("update_settings_auto_delete", String.valueOf(settings.isAutoDeleting())));
+        params.add(new BasicNameValuePair("update_settings_auto_local_save", String.valueOf(settings.isAutoLocalSave())));
         // getting JSON Object
         JSONObject json = jsonParser.makeHttpRequest(URL_UPDATE, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response updateSettings " + json.toString());
 
         // check for success tag
         try {
@@ -337,7 +358,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_GET, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response getUser " + json.toString());
 
         // check for success tag
         try {
@@ -367,7 +388,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_INSERT, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response insertUser " + json.toString());
 
         // check for success tag
         try {
@@ -375,6 +396,8 @@ public class ModelDataSourceMySQL extends ModelDataSource {
             String message = json.getString(TAG_MESSAGE);
             Log.d(String.valueOf(value), message);
             user.setId(json.getInt("response_id_created_user"));
+            user.getSettings().setIdParent(user.getId());
+            user.setSettings(this.insertSettings(user.getSettings()));
             return user;
         } catch (JSONException e) {
             Log.e(getClass().getSimpleName(), "insertToken" + e.toString());
@@ -392,7 +415,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_DELETE, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response deleteUser " + json.toString());
 
         // check for success tag
         try {
@@ -415,7 +438,7 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         JSONObject json = jsonParser.makeHttpRequest(URL_UPDATE, "POST", params);
 
         // check log cat fro response
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response updateUser " + json.toString());
 
         // check for success tag
         try {
@@ -445,10 +468,20 @@ public class ModelDataSourceMySQL extends ModelDataSource {
     public Model insertModel(Model model) {
         model.setUser(this.insertUser(model.getUser()));
         for(int i = 0; i < model.getOutcome().size(); i++){
+            model.getOutcome().get(i).setIdParent(model.getUser().getId());
             model.getOutcome().set(i, this.insertCategory(model.getOutcome().get(i)));
+            for(int j = 0 ; j < model.getOutcome().get(i).getElementList().size(); j++){
+                model.getOutcome().get(i).getElementList().get(j).setIdParent(model.getOutcome().get(i).getId());
+                model.getOutcome().get(i).getElementList().set(j , this.insertElement(model.getOutcome().get(i).getElementList().get(j)));
+            }
         }
         for(int i = 0; i < model.getIncome().size(); i++){
+            model.getIncome().get(i).setIdParent(model.getUser().getId());
             model.getIncome().set(i, this.insertCategory(model.getIncome().get(i)));
+            for(int j = 0 ; j < model.getIncome().get(i).getElementList().size(); j++){
+                model.getIncome().get(i).getElementList().get(j).setIdParent(model.getIncome().get(i).getId());
+                model.getIncome().get(i).getElementList().set(j , this.insertElement(model.getIncome().get(i).getElementList().get(j)));
+            }
         }
         return model;
     }
@@ -494,13 +527,12 @@ public class ModelDataSourceMySQL extends ModelDataSource {
         // getting JSON Object
         JSONObject json = jsonParser.makeHttpRequest(URL_CHECK, "POST", params);
 
-        Log.d("Create Response", json.toString());
+        Log.d(getClass().getSimpleName(), "Create Response checkToken " + json.toString());
 
         // check for success tag
         try {
             int value = json.getInt(TAG_VALUE);
             String message = json.getString(TAG_MESSAGE);
-            Log.d(String.valueOf(value), message);
             return message;
         } catch (JSONException e) {
             Log.e(getClass().getSimpleName(), "checkToken "+ e.toString());

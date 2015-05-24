@@ -87,13 +87,14 @@ if(isset($_POST['insert_element_id_category'])
     echo json_encode($response);
 }
 
-if(isset($_POST['insert_settings'])){
+if(isset($_POST['insert_settings']) && isset($_POST['insert_settings_auto_delete'])
+        && isset($_POST['insert_settings_auto_savings']) && isset($_POST['insert_settings_auto_local_save'])){
     $response = array();
     $mysql->connect();
-    $result = $mysql->insertSettings($_POST['insert_settings']);
+    $result = $mysql->insertSettings($_POST['insert_settings'], $_POST['insert_settings_auto_delete'], $_POST['insert_settings_auto_savings'], $_POST['insert_settings_auto_local_save']);
     if($result === true){
         $response['response_value'] = 1;
-        $response['response_id_created_user'] = $mysql->lastID();
+        $response['response_id_created_settings'] = $mysql->lastID();
         $response['response_message'] = "SETTINGS_ADDED";
     }
     else{

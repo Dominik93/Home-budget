@@ -46,9 +46,10 @@ if(isset($_POST['get_settings'])){
             $response['response_value'] = 1;
             $response['response_message']= 'GET_SUCCESS';
             $response['response_id'] = $row['id'];
-            $response['response_auto_save'] = $row['auto_savings'];
-            $response['response_auto_delete'] = $row['auto_delete'];
-            $response['response_auto_local_save'] = $row['auto_local_save'];     
+            $response['response_id_user'] = $row['id_user'];
+            $response['response_auto_save'] = $tab_bool[$row['auto_savings']];
+            $response['response_auto_delete'] = $tab_bool[$row['auto_delete']];
+            $response['response_auto_local_save'] = $tab_bool[$row['auto_local_save']];     
         }        
         else{
             $response['response_value'] = 2;

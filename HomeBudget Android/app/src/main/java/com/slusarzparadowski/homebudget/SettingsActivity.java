@@ -1,5 +1,6 @@
 package com.slusarzparadowski.homebudget;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.slusarzparadowski.database.ModelDataSourceSQLite;
 import com.slusarzparadowski.model.Model;
@@ -71,6 +73,7 @@ public class SettingsActivity extends MyActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i(getClass().getSimpleName(), "onCheckedChanged "+isChecked);
                 model.getUser().getSettings().setAutoSaving(isChecked);
+                Toast.makeText(getApplicationContext(), "Recommended with auto deleting", Toast.LENGTH_SHORT).show();
             }
         });
         checkBox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -78,6 +81,7 @@ public class SettingsActivity extends MyActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i(getClass().getSimpleName(), "onCheckedChanged " +isChecked);
                 model.getUser().getSettings().setAutoDeleting(isChecked);
+                Toast.makeText(getApplicationContext(), "Recommended with auto savings", Toast.LENGTH_SHORT).show();
             }
         });
         checkBox3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

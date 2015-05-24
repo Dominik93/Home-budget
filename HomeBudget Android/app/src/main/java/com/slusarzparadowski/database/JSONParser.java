@@ -63,8 +63,6 @@ public class JSONParser {
                 is = httpEntity.getContent();
             }
 
-        } catch (UnsupportedEncodingException | ClientProtocolException e) {
-            Log.e(getClass().getSimpleName(), "makeHttpRequest "+ e.toString());
         } catch (IOException e) {
             Log.e(getClass().getSimpleName(), "makeHttpRequest "+ e.toString());
         }

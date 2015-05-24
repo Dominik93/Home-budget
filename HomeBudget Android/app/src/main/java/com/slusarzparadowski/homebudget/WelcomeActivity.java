@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 
 //  cd C:\Users\Dominik\AppData\Local\Android\sdk\platform-tools
 
@@ -115,7 +116,6 @@ public class WelcomeActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b1 online");
-
                 new CheckInternetAccess().execute();
             }
         });
@@ -123,7 +123,6 @@ public class WelcomeActivity extends MyActivity {
             @Override
             public void onClick(View v) {
                 Log.i(getClass().getSimpleName(), "onClick b2 offline");
-
                 new LoadModelFromFile().execute();
             }
         });
@@ -133,9 +132,20 @@ public class WelcomeActivity extends MyActivity {
                 Log.i(getClass().getSimpleName(), "onClick b3 delete");
                 if(!spinner.getSelectedItem().toString().equals("Add user")){
                     try {
-                        model.deleteModel(model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
-                        spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, model.getUsers()));
-                    } catch (SQLException e) {
+                        if(!spinner.getSelectedItem().toString().split("-")[1].equals("OFFLINE MODE")){
+                            if(new CheckInternetAccess().execute().get()){
+                                model.setMode(true);
+                                model.deleteModel(model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
+                                model.setMode(false);
+                                model.deleteModel(model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
+                            }
+                        }
+                        else{
+                            model.setMode(false);
+                            model.deleteModel(model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]));
+                        }
+                            spinner.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, model.getUsers()));
+                    } catch (InterruptedException | ExecutionException | SQLException e) {
                         e.printStackTrace();
                     }
                     if((spinner.getSelectedItem()).toString().equals("Add user")){
@@ -152,6 +162,12 @@ public class WelcomeActivity extends MyActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        model.setMode(false);
+        try {
+            spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, model.getUsers()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -243,10 +259,12 @@ public class WelcomeActivity extends MyActivity {
                         model.setMode(true);
                         model.insertModel();
                         model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                        model.isNewMonth();
                     }
                     else{
                         model.setMode(true);
                         model = model.getModel(spinner.getSelectedItem().toString().split("-")[0], spinner.getSelectedItem().toString().split("-")[1]);
+                        model.isNewMonth();
                     }
                     return true;
                 }
@@ -291,9 +309,13 @@ public class WelcomeActivity extends MyActivity {
                 else {
                     model = model.getModel(spinner.getSelectedItem().toString().split("-")[0],
                             spinner.getSelectedItem().toString().split("-")[1]);
+                    model.isNewMonth();
                 }
                 return true;
             } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
